@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>操作台 - 快哥智服平台</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .layout {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* 头部样式 */
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 0 20px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .logo i {
+            color: #ffd700;
+        }
+
+        .space-switcher {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 60px;
+        }
+
+        .space-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .space-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .space-btn.active {
+            background: rgba(255,255,255,0.3);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .system-switcher-dropdown {
+            display: flex;
+            align-items: center;
+            margin-left: 20px;
+            position: relative;
+            height: 60px;
+        }
+        .system-switcher-dropdown .space-btn {
+            height: 38px;
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 18px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background 0.3s;
+            gap: 8px;
+        }
+        .system-switcher-dropdown .space-btn:hover,
+        .system-switcher-dropdown .space-btn:focus {
+            background: rgba(255,255,255,0.2);
+        }
+        .system-dropdown {
+            display: none;
+            position: absolute;
+            top: 48px;
+            left: 0;
+            min-width: 180px;
+            background: #fff;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+            border-radius: 8px;
+            z-index: 2000;
+            padding: 8px 0;
+            flex-direction: column;
+        }
+        .system-switcher-dropdown:hover .system-dropdown,
+        .system-switcher-dropdown:focus-within .system-dropdown {
+            display: flex;
+        }
+        .system-dropdown .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            color: #495057;
+            text-decoration: none;
+            font-size: 0.98rem;
+            transition: background 0.2s, color 0.2s;
+            border: none;
+            background: none;
+        }
+        .system-dropdown .dropdown-item:hover {
+            background: #f0f4ff;
+            color: #667eea;
+        }
+
+        .admin-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .user-dropdown {
+            display: none;
+            position: absolute;
+            top: 45px;
+            right: 0;
+            min-width: 140px;
+            background: #fff;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+            border-radius: 8px;
+            z-index: 1001;
+            padding: 8px 0;
+            flex-direction: column;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            color: #495057;
+            text-decoration: none;
+            font-size: 0.98rem;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background: #f0f4ff;
+            color: #667eea;
+        }
+
+        .user-info:hover .user-dropdown {
+            display: flex;
+        }
+
+        .header-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s;
+        }
+
+        .header-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* 主体区域 */
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* 左侧菜单 */
+        .sidebar {
+            width: 250px;
+            background: white;
+            border-right: 1px solid #e9ecef;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+        }
+
+        .menu-section {
+            padding: 20px 0;
+        }
+
+        .menu-title {
+            padding: 0 20px 10px;
+            font-size: 0.8rem;
+            color: #6c757d;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: #495057;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .menu-item:hover {
+            background: #f8f9fa;
+            color: #2c3e50;
+        }
+
+        .menu-item.active {
+            background: #2c3e50;
+            color: white;
+        }
+
+        .menu-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* 主内容区域 */
+        .content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            background: #f5f7fa;
+        }
+
+        .content-header {
+            margin-bottom: 30px;
+        }
+
+        .content-title {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .content-subtitle {
+            color: #6c757d;
+            font-size: 1rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .card-icon.dark { background: #2c3e50; }
+        .card-icon.blue { background: #3498db; }
+        .card-icon.green { background: #27ae60; }
+        .card-icon.orange { background: #e67e22; }
+
+        .card-content {
+            color: #6c757d;
+            line-height: 1.6;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .space-switcher, .system-switcher {
+                display: none;
+            }
+            
+            .sidebar {
+                position: fixed;
+                left: -250px;
+                top: 60px;
+                height: calc(100vh - 60px);
+                z-index: 999;
+                transition: left 0.3s;
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <!-- 头部 -->
+        <header class="header">
+            <div class="header-left">
+                <div class="logo">
+                    <i class="fas fa-cogs"></i>
+                    <span>快哥智服</span>
+                </div>
+                <div class="space-switcher" style="margin-left: 60px;">
+                    <button class="space-btn" onclick="location.href='../personal/index.html'">
+                        <i class="fas fa-user"></i>
+                        个人空间
+                    </button>
+                    <button class="space-btn" onclick="location.href='../enterprise/index.html'">
+                        <i class="fas fa-building"></i>
+                        企业空间
+                    </button>
+                    <button class="space-btn active" onclick="location.href='index.html'">
+                        <i class="fas fa-tachometer-alt"></i>
+                        操作台
+                    </button>
+                </div>
+                <div class="system-switcher-dropdown" style="margin-left: 20px; position: relative;">
+                    <button class="space-btn" id="systemSwitcherBtn">
+                        <i class="fas fa-layer-group"></i>
+                        <span id="currentSystem">产品设备远程监测</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="system-dropdown" id="systemDropdown">
+                        <a href="#" class="dropdown-item" onclick="switchSystem('product')"><i class="fas fa-cube"></i> 产品设备远程监测</a>
+                        <a href="#" class="dropdown-item" onclick="switchSystem('device')"><i class="fas fa-server"></i> 设备远程监测运维</a>
+                    </div>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="user-info user-dropdown-trigger">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span>张三</span>
+                    <div class="user-dropdown">
+                        <a href="#" class="dropdown-item"><i class="fas fa-user-edit"></i> 个人资料</a>
+                        <a href="#" class="dropdown-item"><i class="fas fa-key"></i> 密码重置</a>
+                        <a href="#" class="dropdown-item"><i class="fas fa-shield-alt"></i> 安全设置</a>
+                    </div>
+                </div>
+                <button class="header-btn">
+                    <i class="fas fa-bell"></i>
+                    消息
+                </button>
+                <button class="header-btn">
+                    <i class="fas fa-cog"></i>
+                    设置
+                </button>
+                <button class="header-btn" onclick="location.href='../index.html'">
+                    <i class="fas fa-sign-out-alt"></i>
+                    退出
+                </button>
+            </div>
+        </header>
+
+        <!-- 主体区域 -->
+        <div class="main-container">
+            <!-- 左侧菜单 -->
+            <nav class="sidebar" id="productMenu">
+                <div class="menu-section">
+                    <div class="menu-title">产品概览</div>
+                    <div class="menu-item active">
+                        <i class="fas fa-home"></i>
+                        <span>产品概览</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">驾驶舱</div>
+                    <div class="menu-item">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>综合看板</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-desktop"></i>
+                        <span>产品设备实时监测看板</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">状态监测</div>
+                    <div class="menu-item">
+                        <i class="fas fa-play-circle"></i>
+                        <span>启停记录</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>故障分析</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-history"></i>
+                        <span>设备事记</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">数据报表</div>
+                    <div class="menu-item">
+                        <i class="fas fa-chart-line"></i>
+                        <span>设备监测</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-chart-area"></i>
+                        <span>历史趋势</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-pause-circle"></i>
+                        <span>停机分析</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-bell"></i>
+                        <span>告警分析</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>故障分析</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-heartbeat"></i>
+                        <span>健康趋势</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-file-alt"></i>
+                        <span>监测模板</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">预警管理</div>
+                    <div class="menu-item">
+                        <i class="fas fa-bell"></i>
+                        <span>预警记录</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-cog"></i>
+                        <span>预警配置</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">保养指南</div>
+                    <div class="menu-item">
+                        <i class="fas fa-plus"></i>
+                        <span>添加指南</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-list"></i>
+                        <span>保养指南列表</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">巡检指南</div>
+                    <div class="menu-item">
+                        <i class="fas fa-plus"></i>
+                        <span>添加指南</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-list"></i>
+                        <span>巡检指南列表</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">售后工单</div>
+                    <div class="menu-item">
+                        <i class="fas fa-tools"></i>
+                        <span>维修</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-cog"></i>
+                        <span>安装</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-sliders-h"></i>
+                        <span>调试</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-undo"></i>
+                        <span>退货</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span>换货</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">工单流程</div>
+                    <div class="menu-item">
+                        <i class="fas fa-plus"></i>
+                        <span>创建流程</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-list"></i>
+                        <span>流程列表</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">产品系列</div>
+                    <div class="menu-item">
+                        <i class="fas fa-tags"></i>
+                        <span>产品分类</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-cube"></i>
+                        <span>产品型号</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-file-alt"></i>
+                        <span>型号模板</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">产品设备</div>
+                    <div class="menu-item">
+                        <i class="fas fa-plus"></i>
+                        <span>添加产品设备</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-list"></i>
+                        <span>产品设备</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">终端设备</div>
+                    <div class="menu-item">
+                        <i class="fas fa-tags"></i>
+                        <span>终端分类</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-list"></i>
+                        <span>终端列表</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-cog"></i>
+                        <span>物模型配置</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-network-wired"></i>
+                        <span>通讯协议</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">知识库管理</div>
+                    <div class="menu-item">
+                        <i class="fas fa-tags"></i>
+                        <span>分类管理</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-list"></i>
+                        <span>分类列表</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-file-alt"></i>
+                        <span>文档列表</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">客户管理</div>
+                    <div class="menu-item">
+                        <i class="fas fa-plus"></i>
+                        <span>新增客户</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-list"></i>
+                        <span>客户列表</span>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- 设备远程监测运维菜单 -->
+            <nav class="sidebar" id="deviceMenu" style="display: none;">
+                <div class="menu-section">
+                    <div class="menu-title">设备概览</div>
+                    <div class="menu-item active">
+                        <i class="fas fa-home"></i>
+                        <span>设备概览</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">设备监测驾驶舱</div>
+                    <div class="menu-item">
+                        <i class="fas fa-industry"></i>
+                        <span>工厂设备综合监测</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-desktop"></i>
+                        <span>设备实时运行监测</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">告警管理</div>
+                    <div class="menu-item">
+                        <i class="fas fa-bell"></i>
+                        <span>告警记录</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-cog"></i>
+                        <span>告警配置</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">状态监测</div>
+                    <div class="menu-item">
+                        <i class="fas fa-play-circle"></i>
+                        <span>启停记录</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>故障分析</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-history"></i>
+                        <span>设备事记</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">数据报表</div>
+                    <div class="menu-item">
+                        <i class="fas fa-chart-line"></i>
+                        <span>设备监测</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-chart-area"></i>
+                        <span>历史趋势</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-pause-circle"></i>
+                        <span>停机分析</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-bell"></i>
+                        <span>告警分析</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>故障分析</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-heartbeat"></i>
+                        <span>健康趋势</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-file-alt"></i>
+                        <span>监测模板</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">保养管理</div>
+                    <div class="menu-item">
+                        <i class="fas fa-tools"></i>
+                        <span>保养工单</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-calendar-check"></i>
+                        <span>保养计划</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-cog"></i>
+                        <span>保养配置</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">巡检管理</div>
+                    <div class="menu-item">
+                        <i class="fas fa-search"></i>
+                        <span>巡检工单</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-calendar-check"></i>
+                        <span>巡检计划</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-route"></i>
+                        <span>巡检路线</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-cog"></i>
+                        <span>巡检配置</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">售后服务</div>
+                    <div class="menu-item">
+                        <i class="fas fa-tools"></i>
+                        <span>维修、调试、退货、换货</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-list"></i>
+                        <span>申请列表</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">工单流程</div>
+                    <div class="menu-item">
+                        <i class="fas fa-plus"></i>
+                        <span>创建流程</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-list"></i>
+                        <span>流程列表</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">设备管理</div>
+                    <div class="menu-item">
+                        <i class="fas fa-tags"></i>
+                        <span>设备分类</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-list"></i>
+                        <span>设备台账</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>设备位置</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">备品备件</div>
+                    <div class="menu-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>出入库审核</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-boxes"></i>
+                        <span>库存台账</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-user-cog"></i>
+                        <span>员工库存</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>员工领用总汇</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-cube"></i>
+                        <span>备件型号</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-tags"></i>
+                        <span>备件分类</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">终端管理</div>
+                    <div class="menu-item">
+                        <i class="fas fa-list"></i>
+                        <span>终端列表</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-tags"></i>
+                        <span>终端分类</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">通知管理</div>
+                    <div class="menu-item">
+                        <i class="fas fa-file-alt"></i>
+                        <span>通知模板</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-cog"></i>
+                        <span>通知配置</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">基础设置</div>
+                    <div class="menu-item">
+                        <i class="fas fa-box"></i>
+                        <span>货品类型</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-warehouse"></i>
+                        <span>仓库类型</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-cog"></i>
+                        <span>仓库设置</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-map"></i>
+                        <span>网点类型</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>异常类型</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-pause-circle"></i>
+                        <span>停机原因</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-clock"></i>
+                        <span>倒班管理</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-search"></i>
+                        <span>值班查询</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-users"></i>
+                        <span>班组管理</span>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- 主内容区域 -->
+            <main class="content" id="main-content">
+                <!-- 动态内容区域 -->
+            </main>
+        </div>
+    </div>
+    <script>
+    // 菜单项跳转映射
+    const menuMap = {
+        // 产品设备远程监测菜单
+        '产品概览': 'dashboard-content',
+        '综合看板': 'overview.html',
+        '产品设备实时监测看板': 'device-monitor.html',
+        '启停记录': 'start-stop.html',
+        '故障分析': 'fault-analysis.html',
+        '设备事记': 'device-events.html',
+        '设备监测': 'device-report.html',
+        '历史趋势': 'history-trend.html',
+        '停机分析': 'downtime-analysis.html',
+        '告警分析': 'alarm-analysis.html',
+        '健康趋势': 'health-trend.html',
+        '监测模板': 'monitor-template.html',
+        '预警记录': 'warning-record.html',
+        '预警配置': 'warning-config.html',
+        '添加指南': 'guide-add.html',
+        '保养指南列表': 'guide-list.html',
+        '巡检指南列表': 'inspection-guide-list.html',
+        '维修': 'repair.html',
+        '安装': 'install.html',
+        '调试': 'debug.html',
+        '退货': 'return.html',
+        '换货': 'exchange.html',
+        '创建流程': 'workflow-add.html',
+        '流程列表': 'workflow-list.html',
+        '产品分类': 'product-category.html',
+        '产品型号': 'product-model.html',
+        '型号模板': 'model-template.html',
+        '添加产品设备': 'device-add.html',
+        '产品设备': 'device-list.html',
+        '终端分类': 'terminal-category.html',
+        '终端列表': 'terminal-list.html',
+        '物模型配置': 'thing-model.html',
+        '通讯协议': 'protocol.html',
+        '分类管理': 'kb-category.html',
+        '分类列表': 'kb-category-list.html',
+        '文档列表': 'kb-doc-list.html',
+        '新增客户': 'customer-add.html',
+        '客户列表': 'customer-list.html',
+        // 设备远程监测运维菜单
+        '设备概览': 'dashboard-content',
+        '工厂设备综合监测': 'factory-monitor.html',
+        '设备实时运行监测': 'device-realtime.html',
+        '告警记录': 'alarm-record.html',
+        '告警配置': 'alarm-config.html',
+        '保养工单': 'maintenance-order.html',
+        '保养计划': 'maintenance-plan.html',
+        '保养配置': 'maintenance-config.html',
+        '巡检工单': 'inspection-order.html',
+        '巡检计划': 'inspection-plan.html',
+        '巡检路线': 'inspection-route.html',
+        '巡检配置': 'inspection-config.html',
+        '维修、调试、退货、换货': 'service-mix.html',
+        '申请列表': 'service-list.html',
+        '设备分类': 'device-category.html',
+        '设备台账': 'device-ledger.html',
+        '设备位置': 'device-location.html',
+        '出入库审核': 'stock-review.html',
+        '库存台账': 'stock-ledger.html',
+        '员工库存': 'staff-stock.html',
+        '员工领用总汇': 'staff-collect.html',
+        '备件型号': 'spare-model.html',
+        '备件分类': 'spare-category.html',
+        '终端列表': 'terminal-list.html',
+        '终端分类': 'terminal-category.html',
+        '通知模板': 'notice-template.html',
+        '通知配置': 'notice-config.html',
+        '货品类型': 'goods-type.html',
+        '仓库类型': 'warehouse-type.html',
+        '仓库设置': 'warehouse-config.html',
+        '网点类型': 'site-type.html',
+        '异常类型': 'exception-type.html',
+        '停机原因': 'downtime-reason.html',
+        '倒班管理': 'shift.html',
+        '值班查询': 'duty-query.html',
+        '班组管理': 'team.html'
+    };
+    // 动态加载内容
+    function loadContent(key) {
+        const main = document.getElementById('main-content');
+        if (key === 'dashboard-content') {
+            main.innerHTML = `...（原首页内容，略）...`;
+            return;
+        }
+        fetch(key)
+            .then(res => res.text())
+            .then(html => {
+                const temp = document.createElement('div');
+                temp.innerHTML = html;
+                const content = temp.querySelector('.main-content');
+                main.innerHTML = content ? content.outerHTML : '<div style=\'color:red\'>内容加载失败</div>';
+            })
+            .catch(() => {
+                main.innerHTML = '<div style=\'color:red\'>内容加载失败</div>';
+            });
+    }
+    window.addEventListener('DOMContentLoaded', function() {
+        loadContent('dashboard-content');
+        document.querySelectorAll('.menu-item').forEach(item => {
+            const text = item.innerText.trim();
+            if(menuMap[text]) {
+                item.style.cursor = 'pointer';
+                item.onclick = function() {
+                    document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+                    loadContent(menuMap[text]);
+                };
+            }
+        });
+    });
+    function switchSystem(type) {
+        var name = type === 'product' ? '产品设备远程监测' : '设备远程监测运维';
+        document.getElementById('currentSystem').textContent = name;
+        // 切换菜单
+        document.getElementById('productMenu').style.display = type === 'product' ? '' : 'none';
+        document.getElementById('deviceMenu').style.display = type === 'device' ? '' : 'none';
+        // 切换内容区为首页
+        loadContent('dashboard-content');
+        // 激活第一个菜单项
+        var activeMenu = (type === 'product' ? document.querySelector('#productMenu .menu-item') : document.querySelector('#deviceMenu .menu-item'));
+        document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+        if(activeMenu) activeMenu.classList.add('active');
+    }
+    </script>
+</body>
+</html> 

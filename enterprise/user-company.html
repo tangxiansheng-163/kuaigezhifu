@@ -1,0 +1,1636 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设备使用商认证 - 快哥智服平台</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            height: 100vh;
+        }
+
+        .layout {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* 头部样式 */
+        .header {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            color: white;
+            padding: 0 32px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .logo i {
+            color: #ffd700;
+        }
+
+        .space-switcher {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 40px;
+        }
+
+        .space-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            padding: 8px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .space-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .space-btn.active {
+            background: rgba(255,255,255,0.3);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .user-dropdown {
+            display: none;
+            position: absolute;
+            top: 45px;
+            right: 0;
+            min-width: 140px;
+            background: #fff;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+            border-radius: 8px;
+            z-index: 1001;
+            padding: 8px 0;
+            flex-direction: column;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            color: #495057;
+            text-decoration: none;
+            font-size: 0.98rem;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background: #f0f4ff;
+            color: #667eea;
+        }
+
+        .user-info:hover .user-dropdown {
+            display: flex;
+        }
+
+        .header-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .header-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .company-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 15px;
+        }
+
+        .company-selector span {
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .company-selector select {
+            padding: 6px 10px;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 4px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .company-selector select option {
+            background: #fff;
+            color: #333;
+        }
+
+        .company-selector select:focus {
+            outline: none;
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        /* 主体区域 */
+        .main-container {
+            display: flex;
+            flex: 1;
+        }
+
+        /* 左侧菜单 */
+        .sidebar {
+            width: 250px;
+            background: white;
+            border-right: 1px solid #e9ecef;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+        }
+
+        .menu-section {
+            padding: 20px 0;
+        }
+
+        .menu-title {
+            padding: 0 20px 10px;
+            font-size: 0.8rem;
+            color: #6c757d;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: #495057;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .menu-item:hover {
+            background: #f8f9fa;
+            color: #764ba2;
+        }
+
+        .menu-item.active {
+            background: #764ba2;
+            color: white;
+        }
+
+        .menu-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* 主内容区域 */
+        .content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            background: #f5f7fa;
+        }
+
+        .content-header {
+            margin-bottom: 30px;
+        }
+
+        .content-title {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .content-subtitle {
+            color: #6c757d;
+            font-size: 1rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .card-icon.purple { background: #764ba2; }
+        .card-icon.blue { background: #667eea; }
+        .card-icon.green { background: #28a745; }
+        .card-icon.orange { background: #fd7e14; }
+        .card-icon.red { background: #dc3545; }
+
+        .card-content {
+            color: #6c757d;
+            line-height: 1.6;
+        }
+        
+        .desc { 
+            color: #6c757d !important; 
+            font-size: 1rem !important; 
+            line-height: 1.6 !important; 
+            margin-bottom: 25px !important;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: #764ba2;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #663d8a;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #764ba2;
+            border: 1px solid #764ba2;
+        }
+
+        .btn-outline:hover {
+            background: #764ba2;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .btn-warning:hover {
+            background: #e0a800;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        
+        .position-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        /* 认证状态样式 */
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .status-not-applied {
+            background: #f8f9fa;
+            color: #6c757d;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-reviewing {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .status-approved {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-expired {
+            background: #f8f9fa;
+            color: #6c757d;
+        }
+
+        /* 审核进度条 */
+        .progress-container {
+            margin: 20px 0;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            position: relative;
+        }
+
+        .progress-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: #e9ecef;
+            z-index: 1;
+        }
+
+        .progress-step.completed:not(:last-child)::after {
+            background: #28a745;
+        }
+
+        .progress-step.current:not(:last-child)::after {
+            background: linear-gradient(to right, #28a745 50%, #e9ecef 50%);
+        }
+
+        .step-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: #6c757d;
+            position: relative;
+            z-index: 2;
+        }
+
+        .progress-step.completed .step-icon {
+            background: #28a745;
+            color: white;
+        }
+
+        .progress-step.current .step-icon {
+            background: #007bff;
+            color: white;
+        }
+
+        .step-label {
+            margin-top: 8px;
+            font-size: 0.8rem;
+            color: #6c757d;
+            text-align: center;
+        }
+
+        .progress-step.completed .step-label {
+            color: #28a745;
+            font-weight: 500;
+        }
+
+        .progress-step.current .step-label {
+            color: #007bff;
+            font-weight: 500;
+        }
+
+        /* 表格样式 */
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-top: 20px;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .table-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* 文件上传区域 */
+        .upload-area {
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            background: #f8f9fa;
+            margin: 15px 0;
+            transition: all 0.3s;
+        }
+
+        .upload-area:hover {
+            border-color: #764ba2;
+            background: #f0f4ff;
+        }
+
+        .upload-icon {
+            font-size: 2rem;
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .space-switcher {
+                display: none;
+            }
+            
+            .sidebar {
+                position: fixed;
+                left: -250px;
+                top: 60px;
+                height: calc(100vh - 60px);
+                z-index: 999;
+                transition: left 0.3s;
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .progress-steps {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .progress-step:not(:last-child)::after {
+                display: none;
+            }
+        }
+
+        .action-buttons {
+            flex-direction: column;
+        }
+
+        .action-buttons button:not(:last-child) {
+            margin-right: 10px;
+        }
+
+        /* 弹窗样式 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 99999;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(2px);
+        }
+        .modal {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #6c757d;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+        .modal-close:hover {
+            background: #f8f9fa;
+        }
+        .modal-body {
+            padding: 24px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+        .modal-footer {
+            padding: 20px 24px;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+         body.modal-open {
+            overflow: hidden;
+        }
+
+        /* 详情弹窗专属样式 */
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .detail-item {
+            background-color: #f8f9fa;
+            padding: 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: baseline;
+        }
+        .detail-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+        .detail-value {
+            color: #343a40;
+            font-weight: 600;
+            word-wrap: break-word;
+        }
+
+        .attachments-section {
+            margin-top: 24px;
+        }
+        .attachments-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #343a40;
+            font-size: 1.1rem;
+        }
+        .attachments-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .attachment-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 6px;
+            transition: background-color 0.2s;
+        }
+        .attachment-item:hover {
+            background-color: #f8f9fa;
+        }
+        .attachment-item i {
+            color: #764ba2;
+            margin-right: 12px;
+            font-size: 1.1rem;
+        }
+        .attachment-item a {
+            color: #495057;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .attachment-item a:hover {
+            text-decoration: underline;
+        }
+        .alert {
+            padding: 1rem 1.25rem;
+            margin-top: 1.5rem;
+            border: 1px solid transparent;
+            border-radius: .5rem;
+        }
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+
+        /* 自动补全样式 */
+        .autocomplete-container {
+            position: relative;
+        }
+        .autocomplete-suggestions {
+            position: absolute;
+            border: 1px solid #ddd;
+            border-top: none;
+            background: #fff;
+            width: 100%;
+            z-index: 100000;
+            max-height: 150px;
+            overflow-y: auto;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .suggestion-item {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .suggestion-item:hover {
+            background-color: #f0f4ff;
+        }
+
+        /* 文件上传样式 */
+        .upload-label-link {
+            color: #764ba2;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        .image-preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .preview-item {
+            position: relative;
+            width: 100px;
+            height: 100px;
+        }
+        .preview-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .remove-img-btn {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <header class="header">
+            <div class="header-left">
+                <div class="logo">
+                    <i class="fas fa-cogs"></i>
+                    <span>快哥智服</span>
+                </div>
+                <div class="space-switcher">
+                    <button class="space-btn" onclick="location.href='../personal/index.html'"><i class="fas fa-user"></i>个人空间</button>
+                    <button class="space-btn active" onclick="location.href='index.html'"><i class="fas fa-building"></i>企业空间</button>
+                    <button class="space-btn" onclick="location.href='../dashboard/index.html'"><i class="fas fa-tachometer-alt"></i>操作台</button>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="company-selector">
+                    <span>企业：</span>
+                    <select id="header-company-selector">
+                        <option value="company1">快哥智服科技有限公司</option>
+                        <option value="company2">智维技术服务有限公司</option>
+                        <option value="company3">快哥设备销售有限公司</option>
+                        <option value="company4">智服培训学院</option>
+                    </select>
+                </div>
+                <div class="user-info user-dropdown-trigger">
+                    <div class="user-avatar"><i class="fas fa-user"></i></div>
+                    <span>张三</span>
+                    <div class="user-dropdown">
+                        <a href="#" class="dropdown-item"><i class="fas fa-user-edit"></i> 个人资料</a>
+                        <a href="#" class="dropdown-item"><i class="fas fa-key"></i> 密码重置</a>
+                        <a href="#" class="dropdown-item"><i class="fas fa-shield-alt"></i> 安全设置</a>
+                    </div>
+                </div>
+                <button class="header-btn"><i class="fas fa-bell"></i>消息</button>
+                <button class="header-btn"><i class="fas fa-cog"></i>设置</button>
+                <button class="header-btn" onclick="location.href='../index.html'"><i class="fas fa-sign-out-alt"></i>退出</button>
+            </div>
+        </header>
+        <div class="main-container">
+            <nav class="sidebar">
+                <div class="menu-section">
+                    <div class="menu-title">企业管理</div>
+                    <div class="menu-item" onclick="location.href='overview.html'"><i class="fas fa-home"></i><span>企业概览</span></div>
+                    <div class="menu-item" onclick="location.href='staff.html'"><i class="fas fa-users-cog"></i><span>员工管理</span></div>
+                    <div class="menu-item" onclick="location.href='staff-review.html'"><i class="fas fa-user-check"></i><span>员工审核</span></div>
+                    <div class="menu-item" onclick="location.href='org-structure.html'"><i class="fas fa-sitemap"></i><span>组织结构</span></div>
+                    <div class="menu-item" onclick="location.href='position.html'"><i class="fas fa-briefcase"></i><span>岗位管理</span></div>
+                    <div class="menu-item" onclick="location.href='company-info.html'"><i class="fas fa-building"></i><span>企业资料</span></div>
+                </div>
+                <div class="menu-section">
+                    <div class="menu-title">角色管理</div>
+                    <div class="menu-item" onclick="location.href='role-list.html'"><i class="fas fa-user-tag"></i><span>角色列表</span></div>
+                    <div class="menu-item" onclick="location.href='permission.html'"><i class="fas fa-shield-alt"></i><span>权限管理</span></div>
+                </div>
+                <div class="menu-section">
+                    <div class="menu-title">合作企业</div>
+                    <div class="menu-item" onclick="location.href='after-sale.html'"><i class="fas fa-headset"></i><span>售后企业</span></div>
+                    <div class="menu-item" onclick="location.href='maintenance-company.html'"><i class="fas fa-tools"></i><span>维保企业</span></div>
+                </div>
+                <div class="menu-section">
+                    <div class="menu-title">资质认证</div>
+                    <div class="menu-item active" onclick="location.href='user-company.html'"><i class="fas fa-industry"></i><span>设备使用商</span></div>
+                    <div class="menu-item" onclick="location.href='manufacturer-fixed.html'"><i class="fas fa-cogs"></i><span>设备厂商</span></div>
+                    <div class="menu-item" onclick="location.href='maintenance-provider.html'"><i class="fas fa-wrench"></i><span>维保服务商</span></div>
+                    <div class="menu-item" onclick="location.href='auth-shop.html'"><i class="fas fa-store-alt"></i><span>商家认证</span></div>
+                </div>
+                <div class="menu-section">
+                    <div class="menu-title">企业管理员</div>
+                    <div class="menu-item" onclick="location.href='admin.html'"><i class="fas fa-user-shield"></i><span>管理员管理</span></div>
+                </div>
+                <div class="menu-section">
+                    <div class="menu-title">系统设置</div>
+                    <div class="menu-item" onclick="location.href='system-config.html'"><i class="fas fa-cogs"></i><span>系统配置</span></div>
+                    <div class="menu-item" onclick="location.href='system-log.html'"><i class="fas fa-file-alt"></i><span>系统日志</span></div>
+                    <div class="menu-item" onclick="location.href='system-cache.html'"><i class="fas fa-database"></i><span>系统缓存</span></div>
+                    <div class="menu-item" onclick="location.href='system-icon.html'"><i class="fas fa-images"></i><span>系统图标</span></div>
+                </div>
+            </nav>
+            <main class="content">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:25px;">
+                    <h1 class="content-title">设备使用商认证</h1>
+                    <button class="btn btn-primary" data-action="open-apply-modal"><i class="fas fa-plus"></i>申请认证</button>
+                </div>
+                <div class="desc">向平台申请设备使用商资质认证，获得相关业务权限和合作资格</div>
+                
+                <!-- 当前认证状态 -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <div class="card-title">当前认证状态</div>
+                        <div class="card-icon blue"><i class="fas fa-certificate"></i></div>
+                    </div>
+                    <div class="card-content">
+                        <div style="display:flex;align-items:center;gap:20px;margin-bottom:20px;">
+                            <span class="status-badge status-approved" style="font-size:1rem;padding:8px 16px;">已认证</span>
+                            <div>
+                                <div style="font-weight:500;color:#333;">认证有效期至：2025-01-15</div>
+                                <div style="font-size:0.9rem;color:#6c757d;">认证编号：UQ202401150001</div>
+                            </div>
+                        </div>
+                        <div class="progress-steps">
+                            <div class="progress-step completed">
+                                <div class="step-icon"><i class="fas fa-check"></i></div>
+                                <div class="step-label">提交申请</div>
+                            </div>
+                            <div class="progress-step completed">
+                                <div class="step-icon"><i class="fas fa-check"></i></div>
+                                <div class="step-label">资料初审</div>
+                            </div>
+                            <div class="progress-step completed">
+                                <div class="step-icon"><i class="fas fa-check"></i></div>
+                                <div class="step-label">现场核查</div>
+                            </div>
+                            <div class="progress-step completed">
+                                <div class="step-icon"><i class="fas fa-check"></i></div>
+                                <div class="step-label">认证通过</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 认证申请记录 -->
+                <div class="table-container">
+                    <div class="table-header">
+                        <div class="table-title">认证申请记录</div>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>申请单号</th>
+                                <th>申请企业</th>
+                                <th>申请人</th>
+                                <th>申请时间</th>
+                                <th>截止时间</th>
+                                <th>认证状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cert-table-body">
+                            <!-- 表格内容将通过JS动态填充 -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 认证申请指南 -->
+                <div class="dashboard-card" style="margin-top:20px;">
+                    <div class="card-header">
+                        <div class="card-title">认证申请指南</div>
+                        <div class="card-icon green"><i class="fas fa-info-circle"></i></div>
+                    </div>
+                    <div class="card-content">
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:15px;margin-bottom:20px;">
+                            <div style="padding:15px;background:#f8f9fa;border-radius:8px;">
+                                <div style="font-weight:600;color:#333;margin-bottom:8px;">申请条件</div>
+                                <div style="font-size:0.9rem;color:#6c757d;">
+                                    • 具有独立法人资格<br>
+                                    • 注册资本不低于100万元<br>
+                                    • 具备设备使用相关经验<br>
+                                    • 无重大违法违规记录
+                                </div>
+                            </div>
+                            <div style="padding:15px;background:#f8f9fa;border-radius:8px;">
+                                <div style="font-weight:600;color:#333;margin-bottom:8px;">所需资料</div>
+                                <div style="font-size:0.9rem;color:#6c757d;">
+                                    • 营业执照副本<br>
+                                    • 组织机构代码证<br>
+                                    • 税务登记证<br>
+                                    • 设备使用相关资质
+                                </div>
+                            </div>
+                            <div style="padding:15px;background:#f8f9fa;border-radius:8px;">
+                                <div style="font-weight:600;color:#333;margin-bottom:8px;">审核流程</div>
+                                <div style="font-size:0.9rem;color:#6c757d;">
+                                    • 资料初审：1-2个工作日<br>
+                                    • 现场核查：3-5个工作日<br>
+                                    • 最终审核：1-2个工作日<br>
+                                    • 总计：5-9个工作日
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 认证权益说明 -->
+                <div class="dashboard-card" style="margin-top:20px;">
+                    <div class="card-header">
+                        <div class="card-title">认证权益</div>
+                        <div class="card-icon purple"><i class="fas fa-gift"></i></div>
+                    </div>
+                    <div class="card-content">
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;">
+                            <div style="text-align:center;padding:15px;background:#f8f9fa;border-radius:8px;">
+                                <div style="font-size:2rem;color:#764ba2;margin-bottom:8px;"><i class="fas fa-handshake"></i></div>
+                                <div style="font-weight:600;color:#333;margin-bottom:5px;">优先合作</div>
+                                <div style="font-size:0.9rem;color:#6c757d;">获得平台优先推荐</div>
+                            </div>
+                            <div style="text-align:center;padding:15px;background:#f8f9fa;border-radius:8px;">
+                                <div style="font-size:2rem;color:#28a745;margin-bottom:8px;"><i class="fas fa-percentage"></i></div>
+                                <div style="font-weight:600;color:#333;margin-bottom:5px;">优惠费率</div>
+                                <div style="font-size:0.9rem;color:#6c757d;">享受平台服务优惠</div>
+                            </div>
+                            <div style="text-align:center;padding:15px;background:#f8f9fa;border-radius:8px;">
+                                <div style="font-size:2rem;color:#667eea;margin-bottom:8px;"><i class="fas fa-headset"></i></div>
+                                <div style="font-weight:600;color:#333;margin-bottom:5px;">专属服务</div>
+                                <div style="font-size:0.9rem;color:#6c757d;">获得专属客服支持</div>
+                            </div>
+                            <div style="text-align:center;padding:15px;background:#f8f9fa;border-radius:8px;">
+                                <div style="font-size:2rem;color:#fd7e14;margin-bottom:8px;"><i class="fas fa-chart-line"></i></div>
+                                <div style="font-weight:600;color:#333;margin-bottom:5px;">数据洞察</div>
+                                <div style="font-size:0.9rem;color:#6c757d;">获得行业数据分析</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- 申请认证弹窗 -->
+    <div class="modal-overlay" id="applyCertModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">申请设备使用商认证</h3>
+                <button class="modal-close" data-action="close-modal" data-target="#applyCertModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="applyCertForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">企业名称 *</label>
+                            <div class="autocomplete-container">
+                                <input type="text" class="form-input" id="companyName" required autocomplete="off">
+                                <div class="autocomplete-suggestions" id="companyNameSuggestions"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">统一社会信用代码 *</label>
+                            <input type="text" class="form-input" id="creditCode" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">法定代表人 *</label>
+                            <input type="text" class="form-input" id="legalPerson" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">注册资本 *</label>
+                            <input type="text" class="form-input" id="registeredCapital" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">成立日期 *</label>
+                            <input type="date" class="form-input" id="establishDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">经营范围 *</label>
+                            <input type="text" class="form-input" id="businessScope" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">联系人 *</label>
+                            <input type="text" class="form-input" id="contactPerson" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">联系电话 *</label>
+                            <input type="tel" class="form-input" id="contactPhone" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">企业地址 *</label>
+                        <input type="text" class="form-input" id="companyAddress" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">设备使用类型 *</label>
+                        <select class="form-select" id="equipmentType" required>
+                            <option value="">请选择设备类型</option>
+                            <option value="manufacturing">制造设备</option>
+                            <option value="testing">检测设备</option>
+                            <option value="processing">加工设备</option>
+                            <option value="automation">自动化设备</option>
+                            <option value="other">其他设备</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">设备使用经验 *</label>
+                        <textarea class="form-textarea" id="equipmentExperience" placeholder="请描述企业的设备使用经验和相关资质" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">申请说明</label>
+                        <textarea class="form-textarea" id="applyReason" placeholder="请说明申请认证的原因和用途"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">资质证书上传 *</label>
+                        <div class="upload-area" id="cert-upload-area">
+                            <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                            <p>将图片拖到此处，或<label for="cert-file-input" class="upload-label-link">点击上传</label></p>
+                            <input type="file" id="cert-file-input" multiple accept="image/*" style="display: none;">
+                        </div>
+                        <div class="image-preview-container" id="cert-image-preview"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-action="close-modal" data-target="#applyCertModal">取消</button>
+                <button class="btn btn-primary" data-action="submit-application">提交申请</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 查看详情弹窗 -->
+    <div class="modal-overlay" id="viewDetailModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">认证详情</h3>
+                <button class="modal-close" data-action="close-modal" data-target="#viewDetailModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="certDetailContent">
+                    <!-- 详情内容将通过JS动态填充 -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" data-action="close-modal" data-target="#viewDetailModal">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 续期申请弹窗 -->
+    <div class="modal-overlay" id="renewalModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">续期申请</h3>
+                <button class="modal-close" data-action="close-modal" data-target="#renewalModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="renewalForm">
+                    <div class="form-group">
+                        <label class="form-label">当前认证编号</label>
+                        <input type="text" class="form-input" id="currentCertNo" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">到期时间</label>
+                        <input type="text" class="form-input" id="expiryDate" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">续期时长 *</label>
+                        <select class="form-select" id="renewalPeriod" required>
+                            <option value="">请选择续期时长</option>
+                            <option value="1">1年</option>
+                            <option value="2">2年</option>
+                            <option value="3">3年</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">续期原因</label>
+                        <textarea class="form-textarea" id="renewalReason" placeholder="请说明续期申请的原因"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">更新资料</label>
+                        <div class="file-upload-area">
+                            <div class="file-upload-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <div class="file-upload-text">点击或拖拽文件到此处上传</div>
+                            <button type="button" class="file-upload-btn">选择文件</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" data-action="close-modal" data-target="#renewalModal">取消</button>
+                <button class="btn-save" data-action="submit-renewal">提交续期</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // 模拟数据
+            const certRequests = [
+                { id: 'SQ20240701001', company: '上海第一人民医院', applicant: '张三 (ZHANGSAN001)', requestDate: '2024-07-01', status: 'pending', details: { '统一社会信用代码': '91310000MA1K3B0X3G', '法人代表': '李四', '公司地址': '上海市松江区新松江路558号', '联系电话': '021-12345678' }, files: [{ name: '营业执照.jpg', url: '#' }, { name: '法人身份证.pdf', url: '#' }] },
+                { id: 'SQ20240615003', company: '北京协和医院', applicant: '王五 (WANGWU002)', requestDate: '2024-06-15', deadline: '2025-06-14', status: 'approved', details: { '统一社会信用代码': '91110000MA01K9B82N', '法人代表': '赵六', '公司地址': '北京市东城区帅府园一号', '联系电话': '010-87654321' }, files: [{ name: '营业执照.jpg', url: '#' }] },
+                { id: 'SQ20240520010', company: '华西医院', applicant: '刘二 (LIUER005)', requestDate: '2024-05-20', status: 'rejected', details: { '统一社会信用代码': '91510100MA61W1YJ2E', '法人代表': '孙七', '公司地址': '四川省成都市武侯区国学巷37号', '联系电话': '028-98765432' }, files: [] }
+            ];
+    
+            let currentApplicationIndex = -1;
+            let uploadedFiles = [];
+            const mockCompanyNames = [
+                "上海第一人民医院", "北京协和医院", "华西医院", "瑞金医院", "中山大学附属第一医院",
+                "复旦大学附属中山医院", "浙江大学医学院附属第二医院", "空军军医大学西京医院",
+                "华中科技大学同济医学院附属同济医院", "中南大学湘雅医院"
+            ];
+    
+            // --- DOM 元素 ---
+            const modal = document.getElementById('details-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalBody = document.getElementById('modal-body');
+            const modalOverlay = document.getElementById('modal-overlay');
+            const modalFooter = document.getElementById('modal-footer');
+            
+            // --- 核心弹窗函数 ---
+            function openModal(modalElement) {
+                if (!modalElement) return;
+                modalElement.style.display = 'flex';
+                document.body.classList.add('modal-open');
+            }
+    
+            function closeModal(modalElement) {
+                if (!modalElement) return;
+                modalElement.style.display = 'none';
+                // Only remove modal-open class if no other modals are open
+                if (document.querySelectorAll('.modal-overlay[style*="display: flex"]').length === 0) {
+                     document.body.classList.remove('modal-open');
+                }
+            }
+            
+            // --- 业务逻辑函数 ---
+            function showDetails(index) {
+                if(index === undefined) return;
+                currentApplicationIndex = index;
+                const app = certRequests[index];
+                if (!app) return;
+    
+                modalTitle.textContent = `认证详情 - ${app.company}`;
+
+                const filesHTML = app.files.map(file => `
+                    <li class="attachment-item">
+                        <i class="fas fa-file-alt"></i>
+                        <a href="${file.url}" class="file-link">${file.name}</a>
+                    </li>
+                `).join('');
+
+                modalBody.innerHTML = `
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <span class="detail-label">申请单号:</span>
+                            <span class="detail-value">${app.id}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">申请公司:</span>
+                            <span class="detail-value">${app.company}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">申请人:</span>
+                            <span class="detail-value">${app.applicant}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">联系人:</span>
+                            <span class="detail-value">${app.details.contact}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">联系电话:</span>
+                            <span class="detail-value">${app.details.phone}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">认证类型:</span>
+                            <span class="detail-value">${app.details.type}</span>
+                        </div>
+                        <div class="detail-item" style="grid-column: 1 / -1; display: block;">
+                            <span class="detail-label">公司地址:</span>
+                            <span class="detail-value">${app.details.address}</span>
+                        </div>
+                    </div>
+
+                    <div class="attachments-section">
+                        <h4 class="attachments-title">提交附件</h4>
+                        <ul class="attachments-list">
+                            ${filesHTML}
+                        </ul>
+                    </div>
+                    ${app.status === 'rejected' ? `<div class="alert alert-danger"><strong>驳回原因:</strong> ${app.details.reason}</div>` : ''}
+                `;
+
+                 modalFooter.innerHTML = `
+                    <button class="btn btn-secondary" data-action="close">关闭</button>
+                `;
+                openModal(document.getElementById('modal-overlay'));
+            }
+            
+            function showWithdrawDialog(index) {
+                if(index === undefined) return;
+                currentApplicationIndex = index;
+                const app = certRequests[index];
+                if (!app) return;
+    
+                modalTitle.textContent = '撤回申请';
+                modalBody.innerHTML = `<p>您确定要撤回 <strong>${app.company}</strong> 的认证申请吗？</p>`;
+                modalFooter.innerHTML = `
+                    <button class="btn btn-secondary" data-action="close">取消</button>
+                    <button id="confirm-withdraw-btn" class="btn btn-warning">确认撤回</button>
+                `;
+                openModal(document.getElementById('modal-overlay'));
+            }
+
+            function handleWithdraw() {
+                if (currentApplicationIndex === -1) return;
+                console.log(`Withdrawing application ${certRequests[currentApplicationIndex].id}`);
+                // 在实际应用中，这里会调用API
+                certRequests.splice(currentApplicationIndex, 1);
+                renderTable(certRequests);
+                closeModal(document.getElementById('modal-overlay'));
+            }
+
+            function showDeleteDialog(index) {
+                if(index === undefined) return;
+                currentApplicationIndex = index;
+                const app = certRequests[index];
+                if (!app) return;
+
+                modalTitle.textContent = '删除记录';
+                modalBody.innerHTML = `<p>您确定要删除 <strong>${app.company}</strong> 的这条申请记录吗？此操作不可恢复。</p>`;
+                modalFooter.innerHTML = `
+                    <button class="btn btn-secondary" data-action="close">取消</button>
+                    <button id="confirm-delete-btn" class="btn btn-danger">确认删除</button>
+                `;
+                openModal(document.getElementById('modal-overlay'));
+            }
+
+            function handleDelete() {
+                if (currentApplicationIndex === -1) return;
+                console.log(`Deleting application ${certRequests[currentApplicationIndex].id}`);
+                // 在实际应用中，这里会调用API
+                certRequests.splice(currentApplicationIndex, 1);
+                renderTable(certRequests);
+                closeModal(document.getElementById('modal-overlay'));
+            }
+
+            function submitApplication() {
+                // 在这里添加表单验证和提交逻辑
+                if (uploadedFiles.length === 0) {
+                    alert('请上传资质证书！');
+                    return;
+                }
+                alert(`申请已提交！共上传了 ${uploadedFiles.length} 个文件。`);
+                const form = document.getElementById('applyCertForm');
+                const modal = document.getElementById('applyCertModal');
+                closeModal(modal);
+                form.reset();
+                document.getElementById('cert-image-preview').innerHTML = '';
+                uploadedFiles = [];
+            }
+    
+            // --- 渲染函数 ---
+            function renderTable(data) {
+                const tableBody = document.getElementById('cert-table-body');
+                if(!tableBody) return;
+                tableBody.innerHTML = '';
+                data.forEach((app, index) => {
+                    const row = document.createElement('tr');
+                    const statusMap = {
+                        pending: { text: '待审核', class: 'status-pending' },
+                        approved: { text: '已通过', class: 'status-approved' },
+                        rejected: { text: '已驳回', class: 'status-rejected' }
+                    };
+
+                    let actionButtonsHTML = `<button class="btn btn-sm btn-outline" data-action="view" data-index="${index}"><i class="fas fa-eye"></i> 查看</button>`;
+                    if (app.status === 'pending') {
+                        actionButtonsHTML += ` <button class="btn btn-sm btn-warning" data-action="withdraw" data-index="${index}"><i class="fas fa-undo"></i> 撤回</button>`;
+                    } else if (app.status === 'rejected') {
+                        actionButtonsHTML += ` <button class="btn btn-sm btn-danger" data-action="delete" data-index="${index}"><i class="fas fa-trash"></i> 删除</button>`;
+                    }
+
+                    row.innerHTML = `
+                        <td>${app.id}</td>
+                        <td><strong>${app.company}</strong></td>
+                        <td>${app.applicant}</td>
+                        <td>${app.requestDate}</td>
+                        <td>${app.deadline || ' - '}</td>
+                        <td><span class="status-badge ${statusMap[app.status].class}">${statusMap[app.status].text}</span></td>
+                        <td class="action-buttons">
+                           ${actionButtonsHTML}
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+    
+            // --- 主事件委托监听器 ---
+            document.body.addEventListener('click', function(event) {
+                // 弹窗内部的按钮事件
+                if (event.target.id === 'confirm-withdraw-btn') {
+                    handleWithdraw();
+                    return;
+                }
+                if (event.target.id === 'confirm-delete-btn') {
+                    handleDelete();
+                    return;
+                }
+    
+                const target = event.target.closest('[data-action]');
+                
+                // 关闭弹窗的逻辑
+                if (!target && event.target.classList.contains('modal-overlay')) {
+                    closeModal(event.target);
+                    // Also close the main details modal if it's open
+                    if (document.getElementById('modal-overlay').style.display === 'flex') {
+                        closeModal(document.getElementById('modal-overlay'));
+                    }
+                    return;
+                }
+                
+                if(!target) return;
+    
+                const action = target.dataset.action;
+                const index = target.dataset.index;
+    
+                switch (action) {
+                    case 'view':
+                        showDetails(parseInt(index, 10));
+                        break;
+                    case 'withdraw':
+                        showWithdrawDialog(parseInt(index, 10));
+                        break;
+                    case 'delete':
+                        showDeleteDialog(parseInt(index, 10));
+                        break;
+                    case 'close':
+                        closeModal(document.getElementById('modal-overlay'));
+                        break;
+                    case 'open-apply-modal':
+                        openModal(document.getElementById('applyCertModal'));
+                        break;
+                    case 'close-modal':
+                        const modalToClose = document.querySelector(target.dataset.target);
+                        closeModal(modalToClose);
+                        break;
+                    case 'submit-application':
+                        submitApplication();
+                        break;
+                }
+            });
+            
+            // --- 自动补全逻辑 ---
+            const companyNameInput = document.getElementById('companyName');
+            const suggestionsContainer = document.getElementById('companyNameSuggestions');
+
+            companyNameInput.addEventListener('input', () => {
+                const query = companyNameInput.value.toLowerCase();
+                if (!query) {
+                    suggestionsContainer.innerHTML = '';
+                    suggestionsContainer.style.display = 'none';
+                    return;
+                }
+                const filteredCompanies = mockCompanyNames.filter(name => name.toLowerCase().includes(query));
+                
+                if (filteredCompanies.length > 0) {
+                    suggestionsContainer.innerHTML = filteredCompanies.map(name => `<div class="suggestion-item">${name}</div>`).join('');
+                    suggestionsContainer.style.display = 'block';
+                } else {
+                    suggestionsContainer.style.display = 'none';
+                }
+            });
+
+            suggestionsContainer.addEventListener('click', (e) => {
+                if (e.target.classList.contains('suggestion-item')) {
+                    companyNameInput.value = e.target.textContent;
+                    suggestionsContainer.innerHTML = '';
+                    suggestionsContainer.style.display = 'none';
+                }
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!companyNameInput.contains(e.target)) {
+                     suggestionsContainer.style.display = 'none';
+                }
+            });
+
+            // --- 文件上传逻辑 ---
+            const uploadArea = document.getElementById('cert-upload-area');
+            const fileInput = document.getElementById('cert-file-input');
+            const imagePreviewContainer = document.getElementById('cert-image-preview');
+
+            uploadArea.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', () => handleFileUpload(fileInput.files));
+            
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }, false);
+            });
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, () => uploadArea.classList.add('hover'));
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, () => uploadArea.classList.remove('hover'));
+            });
+
+            uploadArea.addEventListener('drop', (e) => {
+                handleFileUpload(e.dataTransfer.files);
+            });
+
+            function handleFileUpload(files) {
+                for (const file of files) {
+                    if (file.type.startsWith('image/')) {
+                        if (!uploadedFiles.some(f => f.name === file.name && f.size === file.size)) {
+                            const newIndex = uploadedFiles.length;
+                            uploadedFiles.push(file);
+                            createImagePreview(file, newIndex);
+                        }
+                    }
+                }
+            }
+
+            function createImagePreview(file, index) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const previewItem = document.createElement('div');
+                    previewItem.className = 'preview-item';
+                    previewItem.innerHTML = `
+                        <img src="${e.target.result}" class="preview-img" title="${file.name}">
+                        <button class="remove-img-btn" data-index="${index}">&times;</button>
+                    `;
+                    imagePreviewContainer.appendChild(previewItem);
+                };
+                reader.readAsDataURL(file);
+            }
+
+            imagePreviewContainer.addEventListener('click', (e) => {
+                if (e.target.classList.contains('remove-img-btn')) {
+                    const indexToRemove = parseInt(e.target.dataset.index, 10);
+                    
+                    // This is a simplified removal. For production, a more robust solution is needed
+                    // as indices will shift. For this demo, we'll just remove visually and from array.
+                    uploadedFiles.splice(indexToRemove, 1); 
+                    
+                    // Re-render previews to fix indices
+                    imagePreviewContainer.innerHTML = '';
+                    uploadedFiles.forEach((file, newIndex) => {
+                        createImagePreview(file, newIndex);
+                    });
+                }
+            });
+
+            // --- 初始化 ---
+            renderTable(certRequests);
+        });
+    </script>
+        
+    <!-- 通用弹窗 -->
+    <div class="modal-overlay" id="modal-overlay" style="display:none;">
+        <div class="modal" id="details-modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-title">详情</h3>
+                <button class="modal-close" data-action="close">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- 内容将通过JS动态填充 -->
+            </div>
+            <div class="modal-footer" id="modal-footer">
+                <!-- 按钮将通过JS动态填充 -->
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

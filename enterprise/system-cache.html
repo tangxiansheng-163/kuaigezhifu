@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统缓存 - 快哥智服平台</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .layout {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* 头部样式 */
+        .header {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            color: white;
+            padding: 0 32px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .logo i {
+            color: #ffd700;
+        }
+
+        .space-switcher {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 40px;
+        }
+
+        .space-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            padding: 8px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .space-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .space-btn.active {
+            background: rgba(255,255,255,0.3);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .user-dropdown {
+            display: none;
+            position: absolute;
+            top: 45px;
+            right: 0;
+            min-width: 140px;
+            background: #fff;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+            border-radius: 8px;
+            z-index: 1001;
+            padding: 8px 0;
+            flex-direction: column;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            color: #495057;
+            text-decoration: none;
+            font-size: 0.98rem;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background: #f0f4ff;
+            color: #667eea;
+        }
+
+        .user-info:hover .user-dropdown {
+            display: flex;
+        }
+
+        .header-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .header-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .company-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 15px;
+        }
+
+        .company-selector span {
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .company-selector select {
+            padding: 6px 10px;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 4px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .company-selector select option {
+            background: #fff;
+            color: #333;
+        }
+
+        .company-selector select:focus {
+            outline: none;
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        /* 主体区域 */
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* 左侧菜单 */
+        .sidebar {
+            width: 250px;
+            background: white;
+            border-right: 1px solid #e9ecef;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+        }
+
+        .menu-section {
+            padding: 20px 0;
+        }
+
+        .menu-title {
+            padding: 0 20px 10px;
+            font-size: 0.8rem;
+            color: #6c757d;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: #495057;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .menu-item:hover {
+            background: #f8f9fa;
+            color: #764ba2;
+        }
+
+        .menu-item.active {
+            background: #764ba2;
+            color: white;
+        }
+
+        .menu-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* 主内容区域 */
+        .content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            background: #f5f7fa;
+            z-index: 1;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+
+        .header-content {
+            flex: 1;
+        }
+
+        .content-title {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .content-subtitle {
+            color: #6c757d;
+            font-size: 1rem;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .cache-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .cache-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .section-title i {
+            color: #764ba2;
+        }
+
+        .cache-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .cache-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .cache-card:hover {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: white;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .card-icon.purple { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card-icon.orange { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .card-icon.blue { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .card-icon.green { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .cache-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .cache-item:last-child {
+            border-bottom: none;
+        }
+
+        .cache-label {
+            font-weight: 500;
+            color: #495057;
+            flex-shrink: 0;
+        }
+
+        .cache-value {
+            color: #333;
+            text-align: right;
+            flex: 1;
+            margin-left: 15px;
+        }
+
+        .status-enabled {
+            color: #28a745;
+            font-weight: 500;
+        }
+
+        .status-disabled {
+            color: #dc3545;
+            font-weight: 500;
+        }
+
+        .status-normal {
+            color: #17a2b8;
+            font-weight: 500;
+        }
+
+        .status-good {
+            color: #28a745;
+            font-weight: 500;
+        }
+
+        .status-excellent {
+            color: #20c997;
+            font-weight: 500;
+        }
+
+        .card-actions {
+            padding: 15px 20px;
+            background: white;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .cache-help {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-top: 30px;
+        }
+
+        .help-header {
+            margin-bottom: 25px;
+        }
+
+        .help-header h3 {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .help-header p {
+            color: #6c757d;
+            margin: 0;
+        }
+
+        .help-content {
+            color: #6c757d;
+            line-height: 1.6;
+        }
+
+        .help-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .help-item h4 {
+            color: #333;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1rem;
+        }
+
+        .help-item h4 i {
+            color: #764ba2;
+        }
+
+        .help-item p {
+            margin-bottom: 8px;
+        }
+
+        .help-item p:last-child {
+            margin-bottom: 0;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        
+        .btn-primary {
+            background: #764ba2;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #6a4190;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: #764ba2;
+            border: 1px solid #764ba2;
+        }
+        .btn-outline:hover { 
+            background-color: rgba(118, 75, 162, 0.05); 
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .system-notice {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #1976d2;
+        }
+
+        .system-notice i {
+            font-size: 1.2rem;
+            color: #1976d2;
+        }
+
+        .system-notice .notice-text {
+            flex: 1;
+        }
+
+        .system-notice .notice-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .system-notice .notice-desc {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .space-switcher {
+                display: none;
+            }
+            
+            .sidebar {
+                position: fixed;
+                left: -250px;
+                top: 60px;
+                height: calc(100vh - 60px);
+                z-index: 999;
+                transition: left 0.3s;
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .content-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .header-actions {
+                justify-content: flex-start;
+                flex-wrap: wrap;
+            }
+
+            .cache-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .help-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cache-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            .cache-value {
+                text-align: left;
+                margin-left: 0;
+            }
+
+            .card-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <!-- 头部 -->
+        <header class="header">
+            <div class="header-left">
+                <div class="logo">
+                    <i class="fas fa-cogs"></i>
+                    <span>快哥智服</span>
+                </div>
+                <div class="space-switcher">
+                    <button class="space-btn" onclick="location.href='../personal/index.html'">
+                        <i class="fas fa-user"></i>
+                        个人空间
+                    </button>
+                    <button class="space-btn active" onclick="location.href='index.html'">
+                        <i class="fas fa-building"></i>
+                        企业空间
+                    </button>
+                    <button class="space-btn" onclick="location.href='../dashboard/index.html'">
+                        <i class="fas fa-tachometer-alt"></i>
+                        操作台
+                    </button>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="company-selector">
+                    <span>企业：</span>
+                    <select id="header-company-selector">
+                        <option value="company1">快哥智服科技有限公司</option>
+                        <option value="company2">智维技术服务有限公司</option>
+                        <option value="company3">快哥设备销售有限公司</option>
+                        <option value="company4">智服培训学院</option>
+                    </select>
+                </div>
+                <div class="user-info user-dropdown-trigger">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span>张三</span>
+                    <div class="user-dropdown">
+                        <a href="#" class="dropdown-item"><i class="fas fa-user-edit"></i> 个人资料</a>
+                        <a href="#" class="dropdown-item"><i class="fas fa-key"></i> 密码重置</a>
+                        <a href="#" class="dropdown-item"><i class="fas fa-shield-alt"></i> 安全设置</a>
+                    </div>
+                </div>
+                <button class="header-btn">
+                    <i class="fas fa-bell"></i>
+                    消息
+                </button>
+                <button class="header-btn">
+                    <i class="fas fa-cog"></i>
+                    设置
+                </button>
+                <button class="header-btn" onclick="location.href='../index.html'">
+                    <i class="fas fa-sign-out-alt"></i>
+                    退出
+                </button>
+            </div>
+        </header>
+
+        <!-- 主体区域 -->
+        <div class="main-container">
+            <!-- 左侧菜单 -->
+            <nav class="sidebar">
+                <div class="menu-section">
+                    <div class="menu-title">企业管理</div>
+                    <div class="menu-item" onclick="location.href='overview.html'">
+                        <i class="fas fa-home"></i>
+                        <span>企业概览</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='staff.html'">
+                        <i class="fas fa-users-cog"></i>
+                        <span>员工管理</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='staff-review.html'">
+                        <i class="fas fa-user-check"></i>
+                        <span>员工审核</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='org-structure.html'">
+                        <i class="fas fa-sitemap"></i>
+                        <span>组织结构</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='position.html'">
+                        <i class="fas fa-briefcase"></i>
+                        <span>岗位管理</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='company-info.html'">
+                        <i class="fas fa-building"></i>
+                        <span>企业资料</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">角色管理</div>
+                    <div class="menu-item" onclick="location.href='role-list.html'">
+                        <i class="fas fa-user-tag"></i>
+                        <span>角色列表</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='permission.html'">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>权限管理</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">合作企业</div>
+                    <div class="menu-item" onclick="location.href='after-sale.html'">
+                        <i class="fas fa-headset"></i>
+                        <span>售后企业</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='maintenance-company.html'">
+                        <i class="fas fa-tools"></i>
+                        <span>维保企业</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">资质认证</div>
+                    <div class="menu-item" onclick="location.href='user-company.html'">
+                        <i class="fas fa-industry"></i>
+                        <span>设备使用商</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='manufacturer-fixed.html'">
+                        <i class="fas fa-cogs"></i>
+                        <span>设备厂商</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='maintenance-provider.html'">
+                        <i class="fas fa-wrench"></i>
+                        <span>维保服务商</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='auth-shop.html'">
+                        <i class="fas fa-store-alt"></i>
+                        <span>商家认证</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">企业管理员</div>
+                    <div class="menu-item" onclick="location.href='admin.html'">
+                        <i class="fas fa-user-shield"></i>
+                        <span>管理员管理</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">系统设置</div>
+                    <div class="menu-item" onclick="location.href='system-config.html'">
+                        <i class="fas fa-cogs"></i>
+                        <span>系统配置</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='system-log.html'">
+                        <i class="fas fa-file-alt"></i>
+                        <span>系统日志</span>
+                    </div>
+                    <div class="menu-item active" onclick="location.href='system-cache.html'">
+                        <i class="fas fa-database"></i>
+                        <span>系统缓存</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='system-icon.html'">
+                        <i class="fas fa-images"></i>
+                        <span>系统图标</span>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- 主内容区域 -->
+            <main class="content">
+                <!-- 缓存状态概览 -->
+                <div class="content-header">
+                    <div class="header-content">
+                        <h1 class="content-title">系统缓存</h1>
+                        <p class="content-subtitle">管理系统缓存，包括数据缓存、页面缓存、会话缓存和文件缓存的管理，优化系统性能和响应速度</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-outline">
+                            <i class="fas fa-sync"></i>
+                            刷新缓存
+                        </button>
+                        <button class="btn btn-outline">
+                            <i class="fas fa-download"></i>
+                            导出缓存
+                        </button>
+                        <button class="btn btn-danger">
+                            <i class="fas fa-trash"></i>
+                            清空缓存
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 系统设置提示 -->
+                <div class="system-notice">
+                    <i class="fas fa-info-circle"></i>
+                    <div class="notice-text">
+                        <div class="notice-title">系统级缓存</div>
+                        <div class="notice-desc">此页面管理系统级缓存，不受企业切换影响。所有缓存操作对所有企业生效。</div>
+                    </div>
+                </div>
+                
+                <!-- 缓存状态概览 -->
+                <div class="cache-container">
+                    <!-- 缓存状态概览 -->
+                    <div class="cache-section">
+                        <h2 class="section-title"><i class="fas fa-chart-pie"></i> 缓存状态概览</h2>
+                        <div class="cache-grid">
+                            <!-- 数据缓存 -->
+                            <div class="cache-card">
+                                <div class="card-header">
+                                    <div class="card-title">数据缓存</div>
+                                    <div class="card-icon purple">
+                                        <i class="fas fa-database"></i>
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <div class="cache-item">
+                                        <span class="cache-label">缓存大小：</span>
+                                        <span class="cache-value">256MB</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">命中率：</span>
+                                        <span class="cache-value status-good">85%</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">缓存项数：</span>
+                                        <span class="cache-value">1,234</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">状态：</span>
+                                        <span class="cache-value status-normal">正常</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">最后更新：</span>
+                                        <span class="cache-value">2024-01-20 15:30</span>
+                                    </div>
+                                </div>
+                                <div class="card-actions">
+                                    <button class="btn btn-outline">查看详情</button>
+                                    <button class="btn btn-secondary">清理</button>
+                                </div>
+                            </div>
+
+                            <!-- 页面缓存 -->
+                            <div class="cache-card">
+                                <div class="card-header">
+                                    <div class="card-title">页面缓存</div>
+                                    <div class="card-icon blue">
+                                        <i class="fas fa-file-alt"></i>
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <div class="cache-item">
+                                        <span class="cache-label">缓存大小：</span>
+                                        <span class="cache-value">128MB</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">命中率：</span>
+                                        <span class="cache-value status-excellent">92%</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">缓存页面：</span>
+                                        <span class="cache-value">456</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">状态：</span>
+                                        <span class="cache-value status-normal">正常</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">最后更新：</span>
+                                        <span class="cache-value">2024-01-20 15:25</span>
+                                    </div>
+                                </div>
+                                <div class="card-actions">
+                                    <button class="btn btn-outline">查看详情</button>
+                                    <button class="btn btn-secondary">清理</button>
+                                </div>
+                            </div>
+
+                            <!-- 会话缓存 -->
+                            <div class="cache-card">
+                                <div class="card-header">
+                                    <div class="card-title">会话缓存</div>
+                                    <div class="card-icon green">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <div class="cache-item">
+                                        <span class="cache-label">缓存大小：</span>
+                                        <span class="cache-value">64MB</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">活跃会话：</span>
+                                        <span class="cache-value">156个</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">过期会话：</span>
+                                        <span class="cache-value">23个</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">状态：</span>
+                                        <span class="cache-value status-normal">正常</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">最后更新：</span>
+                                        <span class="cache-value">2024-01-20 15:28</span>
+                                    </div>
+                                </div>
+                                <div class="card-actions">
+                                    <button class="btn btn-outline">查看详情</button>
+                                    <button class="btn btn-secondary">清理</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 缓存详情 -->
+                    <div class="cache-section">
+                        <h2 class="section-title"><i class="fas fa-list"></i> 缓存详情</h2>
+                        <div class="cache-grid">
+                            <!-- 文件缓存 -->
+                            <div class="cache-card">
+                                <div class="card-header">
+                                    <div class="card-title">文件缓存</div>
+                                    <div class="card-icon orange">
+                                        <i class="fas fa-file"></i>
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <div class="cache-item">
+                                        <span class="cache-label">缓存大小：</span>
+                                        <span class="cache-value">512MB</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">文件数量：</span>
+                                        <span class="cache-value">2,847</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">命中率：</span>
+                                        <span class="cache-value status-good">78%</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">状态：</span>
+                                        <span class="cache-value status-normal">正常</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">最后更新：</span>
+                                        <span class="cache-value">2024-01-20 15:20</span>
+                                    </div>
+                                </div>
+                                <div class="card-actions">
+                                    <button class="btn btn-outline">查看详情</button>
+                                    <button class="btn btn-secondary">清理</button>
+                                </div>
+                            </div>
+
+                            <!-- API缓存 -->
+                            <div class="cache-card">
+                                <div class="card-header">
+                                    <div class="card-title">API缓存</div>
+                                    <div class="card-icon purple">
+                                        <i class="fas fa-code"></i>
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <div class="cache-item">
+                                        <span class="cache-label">缓存大小：</span>
+                                        <span class="cache-value">96MB</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">API接口：</span>
+                                        <span class="cache-value">89个</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">命中率：</span>
+                                        <span class="cache-value status-excellent">94%</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">状态：</span>
+                                        <span class="cache-value status-normal">正常</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">最后更新：</span>
+                                        <span class="cache-value">2024-01-20 15:22</span>
+                                    </div>
+                                </div>
+                                <div class="card-actions">
+                                    <button class="btn btn-outline">查看详情</button>
+                                    <button class="btn btn-secondary">清理</button>
+                                </div>
+                            </div>
+
+                            <!-- 配置缓存 -->
+                            <div class="cache-card">
+                                <div class="card-header">
+                                    <div class="card-title">配置缓存</div>
+                                    <div class="card-icon blue">
+                                        <i class="fas fa-cogs"></i>
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <div class="cache-item">
+                                        <span class="cache-label">缓存大小：</span>
+                                        <span class="cache-value">32MB</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">配置项：</span>
+                                        <span class="cache-value">156个</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">命中率：</span>
+                                        <span class="cache-value status-excellent">98%</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">状态：</span>
+                                        <span class="cache-value status-normal">正常</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">最后更新：</span>
+                                        <span class="cache-value">2024-01-20 15:15</span>
+                                    </div>
+                                </div>
+                                <div class="card-actions">
+                                    <button class="btn btn-outline">查看详情</button>
+                                    <button class="btn btn-secondary">清理</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 缓存操作 -->
+                    <div class="cache-section">
+                        <h2 class="section-title"><i class="fas fa-tools"></i> 缓存操作</h2>
+                        <div class="cache-grid">
+                            <!-- 缓存统计 -->
+                            <div class="cache-card">
+                                <div class="card-header">
+                                    <div class="card-title">缓存统计</div>
+                                    <div class="card-icon green">
+                                        <i class="fas fa-chart-bar"></i>
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <div class="cache-item">
+                                        <span class="cache-label">总缓存大小：</span>
+                                        <span class="cache-value">1.1GB</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">平均命中率：</span>
+                                        <span class="cache-value status-excellent">89.5%</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">缓存类型：</span>
+                                        <span class="cache-value">6种</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">系统状态：</span>
+                                        <span class="cache-value status-normal">健康</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">最后统计：</span>
+                                        <span class="cache-value">2024-01-20 15:30</span>
+                                    </div>
+                                </div>
+                                <div class="card-actions">
+                                    <button class="btn btn-outline">生成报告</button>
+                                    <button class="btn btn-primary">优化建议</button>
+                                </div>
+                            </div>
+
+                            <!-- 缓存设置 -->
+                            <div class="cache-card">
+                                <div class="card-header">
+                                    <div class="card-title">缓存设置</div>
+                                    <div class="card-icon orange">
+                                        <i class="fas fa-sliders-h"></i>
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <div class="cache-item">
+                                        <span class="cache-label">默认过期时间：</span>
+                                        <span class="cache-value">3600秒</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">最大缓存大小：</span>
+                                        <span class="cache-value">2GB</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">清理策略：</span>
+                                        <span class="cache-value">LRU</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">压缩启用：</span>
+                                        <span class="cache-value status-enabled">是</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">监控启用：</span>
+                                        <span class="cache-value status-enabled">是</span>
+                                    </div>
+                                </div>
+                                <div class="card-actions">
+                                    <button class="btn btn-outline">修改设置</button>
+                                    <button class="btn btn-primary">应用配置</button>
+                                </div>
+                            </div>
+
+                            <!-- 缓存监控 -->
+                            <div class="cache-card">
+                                <div class="card-header">
+                                    <div class="card-title">缓存监控</div>
+                                    <div class="card-icon purple">
+                                        <i class="fas fa-eye"></i>
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <div class="cache-item">
+                                        <span class="cache-label">监控状态：</span>
+                                        <span class="cache-value status-enabled">运行中</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">告警阈值：</span>
+                                        <span class="cache-value">80%</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">监控频率：</span>
+                                        <span class="cache-value">5分钟</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">日志记录：</span>
+                                        <span class="cache-value status-enabled">开启</span>
+                                    </div>
+                                    <div class="cache-item">
+                                        <span class="cache-label">最后检查：</span>
+                                        <span class="cache-value">2024-01-20 15:30</span>
+                                    </div>
+                                </div>
+                                <div class="card-actions">
+                                    <button class="btn btn-outline">查看日志</button>
+                                    <button class="btn btn-primary">告警设置</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 缓存说明 -->
+                <div class="cache-help">
+                    <div class="help-header">
+                        <h3><i class="fas fa-info-circle"></i> 缓存说明</h3>
+                        <p>了解各类缓存的作用和管理方法</p>
+                    </div>
+                    <div class="help-content">
+                        <div class="help-grid">
+                            <div class="help-item">
+                                <h4><i class="fas fa-database"></i> 数据缓存</h4>
+                                <p><strong>作用：</strong>缓存数据库查询结果，减少数据库访问次数，提高查询速度。</p>
+                                <p><strong>管理：</strong>定期清理过期数据，监控命中率，优化缓存策略。</p>
+                                <p><strong>建议：</strong>命中率低于70%时考虑优化缓存配置。</p>
+                            </div>
+                            <div class="help-item">
+                                <h4><i class="fas fa-file-alt"></i> 页面缓存</h4>
+                                <p><strong>作用：</strong>缓存完整的HTML页面，减少服务器渲染时间。</p>
+                                <p><strong>管理：</strong>根据页面更新频率设置合适的过期时间。</p>
+                                <p><strong>建议：</strong>静态页面可以设置较长的缓存时间。</p>
+                            </div>
+                            <div class="help-item">
+                                <h4><i class="fas fa-users"></i> 会话缓存</h4>
+                                <p><strong>作用：</strong>存储用户会话信息，提高用户登录状态验证速度。</p>
+                                <p><strong>管理：</strong>定期清理过期会话，监控活跃用户数量。</p>
+                                <p><strong>建议：</strong>根据业务需求调整会话超时时间。</p>
+                            </div>
+                            <div class="help-item">
+                                <h4><i class="fas fa-tools"></i> 缓存操作</h4>
+                                <p><strong>清理缓存：</strong>释放内存空间，但可能影响系统性能。</p>
+                                <p><strong>刷新缓存：</strong>更新缓存内容，保持数据一致性。</p>
+                                <p><strong>监控缓存：</strong>实时监控缓存状态，及时发现问题。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="company-switcher.js"></script>
+</body>
+</html> 

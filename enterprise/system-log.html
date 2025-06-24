@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统日志 - 快哥智服平台</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .layout {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            color: white;
+            padding: 0 32px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .logo i {
+            color: #ffd700;
+        }
+
+        .space-switcher {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 40px;
+        }
+
+        .space-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            padding: 8px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .space-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .space-btn.active {
+            background: rgba(255,255,255,0.3);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+        
+        .company-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 15px;
+        }
+        .company-selector span {
+            color: white;
+            font-size: 0.9rem;
+        }
+        .company-selector select {
+            padding: 6px 10px;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 4px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        .company-selector select option {
+            background: #fff;
+            color: #333;
+        }
+        .company-selector select:focus {
+            outline: none;
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .user-dropdown {
+            display: none;
+            position: absolute;
+            top: 45px;
+            right: 0;
+            min-width: 140px;
+            background: #fff;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+            border-radius: 8px;
+            z-index: 1001;
+            padding: 8px 0;
+            flex-direction: column;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            color: #495057;
+            text-decoration: none;
+            font-size: 0.98rem;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background: #f0f4ff;
+            color: #667eea;
+        }
+
+        .user-info:hover .user-dropdown {
+            display: flex;
+        }
+
+        .header-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .header-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: white;
+            border-right: 1px solid #e9ecef;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+        }
+
+        .menu-section {
+            padding: 20px 0;
+        }
+
+        .menu-title {
+            padding: 0 20px 10px;
+            font-size: 0.8rem;
+            color: #6c757d;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: #495057;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .menu-item:hover {
+            background: #f8f9fa;
+            color: #764ba2;
+        }
+
+        .menu-item.active {
+            background: #764ba2;
+            color: white;
+        }
+
+        .menu-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            background: #f5f7fa;
+        }
+
+        .content-header {
+            margin-bottom: 25px;
+        }
+
+        .content-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #343a40;
+        }
+
+        .content-subtitle {
+            font-size: 1rem;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+        
+        .stat-icon {
+            font-size: 1.8rem;
+            padding: 15px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .stat-icon.total { background-color: #e7f3ff; color: #007bff; }
+        .stat-icon.error { background-color: #fdeeee; color: #dc3545; }
+        .stat-icon.security { background-color: #fff4e6; color: #fd7e14; }
+        .stat-icon.access { background-color: #e9f7ef; color: #28a745; }
+
+        .stat-info h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #343a40;
+        }
+        
+        .stat-info p {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .filter-container {
+            background: white;
+            padding: 20px 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .filter-group label {
+            font-size: 0.95rem;
+            color: #495057;
+            flex-shrink: 0;
+        }
+        
+        .filter-group input, .filter-group select {
+            padding: 10px 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            background: white;
+            min-width: 180px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .filter-group input:focus, .filter-group select:focus {
+            outline: none;
+            border-color: #764ba2;
+            box-shadow: 0 0 0 2px rgba(118, 75, 162, 0.2);
+        }
+
+        .btn-primary, .btn-secondary {
+            padding: 10px 20px;
+            font-size: 0.95rem;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background-color: #764ba2;
+            color: white;
+            border-color: #764ba2;
+        }
+        .btn-primary:hover {
+            background-color: #623b8a;
+            border-color: #623b8a;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+            border-color: #6c757d;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+        
+        .log-list-container {
+             background: white;
+             border-radius: 12px;
+             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+             overflow: hidden;
+        }
+        
+        .log-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 20px 25px;
+            border-bottom: 1px solid #e9ecef;
+            gap: 20px;
+            transition: background-color 0.2s;
+        }
+        
+        .log-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .log-item:last-child {
+            border-bottom: none;
+        }
+        
+        .log-level {
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: white;
+            flex-shrink: 0;
+            width: 80px;
+            text-align: center;
+            margin-top: 2px;
+        }
+        
+        .log-level-INFO { background-color: #17a2b8; }
+        .log-level-SUCCESS { background-color: #28a745; }
+        .log-level-WARN { background-color: #ffc107; color: #333 !important; }
+        .log-level-ERROR { background-color: #dc3545; }
+        
+        .log-content {
+            flex-grow: 1;
+        }
+        
+        .log-message {
+            font-size: 1rem;
+            color: #343a40;
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .log-meta {
+            font-size: 0.85rem;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px 15px;
+        }
+        
+        .log-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .log-actions {
+             flex-shrink: 0;
+             align-self: center;
+        }
+
+        .btn-details {
+            background: none;
+            border: 1px solid #dee2e6;
+            color: #495057;
+            padding: 6px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        
+        .btn-details:hover {
+            background: #e9ecef;
+            border-color: #adb5bd;
+            color: #343a40;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 25px 0 10px;
+            gap: 8px;
+        }
+
+        .pagination a, .pagination span {
+            text-decoration: none;
+            color: #495057;
+            padding: 8px 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        
+        .pagination a:hover {
+            background: #e9ecef;
+            border-color: #adb5bd;
+        }
+        
+        .pagination .active {
+            background-color: #764ba2;
+            color: white;
+            border-color: #764ba2;
+        }
+        
+        .pagination .disabled {
+            color: #adb5bd;
+            cursor: not-allowed;
+            background: #f8f9fa;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .header-left {
+                gap: 15px;
+            }
+            .space-switcher {
+                display: none;
+            }
+            .content {
+                padding: 20px;
+            }
+            .filter-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .filter-group {
+                width: 100%;
+            }
+             .filter-group[style*="margin-left: auto;"] {
+                margin-left: 0 !important;
+                flex-direction: column;
+                gap: 10px;
+            }
+             .filter-group[style*="margin-left: auto;"] button {
+                width: 100%;
+            }
+            .log-item {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 15px;
+            }
+            .log-actions {
+                align-self: flex-end;
+            }
+        }
+
+        .system-notice {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #1976d2;
+        }
+
+        .system-notice i {
+            font-size: 1.2rem;
+            color: #1976d2;
+        }
+
+        .system-notice .notice-text {
+            flex: 1;
+        }
+
+        .system-notice .notice-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .system-notice .notice-desc {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <header class="header">
+            <div class="header-left">
+                <div class="logo">
+                    <i class="fas fa-bolt"></i>
+                    <span>快哥智服</span>
+                </div>
+                <div class="space-switcher">
+                    <button class="space-btn" onclick="location.href='../index.html'">
+                        <i class="fas fa-user"></i>
+                        <span>个人空间</span>
+                    </button>
+                    <button class="space-btn active" onclick="location.href='index.html'">
+                        <i class="fas fa-building"></i>
+                        <span>企业空间</span>
+                    </button>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="header-btn">
+                    <i class="fas fa-concierge-bell"></i>
+                    <span>操作台</span>
+                </button>
+                <div class="company-selector">
+                     <span>当前企业:</span>
+                     <select>
+                         <option>ABC科技有限公司</option>
+                         <option>XYZ制造集团</option>
+                     </select>
+                </div>
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span>张三</span>
+                    <div class="user-dropdown">
+                        <a href="profile.html" class="dropdown-item"><i class="fas fa-user-circle"></i> 个人中心</a>
+                        <a href="security.html" class="dropdown-item"><i class="fas fa-shield-alt"></i> 安全设置</a>
+                        <a href="#" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> 退出登录</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-container">
+            <aside class="sidebar">
+                <div class="menu-section">
+                    <div class="menu-title">企业管理</div>
+                    <div class="menu-item" onclick="location.href='overview.html'"><i class="fas fa-chart-pie"></i><span>企业概览</span></div>
+                    <div class="menu-item" onclick="location.href='staff.html'"><i class="fas fa-users"></i><span>员工管理</span></div>
+                    <div class="menu-item" onclick="location.href='staff-review.html'"><i class="fas fa-user-check"></i><span>员工审核</span></div>
+                    <div class="menu-item" onclick="location.href='org-structure.html'"><i class="fas fa-sitemap"></i><span>组织结构</span></div>
+                    <div class="menu-item" onclick="location.href='position.html'"><i class="fas fa-briefcase"></i><span>岗位管理</span></div>
+                    <div class="menu-item" onclick="location.href='role-list.html'"><i class="fas fa-user-tag"></i><span>角色列表</span></div>
+                    <div class="menu-item" onclick="location.href='permission.html'"><i class="fas fa-shield-alt"></i><span>权限管理</span></div>
+                    <div class="menu-item" onclick="location.href='company-info.html'"><i class="fas fa-building"></i><span>企业资料</span></div>
+                </div>
+                <div class="menu-section">
+                    <div class="menu-title">资质认证</div>
+                    <div class="menu-item" onclick="location.href='auth-shop.html'"><i class="fas fa-store"></i><span>设备使用商认证</span></div>
+                    <div class="menu-item" onclick="location.href='manufacturer-fixed.html'"><i class="fas fa-industry"></i><span>设备厂商认证</span></div>
+                    <div class="menu-item" onclick="location.href='maintenance-provider.html'"><i class="fas fa-tools"></i><span>维保服务商认证</span></div>
+                    <div class="menu-item" onclick="location.href='after-sale.html'"><i class="fas fa-headset"></i><span>售后服务商认证</span></div>
+                </div>
+                <div class="menu-section">
+                    <div class="menu-title">合作方管理</div>
+                    <div class="menu-item" onclick="location.href='user-company.html'"><i class="fas fa-handshake"></i><span>设备使用企业</span></div>
+                    <div class="menu-item" onclick="location.href='maintenance-company.html'"><i class="fas fa-star"></i><span>维保合作企业</span></div>
+                </div>
+                <div class="menu-section">
+                    <div class="menu-title">系统管理</div>
+                    <div class="menu-item" onclick="location.href='system-config.html'"><i class="fas fa-cog"></i><span>系统配置</span></div>
+                    <div class="menu-item active" onclick="location.href='system-log.html'"><i class="fas fa-clipboard-list"></i><span>系统日志</span></div>
+                    <div class="menu-item" onclick="location.href='system-cache.html'"><i class="fas fa-database"></i><span>缓存管理</span></div>
+                    <div class="menu-item" onclick="location.href='system-icon.html'"><i class="fas fa-images"></i><span>系统图标</span></div>
+                </div>
+            </aside>
+
+            <main class="content">
+
+                <div class="content-header">
+                    <h1 class="content-title">系统日志</h1>
+                    <p class="content-subtitle">跟踪和监控平台内的所有重要活动和系统事件</p>
+                </div>
+
+                <!-- 系统设置提示 -->
+                <div class="system-notice">
+                    <i class="fas fa-info-circle"></i>
+                    <div class="notice-text">
+                        <div class="notice-title">系统级日志</div>
+                        <div class="notice-desc">此页面显示系统级日志，不受企业切换影响。所有企业的系统活动都会在此显示。</div>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon total"><i class="fas fa-file-alt"></i></div>
+                        <div class="stat-info">
+                            <h3>1,482</h3>
+                            <p>日志总数 (今日)</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon error"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="stat-info">
+                            <h3>12</h3>
+                            <p>错误日志 (近24h)</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon security"><i class="fas fa-shield-alt"></i></div>
+                         <div class="stat-info">
+                            <h3>3</h3>
+                            <p>安全警告</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon access"><i class="fas fa-sign-in-alt"></i></div>
+                        <div class="stat-info">
+                            <h3>45</h3>
+                            <p>用户登录 (今日)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-container">
+                    <div class="filter-group">
+                        <label for="date-range">日期范围:</label>
+                        <input type="text" id="date-range" placeholder="2023-10-01 to 2023-10-27">
+                    </div>
+                    <div class="filter-group">
+                        <label for="log-level">日志级别:</label>
+                        <select id="log-level">
+                            <option value="all">所有级别</option>
+                            <option value="info">信息</option>
+                            <option value="success">成功</option>
+                            <option value="warn">警告</option>
+                            <option value="error">错误</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="user-search">操作用户:</label>
+                        <input type="text" id="user-search" placeholder="输入用户名或ID">
+                    </div>
+                     <div class="filter-group" style="margin-left: auto;">
+                        <button class="btn-secondary"><i class="fas fa-undo"></i> 重置</button>
+                        <button class="btn-primary"><i class="fas fa-filter"></i> 筛选</button>
+                    </div>
+                </div>
+
+                <div class="log-list-container">
+                    <div class="log-item">
+                        <div class="log-level log-level-SUCCESS">成功</div>
+                        <div class="log-content">
+                            <p class="log-message">用户 "admin" 成功登录系统。</p>
+                            <div class="log-meta">
+                                <span><i class="far fa-clock"></i> 2023-10-27 10:30:15</span>
+                                <span><i class="fas fa-user"></i> 用户: admin (UID: 1)</span>
+                                <span><i class="fas fa-laptop"></i> IP: 192.168.1.101</span>
+                            </div>
+                        </div>
+                        <div class="log-actions">
+                            <button class="btn-details">详情</button>
+                        </div>
+                    </div>
+                    <div class="log-item">
+                         <div class="log-level log-level-ERROR">错误</div>
+                        <div class="log-content">
+                            <p class="log-message">数据库服务连接失败: "Unable to connect to any of the specified MySQL hosts".</p>
+                            <div class="log-meta">
+                                <span><i class="far fa-clock"></i> 2023-10-27 10:28:05</span>
+                                <span><i class="fas fa-cogs"></i> 服务: CoreService-DB</span>
+                                <span><i class="fas fa-server"></i> 节点: prod-db-02</span>
+                            </div>
+                        </div>
+                         <div class="log-actions">
+                            <button class="btn-details">详情</button>
+                        </div>
+                    </div>
+                     <div class="log-item">
+                        <div class="log-level log-level-INFO">信息</div>
+                        <div class="log-content">
+                            <p class="log-message">企业 "ABC科技有限公司" 的营业执照信息已由 "财务总监-王丽" 更新。</p>
+                           <div class="log-meta">
+                                <span><i class="far fa-clock"></i> 2023-10-27 09:45:22</span>
+                                <span><i class="fas fa-user"></i> 用户: 王丽 (UID: 58)</span>
+                                <span><i class="fas fa-laptop"></i> IP: 202.55.89.12</span>
+                            </div>
+                        </div>
+                         <div class="log-actions">
+                            <button class="btn-details">详情</button>
+                        </div>
+                    </div>
+                     <div class="log-item">
+                        <div class="log-level log-level-WARN">警告</div>
+                        <div class="log-content">
+                            <p class="log-message">支付网关 "Stripe" API 响应缓慢，耗时 3500ms。</p>
+                            <div class="log-meta">
+                                <span><i class="far fa-clock"></i> 2023-10-27 08:15:00</span>
+                                 <span><i class="fas fa-cogs"></i> 服务: PaymentGateway</span>
+                                 <span><i class="fas fa-server"></i> 节点: prod-api-05</span>
+                            </div>
+                        </div>
+                         <div class="log-actions">
+                            <button class="btn-details">详情</button>
+                        </div>
+                    </div>
+                     <div class="log-item">
+                        <div class="log-level log-level-INFO">信息</div>
+                        <div class="log-content">
+                            <p class="log-message">系统配置项 "SESSION_TIMEOUT" 已从 "30m" 更改为 "60m"。</p>
+                           <div class="log-meta">
+                                <span><i class="far fa-clock"></i> 2023-10-26 18:00:10</span>
+                                <span><i class="fas fa-user"></i> 用户: a-sys-admin (UID: 2)</span>
+                                <span><i class="fas fa-laptop"></i> IP: 10.0.0.1</span>
+                            </div>
+                        </div>
+                         <div class="log-actions">
+                            <button class="btn-details">详情</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="pagination">
+                    <a href="#" class="disabled"><i class="fas fa-angle-left"></i></a>
+                    <a href="#" class="active">1</a>
+                    <a href="#">2</a>
+                    <a href="#">3</a>
+                    <span>...</span>
+                    <a href="#">15</a>
+                    <a href="#"><i class="fas fa-angle-right"></i></a>
+                </div>
+
+            </main>
+        </div>
+    </div>
+    <script src="../script.js"></script>
+    <script src="company-switcher.js"></script>
+</body>
+</html>

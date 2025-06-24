@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>组织结构 - 快哥智服平台</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .layout {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* 头部样式 */
+        .header {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            color: white;
+            padding: 0 32px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .logo i {
+            color: #ffd700;
+        }
+
+        .space-switcher {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 40px;
+        }
+
+        .space-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            padding: 8px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .space-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .space-btn.active {
+            background: rgba(255,255,255,0.3);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .company-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 15px;
+        }
+
+        .company-selector span {
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .company-selector select {
+            padding: 6px 10px;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 4px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .company-selector select option {
+            background: #fff;
+            color: #333;
+        }
+
+        .company-selector select:focus {
+            outline: none;
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .user-dropdown {
+            display: none;
+            position: absolute;
+            top: 45px;
+            right: 0;
+            min-width: 140px;
+            background: #fff;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+            border-radius: 8px;
+            z-index: 1001;
+            padding: 8px 0;
+            flex-direction: column;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            color: #495057;
+            text-decoration: none;
+            font-size: 0.98rem;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background: #f0f4ff;
+            color: #667eea;
+        }
+
+        .user-info:hover .user-dropdown {
+            display: flex;
+        }
+
+        .header-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .header-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* 主体区域 */
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* 左侧菜单 */
+        .sidebar {
+            width: 250px;
+            background: white;
+            border-right: 1px solid #e9ecef;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+        }
+
+        .menu-section {
+            padding: 20px 0;
+        }
+
+        .menu-title {
+            padding: 0 20px 10px;
+            font-size: 0.8rem;
+            color: #6c757d;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: #495057;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .menu-item:hover {
+            background: #f8f9fa;
+            color: #764ba2;
+        }
+
+        .menu-item.active {
+            background: #764ba2;
+            color: white;
+        }
+
+        .menu-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* 主内容区域 */
+        .content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            background: #f5f7fa;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .content-title {
+            font-size: 1.8rem;
+            color: #333;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #764ba2;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #6a4190;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .view-controls {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .control-row {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .control-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        .control-select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            min-width: 150px;
+            background: white;
+        }
+
+        .org-chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+
+        .org-chart {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 800px;
+        }
+
+        .org-level {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 40px;
+            width: 100%;
+        }
+
+        .org-node {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            min-width: 120px;
+            position: relative;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .org-node:hover {
+            border-color: #764ba2;
+            box-shadow: 0 4px 12px rgba(118, 75, 162, 0.2);
+        }
+
+        .org-node.ceo {
+            background: linear-gradient(135deg, #764ba2, #667eea);
+            color: white;
+            border-color: #764ba2;
+        }
+
+        .org-node.manager {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border-color: #28a745;
+        }
+
+        .org-node.department {
+            background: linear-gradient(135deg, #fd7e14, #ffc107);
+            color: white;
+            border-color: #fd7e14;
+        }
+
+        .org-node.team {
+            background: linear-gradient(135deg, #6c757d, #adb5bd);
+            color: white;
+            border-color: #6c757d;
+        }
+
+        .node-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .node-name {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        .node-count {
+            font-size: 0.75rem;
+            opacity: 0.8;
+            margin-top: 3px;
+        }
+
+        .connection-line {
+            position: absolute;
+            background: #e9ecef;
+            width: 2px;
+            height: 20px;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .connection-line.horizontal {
+            width: 40px;
+            height: 2px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .department-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .dept-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .dept-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .dept-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .dept-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .dept-icon.tech { background: #764ba2; }
+        .dept-icon.operation { background: #667eea; }
+        .dept-icon.sales { background: #28a745; }
+        .dept-icon.service { background: #fd7e14; }
+        .dept-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+        .stat-number {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #764ba2;
+            margin-bottom: 3px;
+        }
+        .stat-label {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+        .dept-manager {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e9ecef;
+        }
+        .manager-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .manager-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #764ba2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        .manager-details {
+            flex: 1;
+        }
+        .manager-name {
+            font-weight: 600;
+            color: #333;
+            font-size: 0.9rem;
+        }
+        .manager-title {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+        @media (max-width: 768px) {
+            .space-switcher {
+                display: none;
+            }
+            .sidebar {
+                position: fixed;
+                left: -250px;
+                top: 60px;
+                height: calc(100vh - 60px);
+                z-index: 999;
+                transition: left 0.3s;
+            }
+            .sidebar.open {
+                left: 0;
+            }
+            .content {
+                padding: 20px;
+            }
+            .control-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .action-buttons {
+                flex-direction: column;
+            }
+            .org-level {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .department-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 弹窗样式 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #6c757d;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+        .modal-close:hover {
+            background: #f8f9fa;
+        }
+        .modal-body {
+            padding: 24px;
+        }
+        .modal-footer {
+            padding: 20px 24px;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .form-label {
+            font-size: 0.9rem;
+            color: #495057;
+            font-weight: 500;
+        }
+        .form-input, .form-select, .form-textarea {
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+        }
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #764ba2;
+        }
+        .btn-cancel {
+            padding: 10px 20px;
+            border: 1px solid #ddd;
+            background: white;
+            color: #495057;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+        .btn-cancel:hover {
+            background: #f8f9fa;
+        }
+        .btn-save {
+            padding: 10px 20px;
+            border: none;
+            background: #764ba2;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: background 0.3s;
+        }
+        .btn-save:hover {
+            background: #6a4190;
+        }
+        .org-node {
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .org-node:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <!-- 头部 -->
+        <header class="header">
+            <div class="header-left">
+                <div class="logo">
+                    <i class="fas fa-cogs"></i>
+                    <span>快哥智服</span>
+                </div>
+                <div class="space-switcher">
+                    <button class="space-btn" onclick="location.href='../personal/index.html'">
+                        <i class="fas fa-user"></i>
+                        个人空间
+                    </button>
+                    <button class="space-btn active" onclick="location.href='index.html'">
+                        <i class="fas fa-building"></i>
+                        企业空间
+                    </button>
+                    <button class="space-btn" onclick="location.href='../dashboard/index.html'">
+                        <i class="fas fa-tachometer-alt"></i>
+                        操作台
+                    </button>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="company-selector">
+                    <span>企业：</span>
+                    <select id="header-company-selector">
+                        <option value="company1">快哥智服科技有限公司</option>
+                        <option value="company2">智维技术服务有限公司</option>
+                        <option value="company3">快哥设备销售有限公司</option>
+                        <option value="company4">智服培训学院</option>
+                    </select>
+                </div>
+                <div class="user-info user-dropdown-trigger">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span>张三</span>
+                    <div class="user-dropdown">
+                        <a href="#" class="dropdown-item"><i class="fas fa-user-edit"></i> 个人资料</a>
+                        <a href="#" class="dropdown-item"><i class="fas fa-key"></i> 密码重置</a>
+                        <a href="#" class="dropdown-item"><i class="fas fa-shield-alt"></i> 安全设置</a>
+                    </div>
+                </div>
+                <button class="header-btn">
+                    <i class="fas fa-bell"></i>
+                    消息
+                </button>
+                <button class="header-btn">
+                    <i class="fas fa-cog"></i>
+                    设置
+                </button>
+                <button class="header-btn" onclick="location.href='../index.html'">
+                    <i class="fas fa-sign-out-alt"></i>
+                    退出
+                </button>
+            </div>
+        </header>
+
+        <!-- 主体区域 -->
+        <div class="main-container">
+            <!-- 左侧菜单 -->
+            <nav class="sidebar">
+                <div class="menu-section">
+                    <div class="menu-title">企业管理</div>
+                    <div class="menu-item" onclick="location.href='overview.html'">
+                        <i class="fas fa-home"></i>
+                        <span>企业概览</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='staff.html'">
+                        <i class="fas fa-users-cog"></i>
+                        <span>员工管理</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='staff-review.html'">
+                        <i class="fas fa-user-check"></i>
+                        <span>员工审核</span>
+                    </div>
+                    <div class="menu-item active" onclick="location.href='org-structure.html'">
+                        <i class="fas fa-sitemap"></i>
+                        <span>组织结构</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='position.html'">
+                        <i class="fas fa-briefcase"></i>
+                        <span>岗位管理</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='company-info.html'">
+                        <i class="fas fa-building"></i>
+                        <span>企业资料</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">角色管理</div>
+                    <div class="menu-item" onclick="location.href='role-list.html'">
+                        <i class="fas fa-user-tag"></i>
+                        <span>角色列表</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='permission.html'">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>权限管理</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">合作企业</div>
+                    <div class="menu-item" onclick="location.href='after-sale.html'">
+                        <i class="fas fa-headset"></i>
+                        <span>售后企业</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='maintenance-company.html'">
+                        <i class="fas fa-tools"></i>
+                        <span>维保企业</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">资质认证</div>
+                    <div class="menu-item" onclick="location.href='user-company.html'">
+                        <i class="fas fa-industry"></i>
+                        <span>设备使用商</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='manufacturer-fixed.html'">
+                        <i class="fas fa-cogs"></i>
+                        <span>设备厂商</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='maintenance-provider.html'">
+                        <i class="fas fa-wrench"></i>
+                        <span>维保服务商</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='auth-shop.html'">
+                        <i class="fas fa-store-alt"></i>
+                        <span>商家认证</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">企业管理员</div>
+                    <div class="menu-item" onclick="location.href='admin.html'">
+                        <i class="fas fa-user-shield"></i>
+                        <span>管理员管理</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">系统设置</div>
+                    <div class="menu-item" onclick="location.href='system-config.html'">
+                        <i class="fas fa-cogs"></i>
+                        <span>系统配置</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='system-log.html'">
+                        <i class="fas fa-file-alt"></i>
+                        <span>系统日志</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='system-cache.html'">
+                        <i class="fas fa-database"></i>
+                        <span>系统缓存</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='system-icon.html'">
+                        <i class="fas fa-images"></i>
+                        <span>系统图标</span>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- 主内容区域 -->
+            <main class="content">
+                <div class="content-header">
+                    <h1 class="content-title">组织结构</h1>
+                    <div class="action-buttons">
+                        <button class="btn btn-secondary"><i class="fas fa-download"></i>导出架构图</button>
+                        <button class="btn btn-primary" onclick="showAddDepartmentModal()"><i class="fas fa-plus"></i>添加部门</button>
+                    </div>
+                </div>
+
+                <div class="view-controls">
+                    <div class="control-row">
+                        <div class="control-group">
+                            <label class="control-label">视图模式</label>
+                            <select class="control-select">
+                                <option value="chart">组织架构图</option>
+                                <option value="list">部门列表</option>
+                                <option value="tree">树形结构</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">显示层级</label>
+                            <select class="control-select">
+                                <option value="all">全部层级</option>
+                                <option value="3">3级以内</option>
+                                <option value="2">2级以内</option>
+                                <option value="1">仅1级</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">排序方式</label>
+                            <select class="control-select">
+                                <option value="name">按名称</option>
+                                <option value="size">按人数</option>
+                                <option value="create">按创建时间</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="org-chart-container">
+                    <div class="org-chart">
+                        <!-- 第一层：CEO -->
+                        <div class="org-level">
+                            <div class="org-node ceo">
+                                <div class="node-title">CEO</div>
+                                <div class="node-name">张总</div>
+                                <div class="node-count">管理156人</div>
+                                <div class="connection-line"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- 第二层：部门经理 -->
+                        <div class="org-level">
+                            <div class="org-node manager">
+                                <div class="node-title">技术总监</div>
+                                <div class="node-name">李技术</div>
+                                <div class="node-count">管理45人</div>
+                                <div class="connection-line"></div>
+                            </div>
+                            <div class="org-node manager">
+                                <div class="node-title">运营总监</div>
+                                <div class="node-name">王运营</div>
+                                <div class="node-count">管理38人</div>
+                                <div class="connection-line"></div>
+                            </div>
+                            <div class="org-node manager">
+                                <div class="node-title">销售总监</div>
+                                <div class="node-name">陈销售</div>
+                                <div class="node-count">管理32人</div>
+                                <div class="connection-line"></div>
+                            </div>
+                            <div class="org-node manager">
+                                <div class="node-title">客服总监</div>
+                                <div class="node-name">赵客服</div>
+                                <div class="node-count">管理41人</div>
+                                <div class="connection-line"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- 第三层：部门 -->
+                        <div class="org-level">
+                            <div class="org-node department">
+                                <div class="node-title">技术部</div>
+                                <div class="node-name">开发团队</div>
+                                <div class="node-count">25人</div>
+                            </div>
+                            <div class="org-node department">
+                                <div class="node-title">运维部</div>
+                                <div class="node-name">运维团队</div>
+                                <div class="node-count">20人</div>
+                            </div>
+                            <div class="org-node department">
+                                <div class="node-title">运营部</div>
+                                <div class="node-name">运营团队</div>
+                                <div class="node-count">38人</div>
+                            </div>
+                            <div class="org-node department">
+                                <div class="node-title">销售部</div>
+                                <div class="node-name">销售团队</div>
+                                <div class="node-count">32人</div>
+                            </div>
+                            <div class="org-node department">
+                                <div class="node-title">客服部</div>
+                                <div class="node-name">客服团队</div>
+                                <div class="node-count">41人</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="department-stats">
+                    <div class="dept-card">
+                        <div class="dept-header">
+                            <div class="dept-name">技术部</div>
+                            <div class="dept-icon tech"><i class="fas fa-code"></i></div>
+                        </div>
+                        <div class="dept-stats">
+                            <div class="stat-item">
+                                <div class="stat-number">45</div>
+                                <div class="stat-label">总人数</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">3</div>
+                                <div class="stat-label">团队数</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">85%</div>
+                                <div class="stat-label">满编率</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">12</div>
+                                <div class="stat-label">新增</div>
+                            </div>
+                        </div>
+                        <div class="dept-manager">
+                            <div class="manager-info">
+                                <div class="manager-avatar">李</div>
+                                <div class="manager-details">
+                                    <div class="manager-name">李技术</div>
+                                    <div class="manager-title">技术总监</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dept-card">
+                        <div class="dept-header">
+                            <div class="dept-name">运营部</div>
+                            <div class="dept-icon operation"><i class="fas fa-chart-line"></i></div>
+                        </div>
+                        <div class="dept-stats">
+                            <div class="stat-item">
+                                <div class="stat-number">38</div>
+                                <div class="stat-label">总人数</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">2</div>
+                                <div class="stat-label">团队数</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">92%</div>
+                                <div class="stat-label">满编率</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">8</div>
+                                <div class="stat-label">新增</div>
+                            </div>
+                        </div>
+                        <div class="dept-manager">
+                            <div class="manager-info">
+                                <div class="manager-avatar">王</div>
+                                <div class="manager-details">
+                                    <div class="manager-name">王运营</div>
+                                    <div class="manager-title">运营总监</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dept-card">
+                        <div class="dept-header">
+                            <div class="dept-name">销售部</div>
+                            <div class="dept-icon sales"><i class="fas fa-handshake"></i></div>
+                        </div>
+                        <div class="dept-stats">
+                            <div class="stat-item">
+                                <div class="stat-number">32</div>
+                                <div class="stat-label">总人数</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">4</div>
+                                <div class="stat-label">团队数</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">78%</div>
+                                <div class="stat-label">满编率</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">15</div>
+                                <div class="stat-label">新增</div>
+                            </div>
+                        </div>
+                        <div class="dept-manager">
+                            <div class="manager-info">
+                                <div class="manager-avatar">陈</div>
+                                <div class="manager-details">
+                                    <div class="manager-name">陈销售</div>
+                                    <div class="manager-title">销售总监</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dept-card">
+                        <div class="dept-header">
+                            <div class="dept-name">客服部</div>
+                            <div class="dept-icon service"><i class="fas fa-headset"></i></div>
+                        </div>
+                        <div class="dept-stats">
+                            <div class="stat-item">
+                                <div class="stat-number">41</div>
+                                <div class="stat-label">总人数</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">3</div>
+                                <div class="stat-label">团队数</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">88%</div>
+                                <div class="stat-label">满编率</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">6</div>
+                                <div class="stat-label">新增</div>
+                            </div>
+                        </div>
+                        <div class="dept-manager">
+                            <div class="manager-info">
+                                <div class="manager-avatar">赵</div>
+                                <div class="manager-details">
+                                    <div class="manager-name">赵客服</div>
+                                    <div class="manager-title">客服总监</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- 添加部门弹窗 -->
+    <div class="modal-overlay" id="addDepartmentModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">添加部门</h3>
+                <button class="modal-close" onclick="closeModal('addDepartmentModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="addDepartmentForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">部门名称 *</label>
+                            <input type="text" class="form-input" id="deptName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">部门代码 *</label>
+                            <input type="text" class="form-input" id="deptCode" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">上级部门</label>
+                            <select class="form-select" id="parentDept">
+                                <option value="">无（顶级部门）</option>
+                                <option value="tech">技术部</option>
+                                <option value="operation">运营部</option>
+                                <option value="sales">销售部</option>
+                                <option value="service">客服部</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">部门类型</label>
+                            <select class="form-select" id="deptType">
+                                <option value="department">部门</option>
+                                <option value="team">团队</option>
+                                <option value="project">项目组</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">部门负责人</label>
+                            <input type="text" class="form-input" id="deptManager" placeholder="请输入负责人姓名">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">负责人职位</label>
+                            <input type="text" class="form-input" id="managerTitle" placeholder="如：经理、总监等">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">部门描述</label>
+                        <textarea class="form-textarea" id="deptDescription" placeholder="请输入部门职责描述"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">计划人数</label>
+                            <input type="number" class="form-input" id="deptSize" min="1" placeholder="请输入计划人数">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">排序</label>
+                            <input type="number" class="form-input" id="deptOrder" min="1" value="1">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal('addDepartmentModal')">取消</button>
+                <button class="btn-save" onclick="saveDepartment()">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 编辑部门弹窗 -->
+    <div class="modal-overlay" id="editDepartmentModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">编辑部门</h3>
+                <button class="modal-close" onclick="closeModal('editDepartmentModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editDepartmentForm">
+                    <input type="hidden" id="editDeptIndex">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">部门名称 *</label>
+                            <input type="text" class="form-input" id="editDeptName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">部门代码 *</label>
+                            <input type="text" class="form-input" id="editDeptCode" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">上级部门</label>
+                            <select class="form-select" id="editParentDept">
+                                <option value="">无（顶级部门）</option>
+                                <option value="tech">技术部</option>
+                                <option value="operation">运营部</option>
+                                <option value="sales">销售部</option>
+                                <option value="service">客服部</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">部门类型</label>
+                            <select class="form-select" id="editDeptType">
+                                <option value="department">部门</option>
+                                <option value="team">团队</option>
+                                <option value="project">项目组</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">部门负责人</label>
+                            <input type="text" class="form-input" id="editDeptManager">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">负责人职位</label>
+                            <input type="text" class="form-input" id="editManagerTitle">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">部门描述</label>
+                        <textarea class="form-textarea" id="editDeptDescription"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">计划人数</label>
+                            <input type="number" class="form-input" id="editDeptSize" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">排序</label>
+                            <input type="number" class="form-input" id="editDeptOrder" min="1">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal('editDepartmentModal')">取消</button>
+                <button class="btn-save" onclick="updateDepartment()">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 删除确认弹窗 -->
+    <div class="modal-overlay" id="deleteDepartmentModal">
+        <div class="modal" style="max-width:400px;">
+            <div class="modal-header">
+                <h3 class="modal-title">确认删除</h3>
+                <button class="modal-close" onclick="closeModal('deleteDepartmentModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="deleteDeptMsg" style="text-align:center;margin:30px 0;">确定要删除该部门吗？</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal('deleteDepartmentModal')">取消</button>
+                <button class="btn-save" style="background:#dc3545;" onclick="confirmDeleteDepartment()">确认删除</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // 模拟部门数据
+    let departmentList = [
+        {name:'技术部',code:'TECH',type:'department',manager:'李技术',title:'技术总监',description:'负责公司技术研发和系统维护',size:45,order:1,parent:''},
+        {name:'运营部',code:'OP',type:'department',manager:'王运营',title:'运营总监',description:'负责公司运营策略和执行',size:38,order:2,parent:''},
+        {name:'销售部',code:'SALES',type:'department',manager:'陈销售',title:'销售总监',description:'负责公司产品销售和客户拓展',size:32,order:3,parent:''},
+        {name:'客服部',code:'SERVICE',type:'department',manager:'赵客服',title:'客服总监',description:'负责客户服务和售后支持',size:41,order:4,parent:''}
+    ];
+    let deleteIndex = null;
+    
+    function showAddDepartmentModal() {
+        document.getElementById('addDepartmentForm').reset();
+        document.getElementById('addDepartmentModal').style.display='flex';
+    }
+    
+    function showEditDepartmentModal(i) {
+        const d = departmentList[i];
+        document.getElementById('editDeptIndex').value = i;
+        document.getElementById('editDeptName').value = d.name;
+        document.getElementById('editDeptCode').value = d.code;
+        document.getElementById('editParentDept').value = d.parent;
+        document.getElementById('editDeptType').value = d.type;
+        document.getElementById('editDeptManager').value = d.manager;
+        document.getElementById('editManagerTitle').value = d.title;
+        document.getElementById('editDeptDescription').value = d.description;
+        document.getElementById('editDeptSize').value = d.size;
+        document.getElementById('editDeptOrder').value = d.order;
+        document.getElementById('editDepartmentModal').style.display='flex';
+    }
+    
+    function showDeleteDepartmentModal(i) {
+        deleteIndex = i;
+        document.getElementById('deleteDeptMsg').innerHTML = `确定要删除部门 <b>${departmentList[i].name}</b> 吗？<br><small style="color:#dc3545;">删除后该部门下的所有员工将需要重新分配</small>`;
+        document.getElementById('deleteDepartmentModal').style.display='flex';
+    }
+    
+    function closeModal(id) {
+        document.getElementById(id).style.display='none';
+    }
+    
+    function saveDepartment() {
+        const name = document.getElementById('deptName').value.trim();
+        const code = document.getElementById('deptCode').value.trim();
+        const parent = document.getElementById('parentDept').value;
+        const type = document.getElementById('deptType').value;
+        const manager = document.getElementById('deptManager').value.trim();
+        const title = document.getElementById('managerTitle').value.trim();
+        const description = document.getElementById('deptDescription').value.trim();
+        const size = document.getElementById('deptSize').value;
+        const order = document.getElementById('deptOrder').value;
+        
+        if(!name || !code) {
+            alert('请填写部门名称和代码');
+            return;
+        }
+        
+        departmentList.push({
+            name, code, parent, type, manager, title, description, 
+            size: size || 0, order: order || 1
+        });
+        
+        closeModal('addDepartmentModal');
+        alert('部门添加成功！');
+        // 这里可以添加重新渲染组织架构图的逻辑
+    }
+    
+    function updateDepartment() {
+        const i = document.getElementById('editDeptIndex').value;
+        const name = document.getElementById('editDeptName').value.trim();
+        const code = document.getElementById('editDeptCode').value.trim();
+        const parent = document.getElementById('editParentDept').value;
+        const type = document.getElementById('editDeptType').value;
+        const manager = document.getElementById('editDeptManager').value.trim();
+        const title = document.getElementById('editManagerTitle').value.trim();
+        const description = document.getElementById('editDeptDescription').value.trim();
+        const size = document.getElementById('editDeptSize').value;
+        const order = document.getElementById('editDeptOrder').value;
+        
+        if(!name || !code) {
+            alert('请填写部门名称和代码');
+            return;
+        }
+        
+        Object.assign(departmentList[i], {
+            name, code, parent, type, manager, title, description, 
+            size: size || 0, order: order || 1
+        });
+        
+        closeModal('editDepartmentModal');
+        alert('部门更新成功！');
+        // 这里可以添加重新渲染组织架构图的逻辑
+    }
+    
+    function confirmDeleteDepartment() {
+        if(deleteIndex !== null) {
+            departmentList.splice(deleteIndex, 1);
+            deleteIndex = null;
+        }
+        closeModal('deleteDepartmentModal');
+        alert('部门删除成功！');
+        // 这里可以添加重新渲染组织架构图的逻辑
+    }
+    
+    // 为组织架构图中的节点添加点击事件
+    document.addEventListener('DOMContentLoaded', function() {
+        const nodes = document.querySelectorAll('.org-node');
+        nodes.forEach((node, index) => {
+            node.addEventListener('click', function() {
+                // 这里可以根据节点类型显示不同的操作菜单
+                if(node.classList.contains('department')) {
+                    showEditDepartmentModal(index);
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html> 

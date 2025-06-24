@@ -1,0 +1,1637 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>权限管理 - 快哥智服平台</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .layout {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* 头部样式 */
+        .header {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            color: white;
+            padding: 0 32px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .logo i {
+            color: #ffd700;
+        }
+
+        .space-switcher {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 40px;
+        }
+
+        .space-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            padding: 8px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .space-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .space-btn.active {
+            background: rgba(255,255,255,0.3);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .user-dropdown {
+            display: none;
+            position: absolute;
+            top: 45px;
+            right: 0;
+            min-width: 140px;
+            background: #fff;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+            border-radius: 8px;
+            z-index: 1001;
+            padding: 8px 0;
+            flex-direction: column;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            color: #495057;
+            text-decoration: none;
+            font-size: 0.98rem;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background: #f0f4ff;
+            color: #667eea;
+        }
+
+        .user-info:hover .user-dropdown {
+            display: flex;
+        }
+
+        .header-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .header-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .company-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 15px;
+        }
+
+        .company-selector span {
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .company-selector select {
+            padding: 6px 10px;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 4px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .company-selector select option {
+            background: #fff;
+            color: #333;
+        }
+
+        .company-selector select:focus {
+            outline: none;
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        /* 主体区域 */
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* 左侧菜单 */
+        .sidebar {
+            width: 250px;
+            background: white;
+            border-right: 1px solid #e9ecef;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+        }
+
+        .menu-section {
+            padding: 20px 0;
+        }
+
+        .menu-title {
+            padding: 0 20px 10px;
+            font-size: 0.8rem;
+            color: #6c757d;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: #495057;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .menu-item:hover {
+            background: #f8f9fa;
+            color: #764ba2;
+        }
+
+        .menu-item.active {
+            background: #764ba2;
+            color: white;
+        }
+
+        .menu-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* 主内容区域 */
+        .content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            background: #f5f7fa;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .content-header {
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .content-title {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .content-subtitle {
+            color: #6c757d;
+            font-size: 1rem;
+        }
+
+        .action-footer-top {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background: #764ba2;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #6a4190;
+        }
+        
+        .btn-secondary {
+            background-color: #f8f9fa;
+            color: #495057;
+            border: 1px solid #dee2e6;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e9ecef;
+        }
+
+        .permission-layout {
+            display: flex;
+            gap: 25px;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        .role-panel {
+            width: 280px;
+            flex-shrink: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .role-panel-header {
+            padding: 18px 20px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .role-list {
+            list-style: none;
+            padding: 10px 0;
+            margin: 0;
+            overflow-y: auto;
+        }
+
+        .role-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 20px;
+            cursor: pointer;
+            border-left: 4px solid transparent;
+            transition: background-color 0.2s, border-left-color 0.2s;
+        }
+        
+        .role-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .role-item.active {
+            background-color: #f0f4ff;
+            border-left-color: #764ba2;
+        }
+        
+        .role-icon {
+            font-size: 1.2rem;
+            color: #8a9ab2;
+            width: 20px;
+            text-align: center;
+        }
+
+        .role-item.active .role-icon {
+            color: #764ba2;
+        }
+
+        .role-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .role-name {
+            font-weight: 500;
+            color: #343a40;
+        }
+        
+        .role-type {
+            font-size: 0.75rem;
+            margin-top: 4px;
+            padding: 3px 8px;
+            border-radius: 10px;
+        }
+        
+        .badge-system {
+            background-color: #e7f3ff;
+            color: #0069d9;
+        }
+
+        .badge-custom {
+            background-color: #e9f7ef;
+            color: #1e7e34;
+        }
+        
+        .permission-panel {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 5px;
+        }
+        
+        .permission-module-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #e9ecef;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .permission-module-card:hover {
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            transform: translateY(-3px);
+        }
+
+        .permission-module-card .card-header {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-bottom: 1px solid #e9ecef;
+            padding: 20px 25px;
+        }
+        
+        .card-title-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        
+        .card-title-group i {
+            color: #764ba2;
+            font-size: 1.4rem;
+            background: linear-gradient(135deg, #764ba2, #667eea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .select-all-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            background: rgba(118, 75, 162, 0.1);
+            border-radius: 20px;
+            border: 1px solid rgba(118, 75, 162, 0.2);
+        }
+
+        .select-all-container label {
+            font-weight: 600;
+            color: #764ba2;
+            cursor: pointer;
+        }
+        
+        .select-all-checkbox {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #764ba2;
+        }
+
+        .permission-module-card .card-body {
+            padding: 25px;
+        }
+        
+        /* 新增的权限模块样式 */
+        .permission-section {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-radius: 12px;
+            border: 1px solid #e9ecef;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .permission-section:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .permission-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e9ecef;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, #764ba2, #667eea);
+            border-radius: 1px;
+        }
+        
+        .section-title i {
+            color: #764ba2;
+            font-size: 1.3rem;
+            background: linear-gradient(135deg, #764ba2, #667eea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subsection {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            border: 1px solid #f0f0f0;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .subsection:hover {
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+            border-color: #e0e6ed;
+        }
+        
+        .subsection:last-child {
+            margin-bottom: 0;
+        }
+        
+        .subsection-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .subsection-title::before {
+            content: '';
+            width: 4px;
+            height: 16px;
+            background: linear-gradient(135deg, #764ba2, #667eea);
+            border-radius: 2px;
+        }
+        
+        .permission-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 12px;
+        }
+        
+        .permission-grid .permission-item {
+            padding: 12px 16px;
+            background: #fafbfc;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .permission-grid .permission-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(118, 75, 162, 0.05), rgba(102, 126, 234, 0.05));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .permission-grid .permission-item:hover {
+            background: #f0f4ff;
+            border-color: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(118, 75, 162, 0.15);
+        }
+        
+        .permission-grid .permission-item:hover::before {
+            opacity: 1;
+        }
+        
+        .permission-grid .permission-item input[type="checkbox"] {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .permission-grid .permission-item input[type="checkbox"]:checked + label {
+            color: #764ba2;
+            font-weight: 600;
+        }
+        
+        .permission-grid .permission-item input[type="checkbox"]:checked + label::after {
+            content: ' ✓';
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        /* 响应式优化 */
+        @media (max-width: 1200px) {
+            .permission-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .permission-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .permission-section {
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+            
+            .subsection {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+
+            .permission-module-card .card-body {
+                padding: 20px;
+            }
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .permission-section {
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        .permission-section:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+        
+        .permission-section:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+        
+        /* 滚动条美化 */
+        .permission-panel::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .permission-panel::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .permission-panel::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #764ba2, #667eea);
+            border-radius: 4px;
+        }
+        
+        .permission-panel::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #6a4190, #5a6fd8);
+        }
+        
+        /* 权限项基础样式 */
+        .permission-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+            font-size: 0.95rem;
+            color: #495057;
+            transition: all 0.3s ease;
+        }
+        
+        .permission-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #764ba2;
+            transition: all 0.3s ease;
+        }
+        
+        .permission-item label {
+            cursor: pointer;
+            flex: 1;
+            transition: all 0.3s ease;
+        }
+        
+        .permission-item:hover {
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            padding: 8px 12px;
+            margin: 0 -12px;
+    }
+
+    /* 弹窗样式 */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 10000;
+        justify-content: center;
+        align-items: center;
+            backdrop-filter: blur(4px);
+    }
+        
+    .modal {
+        background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 700px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+            animation: modalSlideIn 0.3s ease-out;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+    .modal-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid #e9ecef;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    }
+        
+    .modal-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2c3e50;
+        margin: 0;
+    }
+        
+    .modal-close {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: #6c757d;
+        cursor: pointer;
+            padding: 8px;
+            width: 36px;
+            height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+            transition: all 0.3s ease;
+    }
+        
+    .modal-close:hover {
+        background: #f8f9fa;
+            color: #764ba2;
+            transform: rotate(90deg);
+    }
+        
+    .modal-body {
+        padding: 24px;
+    }
+        
+    .modal-footer {
+        padding: 20px 24px;
+        border-top: 1px solid #e9ecef;
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+            background: #f8f9fa;
+    }
+        
+    .form-row {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+        
+    .form-group {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+        
+    .form-label {
+            font-size: 0.95rem;
+        color: #495057;
+            font-weight: 600;
+    }
+        
+    .form-input, .form-select, .form-textarea {
+            padding: 12px 16px;
+        border: 1px solid #ddd;
+            border-radius: 8px;
+        font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background: #fafbfc;
+    }
+        
+    .form-textarea {
+        resize: vertical;
+        min-height: 80px;
+    }
+        
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+        outline: none;
+        border-color: #764ba2;
+            box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.1);
+            background: white;
+    }
+        
+    .btn-cancel {
+            padding: 12px 24px;
+        border: 1px solid #ddd;
+        background: white;
+        color: #495057;
+            border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+    }
+        
+    .btn-cancel:hover {
+        background: #f8f9fa;
+            border-color: #764ba2;
+            color: #764ba2;
+    }
+        
+    .btn-save {
+            padding: 12px 24px;
+        border: none;
+            background: linear-gradient(135deg, #764ba2, #667eea);
+        color: white;
+            border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+    }
+        
+    .btn-save:hover {
+            background: linear-gradient(135deg, #6a4190, #5a6fd8);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(118, 75, 162, 0.3);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .space-switcher {
+                display: none;
+            }
+            
+            .sidebar {
+                position: fixed;
+                left: -250px;
+                top: 60px;
+                height: calc(100vh - 60px);
+                z-index: 999;
+                transition: left 0.3s;
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .modal {
+                width: 95%;
+                margin: 10px;
+            }
+            
+            .modal-body {
+                padding: 20px;
+            }
+    }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <!-- 头部 -->
+        <header class="header">
+            <div class="header-left">
+                <div class="logo">
+                    <i class="fas fa-cogs"></i>
+                    <span>快哥智服</span>
+                </div>
+                <div class="space-switcher">
+                    <button class="space-btn" onclick="location.href='../personal/index.html'">
+                        <i class="fas fa-user"></i>
+                        个人空间
+                    </button>
+                    <button class="space-btn active" onclick="location.href='index.html'">
+                        <i class="fas fa-building"></i>
+                        企业空间
+                    </button>
+                    <button class="space-btn" onclick="location.href='../dashboard/index.html'">
+                        <i class="fas fa-tachometer-alt"></i>
+                        操作台
+                    </button>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="company-selector">
+                    <span>企业：</span>
+                    <select id="header-company-selector">
+                        <option value="company1">快哥智服科技有限公司</option>
+                        <option value="company2">智维技术服务有限公司</option>
+                        <option value="company3">快哥设备销售有限公司</option>
+                        <option value="company4">智服培训学院</option>
+                    </select>
+                </div>
+                <div class="user-info user-dropdown-trigger">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span>张三</span>
+                    <div class="user-dropdown">
+                        <a href="#" class="dropdown-item"><i class="fas fa-user-edit"></i> 个人资料</a>
+                        <a href="#" class="dropdown-item"><i class="fas fa-key"></i> 密码重置</a>
+                        <a href="#" class="dropdown-item"><i class="fas fa-shield-alt"></i> 安全设置</a>
+                    </div>
+                </div>
+                <button class="header-btn">
+                    <i class="fas fa-bell"></i>
+                    消息
+                </button>
+                <button class="header-btn">
+                    <i class="fas fa-cog"></i>
+                    设置
+                </button>
+                <button class="header-btn" onclick="location.href='../index.html'">
+                    <i class="fas fa-sign-out-alt"></i>
+                    退出
+                </button>
+            </div>
+        </header>
+
+        <!-- 主体区域 -->
+        <div class="main-container">
+            <!-- 左侧菜单 -->
+            <nav class="sidebar">
+                <div class="menu-section">
+                    <div class="menu-title">企业管理</div>
+                    <div class="menu-item" onclick="location.href='overview.html'">
+                        <i class="fas fa-home"></i>
+                        <span>企业概览</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='staff.html'">
+                        <i class="fas fa-users-cog"></i>
+                        <span>员工管理</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='staff-review.html'">
+                        <i class="fas fa-user-check"></i>
+                        <span>员工审核</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='org-structure.html'">
+                        <i class="fas fa-sitemap"></i>
+                        <span>组织结构</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='position.html'">
+                        <i class="fas fa-briefcase"></i>
+                        <span>岗位管理</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='company-info.html'">
+                        <i class="fas fa-building"></i>
+                        <span>企业资料</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">角色管理</div>
+                    <div class="menu-item" onclick="location.href='role-list.html'"><i class="fas fa-user-tag"></i><span>角色列表</span></div>
+                    <div class="menu-item active" onclick="location.href='permission.html'"><i class="fas fa-shield-alt"></i><span>权限管理</span></div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">合作企业</div>
+                    <div class="menu-item" onclick="location.href='after-sale.html'">
+                        <i class="fas fa-headset"></i>
+                        <span>售后企业</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='maintenance-company.html'">
+                        <i class="fas fa-tools"></i>
+                        <span>维保企业</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">资质认证</div>
+                    <div class="menu-item" onclick="location.href='user-company.html'">
+                        <i class="fas fa-industry"></i>
+                        <span>设备使用商</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='manufacturer-fixed.html'"><i class="fas fa-cogs"></i><span>设备厂商</span></div>
+                    <div class="menu-item" onclick="location.href='maintenance-provider.html'">
+                        <i class="fas fa-wrench"></i>
+                        <span>维保服务商</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='auth-shop.html'">
+                        <i class="fas fa-store-alt"></i>
+                        <span>商家认证</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">企业管理员</div>
+                    <div class="menu-item" onclick="location.href='admin.html'">
+                        <i class="fas fa-user-shield"></i>
+                        <span>管理员管理</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">系统设置</div>
+                    <div class="menu-item" onclick="location.href='system-config.html'">
+                        <i class="fas fa-cogs"></i>
+                        <span>系统配置</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='system-log.html'">
+                        <i class="fas fa-file-alt"></i>
+                        <span>系统日志</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='system-cache.html'">
+                        <i class="fas fa-database"></i>
+                        <span>系统缓存</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='system-icon.html'">
+                        <i class="fas fa-images"></i>
+                        <span>系统图标</span>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- 主内容区域 -->
+            <main class="content">
+                <div class="content-header">
+                    <div>
+                        <h1 class="content-title">权限管理</h1>
+                        <p class="content-subtitle">精细化分配不同角色所拥有的操作权限</p>
+                    </div>
+                     <div class="action-footer-top">
+                        <button class="btn btn-secondary" onclick="resetPermissionChanges()">重置更改</button>
+                        <button class="btn btn-primary" onclick="savePermissionSettings()"><i class="fas fa-save"></i> 保存权限设置</button>
+                    </div>
+                </div>
+
+                <div class="permission-layout">
+                    <div class="role-panel">
+                        <div class="role-panel-header">
+                            角色列表
+                        </div>
+                        <ul class="role-list">
+                            <li class="role-item active">
+                                <i class="fas fa-user-shield role-icon"></i>
+                                <div class="role-info">
+                                    <span class="role-name">超级管理员</span>
+                                    <span class="role-type badge-system">系统预设</span>
+                                </div>
+                            </li>
+                            <li class="role-item">
+                                <i class="fas fa-money-bill-wave role-icon"></i>
+                                 <div class="role-info">
+                                    <span class="role-name">财务经理</span>
+                                    <span class="role-type badge-custom">自定义</span>
+                                </div>
+                            </li>
+                            <li class="role-item">
+                                <i class="fas fa-user-cog role-icon"></i>
+                                 <div class="role-info">
+                                    <span class="role-name">人事主管</span>
+                                    <span class="role-type badge-custom">自定义</span>
+                                </div>
+                            </li>
+                            <li class="role-item">
+                                <i class="fas fa-user role-icon"></i>
+                                <div class="role-info">
+                                    <span class="role-name">普通员工</span>
+                                    <span class="role-type badge-system">系统预设</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="permission-panel">
+                        <!-- PC端操作权限 -->
+                        <div class="permission-module-card" data-module="pc-enterprise">
+                            <div class="card-header">
+                                <div class="card-title-group">
+                                    <i class="fas fa-desktop"></i>
+                                    <h3>PC端企业空间权限</h3>
+                                </div>
+                                <div class="select-all-container">
+                                    <input type="checkbox" id="select-all-pc-enterprise" class="select-all-checkbox">
+                                    <label for="select-all-pc-enterprise">全选</label>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <!-- 企业基础管理 -->
+                                <div class="permission-section">
+                                    <div class="section-title"><i class="fas fa-building"></i> 企业基础管理</div>
+                                    <div class="permission-grid">
+                                        <div class="permission-item"><input type="checkbox" id="overview_view"><label for="overview_view">概览查看</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="company_info_manage"><label for="company_info_manage">资料管理</label></div>
+                            </div>
+                        </div>
+                                <!-- 员工管理 -->
+                                <div class="permission-section">
+                                    <div class="section-title"><i class="fas fa-users"></i> 员工管理</div>
+                                    <div class="permission-grid">
+                                        <div class="permission-item"><input type="checkbox" id="staff_view"><label for="staff_view">员工查看</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="staff_add"><label for="staff_add">新增</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="staff_edit"><label for="staff_edit">编辑</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="staff_delete"><label for="staff_delete">删除</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="staff_review"><label for="staff_review">审核</label></div>
+                                    </div>
+                                </div>
+                                <!-- 组织架构 -->
+                                <div class="permission-section">
+                                    <div class="section-title"><i class="fas fa-sitemap"></i> 组织架构</div>
+                                    <div class="permission-grid">
+                                        <div class="permission-item"><input type="checkbox" id="org_view"><label for="org_view">查看</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="org_manage"><label for="org_manage">管理</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="position_manage"><label for="position_manage">岗位管理</label></div>
+                                    </div>
+                                </div>
+                                <!-- 角色权限 -->
+                                <div class="permission-section">
+                                    <div class="section-title"><i class="fas fa-user-tag"></i> 角色权限</div>
+                                    <div class="permission-grid">
+                                        <div class="permission-item"><input type="checkbox" id="role_view"><label for="role_view">角色查看</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="role_manage"><label for="role_manage">角色管理</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="permission_assign"><label for="permission_assign">权限分配</label></div>
+                                    </div>
+                                </div>
+                                <!-- 合作企业 -->
+                                <div class="permission-section">
+                                    <div class="section-title"><i class="fas fa-handshake"></i> 合作企业</div>
+                                    <div class="permission-grid">
+                                        <div class="permission-item"><input type="checkbox" id="after_sale_manage"><label for="after_sale_manage">售后企业管理</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="maintenance_manage"><label for="maintenance_manage">维保企业管理</label></div>
+                                    </div>
+                                </div>
+                                <!-- 资质认证 -->
+                                <div class="permission-section">
+                                    <div class="section-title"><i class="fas fa-certificate"></i> 资质认证</div>
+                                    <div class="permission-grid">
+                                        <div class="permission-item"><input type="checkbox" id="user_company_manage"><label for="user_company_manage">设备使用商管理</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="manufacturer_manage"><label for="manufacturer_manage">设备厂商管理</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="auth_shop_manage"><label for="auth_shop_manage">商家认证管理</label></div>
+                                    </div>
+                                </div>
+                                <!-- 系统管理 -->
+                                <div class="permission-section">
+                                    <div class="section-title"><i class="fas fa-cogs"></i> 系统管理</div>
+                                    <div class="permission-grid">
+                                        <div class="permission-item"><input type="checkbox" id="admin_manage"><label for="admin_manage">管理员管理</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="system_config"><label for="system_config">系统配置</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="system_log"><label for="system_log">系统日志</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="system_cache"><label for="system_cache">系统缓存</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="system_icon"><label for="system_icon">系统图标</label></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 移动端权限（优化版） -->
+                        <div class="permission-module-card" data-module="mobile">
+                             <div class="card-header">
+                                <div class="card-title-group">
+                                    <i class="fas fa-mobile-alt"></i>
+                                    <h3>移动端权限</h3>
+                                </div>
+                                <div class="select-all-container">
+                                    <input type="checkbox" id="select-all-mobile" class="select-all-checkbox">
+                                    <label for="select-all-mobile">全选</label>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <!-- 小程序权限 -->
+                                <div class="permission-section">
+                                    <div class="section-title"><i class="fab fa-weixin"></i> 小程序权限</div>
+                                    <div class="permission-grid">
+                                        <div class="permission-item"><input type="checkbox" id="mini_device_view"><label for="mini_device_view">设备查看</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="mini_device_control"><label for="mini_device_control">远程控制</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="mini_alarm_notify"><label for="mini_alarm_notify">告警通知</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="mini_maintenance_view"><label for="mini_maintenance_view">维护查看</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="mini_maintenance_apply"><label for="mini_maintenance_apply">维护申请</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="mini_report_view"><label for="mini_report_view">报表查看</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="mini_profile_edit"><label for="mini_profile_edit">个人资料</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="mini_message"><label for="mini_message">消息中心</label></div>
+                            </div>
+                        </div>
+                                <!-- APP权限 -->
+                                <div class="permission-section">
+                                    <div class="section-title"><i class="fas fa-mobile"></i> APP权限</div>
+                                    <div class="permission-grid">
+                                        <div class="permission-item"><input type="checkbox" id="app_device_monitor"><label for="app_device_monitor">设备监控</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="app_device_control"><label for="app_device_control">远程控制</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="app_alarm_manage"><label for="app_alarm_manage">告警管理</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="app_maintenance_manage"><label for="app_maintenance_manage">维护管理</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="app_work_order"><label for="app_work_order">工单管理</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="app_data_analysis"><label for="app_data_analysis">数据分析</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="app_report_generate"><label for="app_report_generate">报表生成</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="app_system_config"><label for="app_system_config">系统配置</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="app_user_manage"><label for="app_user_manage">用户管理</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="app_notification"><label for="app_notification">通知设置</label></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PC端操作台权限（优化版） -->
+                        <div class="permission-module-card" data-module="pc-dashboard">
+                             <div class="card-header">
+                                <div class="card-title-group">
+                                    <i class="fas fa-tachometer-alt"></i>
+                                    <h3>PC端操作台权限</h3>
+                                </div>
+                                <div class="select-all-container">
+                                    <input type="checkbox" id="select-all-pc-dashboard" class="select-all-checkbox">
+                                    <label for="select-all-pc-dashboard">全选</label>
+                                </div>
+                            </div>
+                           <div class="card-body">
+                                <!-- 设备监控 -->
+                                <div class="permission-section">
+                                    <div class="section-title"><i class="fas fa-chart-line"></i> 设备监控</div>
+                                    <div class="permission-grid">
+                                        <div class="permission-item"><input type="checkbox" id="device_monitor_view"><label for="device_monitor_view">监控查看</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="device_control"><label for="device_control">远程控制</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="monitor_config"><label for="monitor_config">参数配置</label></div>
+                            </div>
+                        </div>
+                                <!-- 设备数据 -->
+                                <div class="permission-section">
+                                    <div class="section-title"><i class="fas fa-database"></i> 设备数据</div>
+                                    <div class="permission-grid">
+                                        <div class="permission-item"><input type="checkbox" id="data_view"><label for="data_view">数据查看</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="data_export"><label for="data_export">数据导出</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="data_analyze"><label for="data_analyze">数据分析</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="report_view"><label for="report_view">报表查看</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="report_generate"><label for="report_generate">报表生成</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="report_export"><label for="report_export">报表导出</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="trend_view"><label for="trend_view">趋势查看</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="trend_analyze"><label for="trend_analyze">趋势分析</label></div>
+                    </div>
+                </div>
+                                <!-- 设备配置 -->
+                                <div class="permission-section">
+                                    <div class="section-title"><i class="fas fa-cog"></i> 设备配置</div>
+                                    <div class="permission-grid">
+                                        <div class="permission-item"><input type="checkbox" id="map_view"><label for="map_view">地图查看</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="map_edit"><label for="map_edit">地图编辑</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="config_view"><label for="config_view">配置查看</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="config_edit"><label for="config_edit">配置编辑</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="config_backup"><label for="config_backup">配置备份</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="config_restore"><label for="config_restore">配置恢复</label></div>
+        </div>
+    </div>
+                                <!-- 工单管理 -->
+                                <div class="permission-section">
+                                    <div class="section-title"><i class="fas fa-clipboard-list"></i> 工单管理</div>
+                                    <div class="permission-grid">
+                                        <div class="permission-item"><input type="checkbox" id="maintenance_plan_view"><label for="maintenance_plan_view">维护计划查看</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="maintenance_plan_manage"><label for="maintenance_plan_manage">维护计划管理</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="maintenance_order_view"><label for="maintenance_order_view">维护工单查看</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="maintenance_order_manage"><label for="maintenance_order_manage">维护工单管理</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="repair_order_view"><label for="repair_order_view">维修工单查看</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="repair_order_manage"><label for="repair_order_manage">维修工单管理</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="inspection_order_view"><label for="inspection_order_view">巡检工单查看</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="inspection_order_manage"><label for="inspection_order_manage">巡检工单管理</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="install_order_view"><label for="install_order_view">安装工单查看</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="install_order_manage"><label for="install_order_manage">安装工单管理</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="debug_order_view"><label for="debug_order_view">调试工单查看</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="debug_order_manage"><label for="debug_order_manage">调试工单管理</label></div>
+            </div>
+                </div>
+                                <!-- 统计分析 -->
+                        <div class="permission-section">
+                                    <div class="section-title"><i class="fas fa-chart-bar"></i> 统计分析</div>
+                                    <div class="permission-grid">
+                                        <div class="permission-item"><input type="checkbox" id="work_order_stat_view"><label for="work_order_stat_view">工单统计查看</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="work_order_stat_export"><label for="work_order_stat_export">工单统计导出</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="work_order_stat_analyze"><label for="work_order_stat_analyze">工单统计分析</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="work_order_report_view"><label for="work_order_report_view">工单报表查看</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="work_order_report_generate"><label for="work_order_report_generate">工单报表生成</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="work_order_report_export"><label for="work_order_report_export">工单报表导出</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="work_order_report_schedule"><label for="work_order_report_schedule">定时报表发送</label></div>
+                        </div>
+                        </div>
+                                <!-- 质量与知识管理 -->
+                        <div class="permission-section">
+                                    <div class="section-title"><i class="fas fa-star"></i> 质量与知识管理</div>
+                                    <div class="permission-grid">
+                                        <div class="permission-item"><input type="checkbox" id="quality_view"><label for="quality_view">质量查看</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="quality_evaluate"><label for="quality_evaluate">质量评价</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="quality_feedback"><label for="quality_feedback">质量反馈</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="quality_improve"><label for="quality_improve">改进建议</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="knowledge_view"><label for="knowledge_view">知识库查看</label></div>
+                                        <div class="permission-item"><input type="checkbox" id="knowledge_manage"><label for="knowledge_manage">知识库管理</label></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- 批量权限设置弹窗 -->
+    <div class="modal-overlay" id="batchPermissionModal">
+        <div class="modal" style="max-width:700px;">
+            <div class="modal-header">
+                <h3 class="modal-title">批量权限设置</h3>
+                <button class="modal-close" onclick="closeModal('batchPermissionModal')">&times;</button>
+    <script>
+    // 角色权限映射 - 更新为新的权限结构
+    let rolePermissions = {
+        'super_admin': [
+            // PC端企业空间权限 - 详细操作权限
+            'pc_enterprise_overview_view', 'pc_enterprise_staff_view', 'pc_enterprise_staff_add', 'pc_enterprise_staff_edit', 'pc_enterprise_staff_delete',
+            'pc_enterprise_staff_review_view', 'pc_enterprise_staff_review_approve', 'pc_enterprise_staff_review_reject',
+            'pc_enterprise_org_view', 'pc_enterprise_org_add', 'pc_enterprise_org_edit', 'pc_enterprise_org_delete',
+            'pc_enterprise_position_view', 'pc_enterprise_position_add', 'pc_enterprise_position_edit', 'pc_enterprise_position_delete',
+            'pc_enterprise_company_info_view', 'pc_enterprise_company_info_edit',
+            'pc_enterprise_role_view', 'pc_enterprise_role_add', 'pc_enterprise_role_edit', 'pc_enterprise_role_delete',
+            'pc_enterprise_permission_view', 'pc_enterprise_permission_edit',
+            'pc_enterprise_after_sale_view', 'pc_enterprise_after_sale_add', 'pc_enterprise_after_sale_edit', 'pc_enterprise_after_sale_delete',
+            'pc_enterprise_maintenance_view', 'pc_enterprise_maintenance_add', 'pc_enterprise_maintenance_edit', 'pc_enterprise_maintenance_delete',
+            'pc_enterprise_user_company_view', 'pc_enterprise_user_company_add', 'pc_enterprise_user_company_edit', 'pc_enterprise_user_company_delete',
+            'pc_enterprise_manufacturer_view', 'pc_enterprise_manufacturer_add', 'pc_enterprise_manufacturer_edit', 'pc_enterprise_manufacturer_delete',
+            'pc_enterprise_maintenance_provider_view', 'pc_enterprise_maintenance_provider_add', 'pc_enterprise_maintenance_provider_edit', 'pc_enterprise_maintenance_provider_delete',
+            'pc_enterprise_auth_shop_view', 'pc_enterprise_auth_shop_approve', 'pc_enterprise_auth_shop_reject',
+            'pc_enterprise_admin_view', 'pc_enterprise_admin_add', 'pc_enterprise_admin_edit', 'pc_enterprise_admin_delete',
+            'pc_enterprise_system_config_view', 'pc_enterprise_system_config_edit',
+            'pc_enterprise_system_log_view', 'pc_enterprise_system_log_export',
+            'pc_enterprise_system_cache_view', 'pc_enterprise_system_cache_clear',
+            'pc_enterprise_system_icon_view', 'pc_enterprise_system_icon_upload', 'pc_enterprise_system_icon_delete',
+            
+            // PC端操作台权限 - 产品设备远程监测详细操作权限
+            'pc_dashboard_device_monitor_view', 'pc_dashboard_device_monitor_control', 'pc_dashboard_device_monitor_config',
+            'pc_dashboard_device_status_view', 'pc_dashboard_device_status_update',
+            'pc_dashboard_device_alarm_view', 'pc_dashboard_device_alarm_acknowledge', 'pc_dashboard_device_alarm_resolve',
+            'pc_dashboard_device_data_view', 'pc_dashboard_device_data_export', 'pc_dashboard_device_data_analyze',
+            'pc_dashboard_device_report_view', 'pc_dashboard_device_report_generate', 'pc_dashboard_device_report_export',
+            'pc_dashboard_device_trend_view', 'pc_dashboard_device_trend_analyze',
+            'pc_dashboard_device_map_view', 'pc_dashboard_device_map_edit',
+            'pc_dashboard_device_config_view', 'pc_dashboard_device_config_edit', 'pc_dashboard_device_config_backup', 'pc_dashboard_device_config_restore',
+            
+            // PC端操作台权限 - 设备远程监测运维详细操作权限
+            'pc_dashboard_maintenance_schedule_view', 'pc_dashboard_maintenance_schedule_add', 'pc_dashboard_maintenance_schedule_edit', 'pc_dashboard_maintenance_schedule_delete',
+            'pc_dashboard_maintenance_order_view', 'pc_dashboard_maintenance_order_add', 'pc_dashboard_maintenance_order_edit', 'pc_dashboard_maintenance_order_assign', 'pc_dashboard_maintenance_order_close',
+            'pc_dashboard_repair_order_view', 'pc_dashboard_repair_order_add', 'pc_dashboard_repair_order_edit', 'pc_dashboard_repair_order_assign', 'pc_dashboard_repair_order_close',
+            'pc_dashboard_inspection_order_view', 'pc_dashboard_inspection_order_add', 'pc_dashboard_inspection_order_edit', 'pc_dashboard_inspection_order_assign', 'pc_dashboard_inspection_order_close',
+            'pc_dashboard_install_order_view', 'pc_dashboard_install_order_add', 'pc_dashboard_install_order_edit', 'pc_dashboard_install_order_assign', 'pc_dashboard_install_order_close',
+            'pc_dashboard_debug_order_view', 'pc_dashboard_debug_order_add', 'pc_dashboard_debug_order_edit', 'pc_dashboard_debug_order_assign', 'pc_dashboard_debug_order_close',
+            'pc_dashboard_work_order_management_view', 'pc_dashboard_work_order_management_approve', 'pc_dashboard_work_order_management_reject', 'pc_dashboard_work_order_management_priority', 'pc_dashboard_work_order_management_batch',
+            'pc_dashboard_work_order_statistics_view', 'pc_dashboard_work_order_statistics_export', 'pc_dashboard_work_order_statistics_analyze',
+            'pc_dashboard_work_order_report_view', 'pc_dashboard_work_order_report_generate', 'pc_dashboard_work_order_report_export', 'pc_dashboard_work_order_report_schedule',
+            'pc_dashboard_work_order_quality_view', 'pc_dashboard_work_order_quality_evaluate', 'pc_dashboard_work_order_quality_feedback', 'pc_dashboard_work_order_quality_improve',
+            'pc_dashboard_work_order_knowledge_view', 'pc_dashboard_work_order_knowledge_add', 'pc_dashboard_work_order_knowledge_edit', 'pc_dashboard_work_order_knowledge_delete', 'pc_dashboard_work_order_knowledge_search', 'pc_dashboard_work_order_knowledge_share',
+            
+            // 移动端小程序权限 - 详细操作权限
+            'mobile_miniprogram_profile_view', 'mobile_miniprogram_profile_edit', 'mobile_miniprogram_password_change',
+            'mobile_miniprogram_security_view', 'mobile_miniprogram_security_edit',
+            'mobile_miniprogram_shop_view', 'mobile_miniprogram_shop_edit',
+            'mobile_miniprogram_repair_order_view', 'mobile_miniprogram_repair_order_add', 'mobile_miniprogram_repair_order_edit', 'mobile_miniprogram_repair_order_update',
+            'mobile_miniprogram_maintenance_order_view', 'mobile_miniprogram_maintenance_order_add', 'mobile_miniprogram_maintenance_order_edit', 'mobile_miniprogram_maintenance_order_update',
+            'mobile_miniprogram_inspection_order_view', 'mobile_miniprogram_inspection_order_add', 'mobile_miniprogram_inspection_order_edit', 'mobile_miniprogram_inspection_order_update',
+            'mobile_miniprogram_install_order_view', 'mobile_miniprogram_install_order_add', 'mobile_miniprogram_install_order_edit', 'mobile_miniprogram_install_order_update',
+            'mobile_miniprogram_debug_order_view', 'mobile_miniprogram_debug_order_add', 'mobile_miniprogram_debug_order_edit', 'mobile_miniprogram_debug_order_update',
+            'mobile_miniprogram_assist_order_view', 'mobile_miniprogram_assist_order_add', 'mobile_miniprogram_assist_order_edit', 'mobile_miniprogram_assist_order_update',
+            'mobile_miniprogram_assist_record_view', 'mobile_miniprogram_assist_record_add', 'mobile_miniprogram_assist_record_edit',
+            'mobile_miniprogram_assist_launch_view', 'mobile_miniprogram_assist_launch_add',
+            'mobile_miniprogram_knowledge_view', 'mobile_miniprogram_knowledge_search', 'mobile_miniprogram_knowledge_favorite',
+            'mobile_miniprogram_teaching_view', 'mobile_miniprogram_teaching_learn', 'mobile_miniprogram_teaching_progress',
+            'mobile_miniprogram_auth_expert_view', 'mobile_miniprogram_auth_expert_apply', 'mobile_miniprogram_auth_expert_edit',
+            'mobile_miniprogram_auth_real_view', 'mobile_miniprogram_auth_real_apply', 'mobile_miniprogram_auth_real_edit',
+            'mobile_miniprogram_auth_repair_view', 'mobile_miniprogram_auth_repair_apply', 'mobile_miniprogram_auth_repair_edit',
+            'mobile_miniprogram_auth_shop_view', 'mobile_miniprogram_auth_shop_apply', 'mobile_miniprogram_auth_shop_edit',
+            
+            // 移动端APP权限 - 详细操作权限
+            'mobile_app_profile_view', 'mobile_app_profile_edit', 'mobile_app_password_change',
+            'mobile_app_security_view', 'mobile_app_security_edit',
+            'mobile_app_shop_view', 'mobile_app_shop_edit',
+            'mobile_app_repair_order_view', 'mobile_app_repair_order_add', 'mobile_app_repair_order_edit', 'mobile_app_repair_order_update',
+            'mobile_app_maintenance_order_view', 'mobile_app_maintenance_order_add', 'mobile_app_maintenance_order_edit', 'mobile_app_maintenance_order_update',
+            'mobile_app_inspection_order_view', 'mobile_app_inspection_order_add', 'mobile_app_inspection_order_edit', 'mobile_app_inspection_order_update',
+            'mobile_app_install_order_view', 'mobile_app_install_order_add', 'mobile_app_install_order_edit', 'mobile_app_install_order_update',
+            'mobile_app_debug_order_view', 'mobile_app_debug_order_add', 'mobile_app_debug_order_edit', 'mobile_app_debug_order_update',
+            'mobile_app_assist_order_view', 'mobile_app_assist_order_add', 'mobile_app_assist_order_edit', 'mobile_app_assist_order_update',
+            'mobile_app_assist_record_view', 'mobile_app_assist_record_add', 'mobile_app_assist_record_edit',
+            'mobile_app_assist_launch_view', 'mobile_app_assist_launch_add',
+            'mobile_app_knowledge_view', 'mobile_app_knowledge_search', 'mobile_app_knowledge_favorite',
+            'mobile_app_teaching_view', 'mobile_app_teaching_learn', 'mobile_app_teaching_progress',
+            'mobile_app_auth_expert_view', 'mobile_app_auth_expert_apply', 'mobile_app_auth_expert_edit',
+            'mobile_app_auth_real_view', 'mobile_app_auth_real_apply', 'mobile_app_auth_real_edit',
+            'mobile_app_auth_repair_view', 'mobile_app_auth_repair_apply', 'mobile_app_auth_repair_edit',
+            'mobile_app_auth_shop_view', 'mobile_app_auth_shop_apply', 'mobile_app_auth_shop_edit'
+        ],
+        'finance_manager': [
+            // 企业空间权限 - 只读权限
+            'pc_enterprise_overview_view', 'pc_enterprise_company_info_view',
+            // 操作台权限 - 财务相关
+            'pc_dashboard_device_report_view', 'pc_dashboard_device_report_export',
+            'pc_dashboard_work_order_statistics_view', 'pc_dashboard_work_order_statistics_export',
+            'pc_dashboard_work_order_report_view', 'pc_dashboard_work_order_report_export',
+            // 移动端权限 - 只读
+            'mobile_miniprogram_profile_view', 'mobile_app_profile_view'
+        ],
+        'hr_manager': [
+            // 企业空间权限 - 人力资源相关
+            'pc_enterprise_overview_view', 'pc_enterprise_staff_view', 'pc_enterprise_staff_add', 'pc_enterprise_staff_edit',
+            'pc_enterprise_staff_review_view', 'pc_enterprise_staff_review_approve', 'pc_enterprise_staff_review_reject',
+            'pc_enterprise_org_view', 'pc_enterprise_org_add', 'pc_enterprise_org_edit',
+            'pc_enterprise_position_view', 'pc_enterprise_position_add', 'pc_enterprise_position_edit',
+            'pc_enterprise_role_view', 'pc_enterprise_role_add', 'pc_enterprise_role_edit',
+            'pc_enterprise_permission_view',
+            // 操作台权限 - 团队管理
+            'pc_dashboard_work_order_management_view', 'pc_dashboard_work_order_management_assign',
+            // 移动端权限 - 个人资料管理
+            'mobile_miniprogram_profile_view', 'mobile_miniprogram_profile_edit',
+            'mobile_app_profile_view', 'mobile_app_profile_edit'
+        ],
+        'employee': [
+            // 基础权限 - 只读和基本操作
+            'pc_enterprise_overview_view',
+            'pc_dashboard_device_monitor_view', 'pc_dashboard_device_status_view', 'pc_dashboard_device_alarm_view',
+            'pc_dashboard_maintenance_order_view', 'pc_dashboard_repair_order_view', 'pc_dashboard_inspection_order_view',
+            'mobile_miniprogram_profile_view', 'mobile_miniprogram_profile_edit',
+            'mobile_miniprogram_repair_order_view', 'mobile_miniprogram_repair_order_update',
+            'mobile_miniprogram_maintenance_order_view', 'mobile_miniprogram_maintenance_order_update',
+            'mobile_miniprogram_inspection_order_view', 'mobile_miniprogram_inspection_order_update',
+            'mobile_app_profile_view', 'mobile_app_profile_edit',
+            'mobile_app_repair_order_view', 'mobile_app_repair_order_update',
+            'mobile_app_maintenance_order_view', 'mobile_app_maintenance_order_update',
+            'mobile_app_inspection_order_view', 'mobile_app_inspection_order_update'
+        ]
+    };
+    
+    let currentRole = 'super_admin';
+    
+    function closeModal(id) {
+        document.getElementById(id).style.display='none';
+    }
+    
+    function saveBatchPermission() {
+        const role = document.getElementById('batchRoleSelect').value;
+        const template = document.getElementById('permissionTemplate').value;
+        
+        if(!role) {
+            alert('请选择角色');
+            return;
+        }
+        
+        // 收集选中的权限
+        const permissions = [];
+        document.querySelectorAll('#batchPermissionModal .permission-item input[type="checkbox"]:checked').forEach(cb => {
+            const permId = cb.id.replace('batch_', '');
+            permissions.push(permId);
+        });
+        
+        // 更新角色权限
+        rolePermissions[role] = permissions;
+        
+        closeModal('batchPermissionModal');
+        alert('批量权限设置成功！');
+        
+        // 如果当前选中的角色与批量设置的角色相同，则更新显示
+        if (role === currentRole) {
+            updatePermissionDisplay();
+        }
+    }
+    
+    function savePermissionSettings() {
+        // 收集当前页面的权限设置
+        const permissions = [];
+        document.querySelectorAll('.permission-item input[type="checkbox"]:checked').forEach(cb => {
+            permissions.push(cb.id);
+        });
+        
+        // 更新角色权限
+        rolePermissions[currentRole] = permissions;
+        
+        alert('权限设置保存成功！');
+    }
+    
+    function resetPermissionChanges() {
+        // 重置为默认权限设置
+        const defaultPerms = rolePermissions[currentRole] || [];
+        document.querySelectorAll('.permission-item input[type="checkbox"]').forEach(cb => {
+            cb.checked = defaultPerms.includes(cb.id);
+        });
+        alert('权限设置已重置！');
+    }
+    
+    // 角色切换事件
+    document.addEventListener('DOMContentLoaded', function() {
+        const roleItems = document.querySelectorAll('.role-item');
+        roleItems.forEach((item, index) => {
+            item.addEventListener('click', function() {
+                // 移除所有active类
+                roleItems.forEach(ri => ri.classList.remove('active'));
+                // 添加active类到当前项
+                item.classList.add('active');
+                
+                // 更新当前角色
+                const roleNames = ['super_admin', 'finance_manager', 'hr_manager', 'employee'];
+                currentRole = roleNames[index];
+                
+                // 更新权限显示
+                updatePermissionDisplay();
+            });
+        });
+        
+        // 全选功能 - 更新为支持新的权限结构
+        document.querySelectorAll('.select-all-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const cardBody = this.closest('.permission-module-card').querySelector('.card-body');
+                const checkboxes = cardBody.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(cb => cb.checked = this.checked);
+            });
+        });
+        
+        // 为保存和重置按钮绑定事件
+        const saveBtn = document.querySelector('.btn-primary');
+        const resetBtn = document.querySelector('.btn-secondary');
+        if(saveBtn) saveBtn.addEventListener('click', savePermissionSettings);
+        if(resetBtn) resetBtn.addEventListener('click', resetPermissionChanges);
+        
+        // 初始化权限显示
+        updatePermissionDisplay();
+    });
+    
+    function updatePermissionDisplay() {
+        const currentPerms = rolePermissions[currentRole] || [];
+        document.querySelectorAll('.permission-item input[type="checkbox"]').forEach(cb => {
+            cb.checked = currentPerms.includes(cb.id);
+        });
+        
+        // 更新全选状态
+        updateSelectAllStatus();
+    }
+    
+    function updateSelectAllStatus() {
+        // 更新PC端企业空间全选状态
+        const pcEnterpriseCheckboxes = document.querySelectorAll('.permission-module-card[data-module="pc-enterprise"] .permission-item input[type="checkbox"]');
+        const pcEnterpriseCheckedCount = Array.from(pcEnterpriseCheckboxes).filter(cb => cb.checked).length;
+        const pcEnterpriseSelectAll = document.querySelector('.permission-module-card[data-module="pc-enterprise"] .select-all-checkbox');
+        if (pcEnterpriseSelectAll) {
+            pcEnterpriseSelectAll.checked = pcEnterpriseCheckedCount === pcEnterpriseCheckboxes.length;
+            pcEnterpriseSelectAll.indeterminate = pcEnterpriseCheckedCount > 0 && pcEnterpriseCheckedCount < pcEnterpriseCheckboxes.length;
+        }
+        
+        // 更新PC端操作台全选状态
+        const pcDashboardCheckboxes = document.querySelectorAll('.permission-module-card[data-module="pc-dashboard"] .permission-item input[type="checkbox"]');
+        const pcDashboardCheckedCount = Array.from(pcDashboardCheckboxes).filter(cb => cb.checked).length;
+        const pcDashboardSelectAll = document.querySelector('.permission-module-card[data-module="pc-dashboard"] .select-all-checkbox');
+        if (pcDashboardSelectAll) {
+            pcDashboardSelectAll.checked = pcDashboardCheckedCount === pcDashboardCheckboxes.length;
+            pcDashboardSelectAll.indeterminate = pcDashboardCheckedCount > 0 && pcDashboardCheckedCount < pcDashboardCheckboxes.length;
+        }
+        
+        // 更新移动端全选状态
+        const mobileCheckboxes = document.querySelectorAll('.permission-module-card[data-module="mobile"] .permission-item input[type="checkbox"]');
+        const mobileCheckedCount = Array.from(mobileCheckboxes).filter(cb => cb.checked).length;
+        const mobileSelectAll = document.querySelector('.permission-module-card[data-module="mobile"] .select-all-checkbox');
+        if (mobileSelectAll) {
+            mobileSelectAll.checked = mobileCheckedCount === mobileCheckboxes.length;
+            mobileSelectAll.indeterminate = mobileCheckedCount > 0 && mobileCheckedCount < mobileCheckboxes.length;
+        }
+    }
+    
+    // 监听权限复选框变化
+    document.addEventListener('change', function(e) {
+        if (e.target.type === 'checkbox' && e.target.closest('.permission-item')) {
+            updateSelectAllStatus();
+        }
+    });
+    </script>
+    <script src="company-switcher.js"></script>
+</body>
+</html> 

@@ -1,0 +1,2566 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>售后企业管理 - 快哥智服平台</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            height: 100vh;
+        }
+
+        .layout {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* 头部样式 */
+        .header {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            color: white;
+            padding: 0 32px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .logo i {
+            color: #ffd700;
+        }
+
+        .space-switcher {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 40px;
+        }
+
+        .space-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            padding: 8px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .space-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .space-btn.active {
+            background: rgba(255,255,255,0.3);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .user-dropdown {
+            display: none;
+            position: absolute;
+            top: 45px;
+            right: 0;
+            min-width: 140px;
+            background: #fff;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+            border-radius: 8px;
+            z-index: 1001;
+            padding: 8px 0;
+            flex-direction: column;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            color: #495057;
+            text-decoration: none;
+            font-size: 0.98rem;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background: #f0f4ff;
+            color: #667eea;
+        }
+
+        .user-info:hover .user-dropdown {
+            display: flex;
+        }
+
+        .header-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .header-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .company-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 15px;
+        }
+
+        .company-selector span {
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .company-selector select {
+            padding: 6px 10px;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 4px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .company-selector select option {
+            background: #fff;
+            color: #333;
+        }
+
+        .company-selector select:focus {
+            outline: none;
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        /* 主体区域 */
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* 左侧菜单 */
+        .sidebar {
+            width: 250px;
+            background: white;
+            border-right: 1px solid #e9ecef;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+        }
+
+        .menu-section {
+            padding: 20px 0;
+        }
+
+        .menu-title {
+            padding: 0 20px 10px;
+            font-size: 0.8rem;
+            color: #6c757d;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: #495057;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .menu-item:hover {
+            background: #f8f9fa;
+            color: #764ba2;
+        }
+
+        .menu-item.active {
+            background: #764ba2;
+            color: white;
+        }
+
+        .menu-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* 主内容区域 */
+        .content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            background: #f5f7fa;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .content-title {
+            font-size: 1.8rem;
+            color: #333;
+            margin: 0;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(118, 75, 162, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(118, 75, 162, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #764ba2;
+            border: 2px solid #764ba2;
+        }
+
+        .btn-outline:hover {
+            background: #764ba2;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-danger-outline {
+            background-color: transparent;
+            color: #d9534f;
+            border: 2px solid #d9534f;
+        }
+        .btn-danger-outline:hover {
+            background-color: rgba(217, 83, 79, 0.05);
+            color: #d9534f;
+        }
+
+        .btn-info {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-info:hover {
+            background: #138496;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .company-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .company-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+            transition: all 0.3s;
+            border: 1px solid #f0f0f0;
+        }
+        
+        .company-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+        
+        .card-header {
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-bottom: 1px solid #e9ecef;
+            position: relative;
+        }
+
+        .company-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .company-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .company-details h3 {
+            font-size: 1.1rem;
+            color: #333;
+            margin: 0 0 4px 0;
+        }
+
+        .company-details p {
+            font-size: 0.85rem;
+            color: #666;
+            margin: 0;
+        }
+        
+        .status-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-expired {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .card-body {
+            padding: 20px 24px 0 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        
+        .info-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.97rem;
+            color: #5a3e85;
+            padding: 10px 0 10px 0;
+            border-bottom: 1px solid #f2f2f2;
+        }
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        .info-row i {
+            width: 20px;
+            color: #764ba2;
+            text-align: center;
+            font-size: 1.08em;
+        }
+        .info-row span {
+            color: #333;
+            word-break: break-all;
+        }
+        .card-footer {
+            padding: 18px 24px 18px 24px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            gap: 14px;
+            justify-content: flex-end;
+        }
+
+        /* 弹窗样式 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 10000;
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideIn 0.3s ease;
+            margin: auto;
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        @keyframes slideIn {
+            from { 
+                opacity: 0;
+                transform: translateY(-50%) scale(0.9);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(-50%) scale(1);
+            }
+        }
+
+        .modal-header {
+            padding: 25px 30px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 20px 20px 0 0;
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: #6c757d;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: all 0.2s;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        /* 表单样式优化 */
+        .modal-body {
+            padding: 30px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .form-label.required::after {
+            content: '*';
+            color: #dc3545;
+            margin-left: 4px;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            padding: 12px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            background: #fff;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #764ba2;
+            box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* 附件上传样式 */
+        .file-upload {
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            background: #f8f9fa;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .file-upload:hover {
+            border-color: #764ba2;
+            background: #f0f4ff;
+        }
+
+        .file-upload.dragover {
+            border-color: #764ba2;
+            background: #f0f4ff;
+        }
+
+        .file-upload-icon {
+            font-size: 2rem;
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+
+        .file-upload-text {
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+
+        .file-upload-hint {
+            font-size: 0.8rem;
+            color: #adb5bd;
+        }
+
+        .file-list {
+            margin-top: 15px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 15px;
+        background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+
+        .file-info {
+        display: flex;
+        align-items: center;
+            gap: 10px;
+    }
+
+        .file-icon {
+            color: #764ba2;
+        font-size: 1.2rem;
+        }
+
+        .file-name {
+            font-weight: 500;
+        color: #333;
+        }
+
+        .file-size {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+
+        .file-remove {
+        background: none;
+        border: none;
+            color: #dc3545;
+        cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+        transition: background 0.2s;
+    }
+
+        .file-remove:hover {
+            background: #f8d7da;
+        }
+
+        /* 设备选择样式优化 */
+        .device-selection {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+        background: #f8f9fa;
+    }
+
+        .device-category {
+            margin-bottom: 25px;
+        }
+
+        .device-category:last-child {
+            margin-bottom: 0;
+        }
+
+        .device-category h4 {
+            color: #333;
+            margin: 0 0 15px 0;
+            font-size: 1rem;
+            font-weight: 600;
+        display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .device-category h4 i {
+            color: #764ba2;
+        }
+
+        .device-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 12px;
+    }
+
+        .device-item {
+        display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .device-item:hover {
+            border-color: #764ba2;
+            background: #f0f4ff;
+        }
+
+        .device-item input[type="checkbox"] {
+            margin: 0;
+            width: 16px;
+            height: 16px;
+            accent-color: #764ba2;
+        }
+
+        .device-item input[type="checkbox"]:checked + span {
+            color: #764ba2;
+            font-weight: 600;
+        }
+
+        .device-item input[type="checkbox"]:checked ~ .device-item {
+            border-color: #764ba2;
+            background: #f0f4ff;
+        }
+
+        .modal-footer {
+            padding: 20px 30px;
+            border-top: 1px solid #e9ecef;
+        display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            background: #f8f9fa;
+            border-radius: 0 0 20px 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+    .form-label {
+            display: block;
+        font-size: 0.9rem;
+        color: #495057;
+        font-weight: 500;
+            margin-bottom: 8px;
+    }
+
+    .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+        font-size: 0.95rem;
+            transition: all 0.3s;
+            background: white;
+    }
+
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+        outline: none;
+        border-color: #764ba2;
+            box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+    .btn-cancel {
+            padding: 12px 24px;
+            border: 2px solid #e9ecef;
+        background: white;
+            color: #6c757d;
+            border-radius: 10px;
+        cursor: pointer;
+        font-size: 0.95rem;
+        transition: all 0.3s;
+            font-weight: 500;
+    }
+
+    .btn-cancel:hover {
+        background: #f8f9fa;
+            border-color: #6c757d;
+    }
+
+    .btn-save {
+            padding: 12px 24px;
+        border: none;
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        color: white;
+            border-radius: 10px;
+        cursor: pointer;
+        font-size: 0.95rem;
+            transition: all 0.3s;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(118, 75, 162, 0.3);
+    }
+
+    .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(118, 75, 162, 0.4);
+    }
+
+    .detail-row {
+        display: flex;
+        margin-bottom: 15px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+    }
+
+    .detail-label {
+        width: 120px;
+            font-weight: 600;
+        color: #495057;
+            flex-shrink: 0;
+    }
+
+    .detail-value {
+        flex: 1;
+        color: #333;
+    }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .space-switcher {
+                display: none;
+            }
+            
+            .sidebar {
+                position: fixed;
+                left: -250px;
+                top: 60px;
+                height: calc(100vh - 60px);
+                z-index: 999;
+                transition: left 0.3s;
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .company-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 统计信息卡片样式 */
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stats-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .stats-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+
+        .stats-icon.active {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        }
+
+        .stats-icon.pending {
+            background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+        }
+
+        .stats-icon.warning {
+            background: linear-gradient(135deg, #dc3545 0%, #e83e8c 100%);
+        }
+
+        .stats-content {
+            flex: 1;
+        }
+
+        .stats-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .stats-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        /* 合作注意事项样式 */
+        .notice-section {
+            background: white;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-left: 4px solid #764ba2;
+        }
+
+        .notice-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .notice-header i {
+            color: #764ba2;
+            font-size: 1rem;
+        }
+
+        .notice-header h3 {
+            color: #333;
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .notice-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .notice-category {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 12px;
+            border-left: 3px solid #764ba2;
+        }
+
+        .notice-category h4 {
+            color: #333;
+            margin: 0 0 8px 0;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .notice-category h4 i {
+            color: #764ba2;
+            font-size: 0.8rem;
+        }
+
+        .notice-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+            padding: 4px 0;
+            font-size: 0.8rem;
+        }
+
+        .notice-item i {
+            color: #28a745;
+            margin-top: 1px;
+            flex-shrink: 0;
+            font-size: 0.7rem;
+        }
+
+        .notice-item span {
+            color: #495057;
+            line-height: 1.4;
+        }
+
+        /* 搜索下拉框样式 */
+        .search-dropdown {
+            position: relative;
+        }
+
+        .dropdown-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .dropdown-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background: #f8f9fa;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        /* 设备选择样式 */
+        .device-selection {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            background: #f8f9fa;
+        }
+
+        .device-category {
+            margin-bottom: 20px;
+        }
+
+        .device-category:last-child {
+            margin-bottom: 0;
+        }
+
+        .device-category h4 {
+            color: #333;
+            margin: 0 0 10px 0;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .device-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        .device-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .device-item:hover {
+            border-color: #764ba2;
+            background: #f8f9fa;
+        }
+
+        .device-item input[type="checkbox"] {
+            margin: 0;
+        }
+
+        .device-item input[type="checkbox"]:checked + span {
+            color: #764ba2;
+        font-weight: 500;
+    }
+
+        /* 视图切换和分页控件样式 */
+        .view-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 10px;
+        }
+
+        .view-btn {
+            background: none;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            color: #6c757d;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .view-btn:hover {
+            border-color: #764ba2;
+            color: #764ba2;
+        }
+
+        .view-btn.active {
+            background: #764ba2;
+            color: white;
+            border-color: #764ba2;
+        }
+
+        .pagination {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .page-btn {
+            background: none;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            color: #6c757d;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .page-btn:hover:not(:disabled) {
+            border-color: #764ba2;
+            color: #764ba2;
+        }
+
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .page-info {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        /* 表格视图样式 */
+        .table-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        .company-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .company-table th {
+            background: #f8f9fa;
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #e9ecef;
+            font-size: 0.9rem;
+        }
+
+        .company-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 0.9rem;
+        }
+
+        .company-table tbody tr:nth-child(even) {
+            background-color: #fafbfc;
+        }
+
+        .company-table tbody tr:hover {
+            background-color: #f0f4ff;
+        }
+
+        .table-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .table-status.status-active {
+        background: #d4edda;
+        color: #155724;
+    }
+
+        .table-status.status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .table-status.status-expired {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+        .table-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .table-actions .btn {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
+        /* 企业列表容器样式 */
+        .company-list-container {
+            position: relative;
+            min-height: 400px;
+        }
+
+        /* 表格视图样式 */
+        .table-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            overflow: hidden;
+    }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <!-- 头部 -->
+        <header class="header">
+            <div class="header-left">
+                <div class="logo">
+                    <i class="fas fa-cogs"></i>
+                    <span>快哥智服</span>
+                </div>
+                <div class="space-switcher">
+                    <button class="space-btn" onclick="location.href='../personal/index.html'">
+                        <i class="fas fa-user"></i>
+                        个人空间
+                    </button>
+                    <button class="space-btn active" onclick="location.href='index.html'">
+                        <i class="fas fa-building"></i>
+                        企业空间
+                    </button>
+                    <button class="space-btn" onclick="location.href='../dashboard/index.html'">
+                        <i class="fas fa-tachometer-alt"></i>
+                        操作台
+                    </button>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="company-selector">
+                    <span>企业：</span>
+                    <select id="header-company-selector">
+                        <option value="company1">快哥智服科技有限公司</option>
+                        <option value="company2">智维技术服务有限公司</option>
+                        <option value="company3">快哥设备销售有限公司</option>
+                        <option value="company4">智服培训学院</option>
+                    </select>
+                </div>
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span>张三</span>
+                    <div class="user-dropdown">
+                        <a href="#" class="dropdown-item"><i class="fas fa-user-edit"></i> 个人资料</a>
+                        <a href="#" class="dropdown-item"><i class="fas fa-key"></i> 密码重置</a>
+                        <a href="#" class="dropdown-item"><i class="fas fa-shield-alt"></i> 安全设置</a>
+                    </div>
+                </div>
+                <button class="header-btn"><i class="fas fa-bell"></i>消息</button>
+                <button class="header-btn"><i class="fas fa-cog"></i>设置</button>
+                <button class="header-btn" onclick="location.href='../index.html'"><i class="fas fa-sign-out-alt"></i>退出</button>
+            </div>
+        </header>
+        <div class="main-container">
+            <!-- 左侧菜单 -->
+            <nav class="sidebar">
+                <div class="menu-section">
+                    <div class="menu-title">企业管理</div>
+                    <div class="menu-item" onclick="location.href='overview.html'"><i class="fas fa-home"></i><span>企业概览</span></div>
+                    <div class="menu-item" onclick="location.href='staff.html'"><i class="fas fa-users-cog"></i><span>员工管理</span></div>
+                    <div class="menu-item" onclick="location.href='staff-review.html'"><i class="fas fa-user-check"></i><span>员工审核</span></div>
+                    <div class="menu-item" onclick="location.href='org-structure.html'"><i class="fas fa-sitemap"></i><span>组织结构</span></div>
+                    <div class="menu-item" onclick="location.href='position.html'"><i class="fas fa-briefcase"></i><span>岗位管理</span></div>
+                    <div class="menu-item" onclick="location.href='company-info.html'"><i class="fas fa-building"></i><span>企业资料</span></div>
+                    </div>
+                <div class="menu-section">
+                    <div class="menu-title">角色管理</div>
+                    <div class="menu-item" onclick="location.href='role-list.html'"><i class="fas fa-user-tag"></i><span>角色列表</span></div>
+                    <div class="menu-item" onclick="location.href='permission.html'"><i class="fas fa-shield-alt"></i><span>权限管理</span></div>
+                    </div>
+                <div class="menu-section">
+                    <div class="menu-title">合作企业</div>
+                    <div class="menu-item active" onclick="location.href='after-sale.html'"><i class="fas fa-headset"></i><span>售后企业</span></div>
+                    <div class="menu-item" onclick="location.href='maintenance-company.html'"><i class="fas fa-tools"></i><span>维保企业</span></div>
+                    </div>
+                <div class="menu-section">
+                    <div class="menu-title">资质认证</div>
+                    <div class="menu-item" onclick="location.href='user-company.html'"><i class="fas fa-industry"></i><span>设备使用商</span></div>
+                    <div class="menu-item" onclick="location.href='manufacturer-fixed.html'"><i class="fas fa-cogs"></i><span>设备厂商</span></div>
+                    <div class="menu-item" onclick="location.href='maintenance-provider.html'"><i class="fas fa-wrench"></i><span>维保服务商</span></div>
+                    <div class="menu-item" onclick="location.href='auth-shop.html'"><i class="fas fa-store-alt"></i><span>商家认证</span></div>
+                    </div>
+                <div class="menu-section">
+                    <div class="menu-title">企业管理员</div>
+                    <div class="menu-item" onclick="location.href='admin.html'"><i class="fas fa-user-shield"></i><span>管理员管理</span></div>
+                    </div>
+                <div class="menu-section">
+                    <div class="menu-title">系统设置</div>
+                    <div class="menu-item" onclick="location.href='system-config.html'"><i class="fas fa-cogs"></i><span>系统配置</span></div>
+                    <div class="menu-item" onclick="location.href='system-log.html'"><i class="fas fa-file-alt"></i><span>系统日志</span></div>
+                    <div class="menu-item" onclick="location.href='system-cache.html'"><i class="fas fa-database"></i><span>系统缓存</span></div>
+                    <div class="menu-item" onclick="location.href='system-icon.html'"><i class="fas fa-images"></i><span>系统图标</span></div>
+                </div>
+            </nav>
+            <!-- 主内容区域 -->
+            <main class="content">
+                <div class="content-header">
+                    <h1 class="content-title">售后企业管理</h1>
+                    <button class="btn btn-primary" onclick="showAddModal()">
+                        <i class="fas fa-plus"></i>
+                        添加合作企业
+                    </button>
+                </div>
+
+                <!-- 统计信息卡片 -->
+                <div class="stats-section">
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="fas fa-handshake"></i>
+                    </div>
+                        <div class="stats-content">
+                            <div class="stats-number" id="totalCompanies">0</div>
+                            <div class="stats-label">合作企业总数</div>
+                    </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-icon active">
+                            <i class="fas fa-check-circle"></i>
+                </div>
+                        <div class="stats-content">
+                            <div class="stats-number" id="activeCompanies">0</div>
+                            <div class="stats-label">活跃合作</div>
+                            </div>
+                        </div>
+                    <div class="stats-card">
+                        <div class="stats-icon pending">
+                            <i class="fas fa-clock"></i>
+                            </div>
+                        <div class="stats-content">
+                            <div class="stats-number" id="pendingCompanies">0</div>
+                            <div class="stats-label">待审核</div>
+                            </div>
+                            </div>
+                    <div class="stats-card">
+                        <div class="stats-icon warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                        <div class="stats-content">
+                            <div class="stats-number" id="expiringCompanies">0</div>
+                            <div class="stats-label">即将到期</div>
+                        </div>
+                        </div>
+                    </div>
+
+                <!-- 合作注意事项 -->
+                <div class="notice-section">
+                    <div class="notice-header">
+                        <i class="fas fa-info-circle"></i>
+                        <h3>合作注意事项</h3>
+                            </div>
+                    <div class="notice-content">
+                        <div class="notice-category">
+                            <h4><i class="fas fa-certificate"></i> 资质要求</h4>
+                            <div class="notice-item">
+                                <i class="fas fa-check"></i>
+                                <span>合作企业要有相关资质证书，保证服务靠谱、安全。</span>
+                        </div>
+                            </div>
+                        <div class="notice-category">
+                            <h4><i class="fas fa-file-contract"></i> 合作协议</h4>
+                            <div class="notice-item">
+                                <i class="fas fa-check"></i>
+                                <span>双方要签正式合作协议，明确各自的责任和服务内容。</span>
+                            </div>
+                            </div>
+                        <div class="notice-category">
+                            <h4><i class="fas fa-chart-line"></i> 质量监督</h4>
+                            <div class="notice-item">
+                                <i class="fas fa-check"></i>
+                                <span>合作企业要定期提交服务报告，接受质量检查和评价。</span>
+                            </div>
+                        </div>
+                        <div class="notice-category">
+                            <h4><i class="fas fa-handshake"></i> 合作管理</h4>
+                            <div class="notice-item">
+                                <i class="fas fa-check"></i>
+                                <span>任何一方提前30天书面通知就能解除合作。</span>
+                        </div>
+                            <div class="notice-item">
+                                <i class="fas fa-check"></i>
+                                <span>合作中有争议，优先协商解决，协商不成可以申请仲裁。</span>
+                    </div>
+                            </div>
+                        </div>
+                            </div>
+
+                <!-- 视图切换和分页控件 -->
+                <div class="view-controls">
+                    <div class="view-toggle">
+                        <button class="view-btn active" onclick="switchView('card')" id="cardViewBtn">
+                            <i class="fas fa-th-large"></i>
+                            卡片视图
+                        </button>
+                        <button class="view-btn" onclick="switchView('table')" id="tableViewBtn">
+                            <i class="fas fa-table"></i>
+                            表格视图
+                        </button>
+                            </div>
+                    <div class="pagination">
+                        <button class="page-btn" onclick="changePage(-1)" id="prevBtn">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <span class="page-info" id="pageInfo">第 1 页，共 1 页</span>
+                        <button class="page-btn" onclick="changePage(1)" id="nextBtn">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                            </div>
+                            </div>
+
+                <!-- 企业列表容器 -->
+                <div class="company-list-container">
+                    <!-- 卡片视图 -->
+                    <div class="company-grid" id="companyGrid">
+                        <!-- 企业卡片将通过JavaScript动态生成 -->
+                </div>
+
+                    <!-- 表格视图 -->
+                    <div class="table-container" id="tableContainer" style="display: none;">
+                        <table class="company-table">
+                            <thead>
+                                <tr>
+                                    <th>企业名称</th>
+                                    <th>企业代码</th>
+                                    <th>联系人</th>
+                                    <th>联系电话</th>
+                                    <th>服务区域</th>
+                                    <th>合作设备</th>
+                                    <th>合作状态</th>
+                                    <th>合作开始</th>
+                                    <th>合作结束</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                                <!-- 表格内容将通过JavaScript动态生成 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- 添加企业弹窗 -->
+    <div class="modal-overlay" id="addModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">添加合作企业</h3>
+                <button class="modal-close" onclick="closeModal('addModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="addForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required">
+                                <i class="fas fa-building"></i>
+                                企业名称
+                            </label>
+                            <div class="search-dropdown">
+                                <input type="text" class="form-input" id="companyName" placeholder="输入企业名称搜索..." required>
+                                <div class="dropdown-list" id="companyDropdown" style="display: none;">
+                                    <!-- 搜索结果将在这里显示 -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">
+                                <i class="fas fa-user"></i>
+                                联系人
+                            </label>
+                            <input type="text" class="form-input" id="contactPerson" placeholder="请输入联系人姓名" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required">
+                                <i class="fas fa-phone"></i>
+                                联系电话
+                            </label>
+                            <input type="tel" class="form-input" id="contactPhone" placeholder="请输入联系电话" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-envelope"></i>
+                                邮箱
+                            </label>
+                            <input type="email" class="form-input" id="contactEmail" placeholder="请输入邮箱地址">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required">
+                                <i class="fas fa-map-marker-alt"></i>
+                                服务区域
+                            </label>
+                            <select class="form-select" id="serviceRegion" required>
+                                <option value="">请选择区域</option>
+                                <option value="north">华北区</option>
+                                <option value="east">华东区</option>
+                                <option value="south">华南区</option>
+                                <option value="west">西部区</option>
+                                <option value="northeast">东北区</option>
+                                <option value="central">中部区</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">
+                                <i class="fas fa-calendar"></i>
+                                合作开始日期
+                            </label>
+                            <input type="date" class="form-input" id="startDate" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required">
+                                <i class="fas fa-hourglass-half"></i>
+                                合作期限
+                            </label>
+                            <select class="form-select" id="cooperationPeriod" required>
+                                <option value="">请选择期限</option>
+                                <option value="6个月">6个月</option>
+                                <option value="12个月">12个月</option>
+                                <option value="24个月">24个月</option>
+                                <option value="36个月">36个月</option>
+                                <option value="自定义">自定义</option>
+                            </select>
+                            <input type="text" class="form-input" id="customPeriod" placeholder="请输入自定义期限（如18个月）" style="display:none;margin-top:8px;">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">
+                                <i class="fas fa-calendar-times"></i>
+                                合作截止日期
+                            </label>
+                            <input type="date" class="form-input" id="endDate" required>
+                        </div>
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label required">
+                            <i class="fas fa-cogs"></i>
+                            合作产品设备
+                        </label>
+                        <div class="device-selection">
+                            <div class="device-category">
+                                <h4><i class="fas fa-industry"></i>工业设备</h4>
+                                <div class="device-items">
+                                    <label class="device-item">
+                                        <input type="checkbox" value="cnc_machine">
+                                        <span>数控机床</span>
+                                    </label>
+                                    <label class="device-item">
+                                        <input type="checkbox" value="robot_arm">
+                                        <span>机械臂</span>
+                                    </label>
+                                    <label class="device-item">
+                                        <input type="checkbox" value="conveyor">
+                                        <span>输送线</span>
+                                    </label>
+                                    <label class="device-item">
+                                        <input type="checkbox" value="press_machine">
+                                        <span>冲压设备</span>
+                                    </label>
+                    </div>
+                            </div>
+                            <div class="device-category">
+                                <h4><i class="fas fa-search"></i>检测设备</h4>
+                                <div class="device-items">
+                                    <label class="device-item">
+                                        <input type="checkbox" value="vision_system">
+                                        <span>视觉检测系统</span>
+                                    </label>
+                                    <label class="device-item">
+                                        <input type="checkbox" value="sensor">
+                                        <span>传感器</span>
+                                    </label>
+                                    <label class="device-item">
+                                        <input type="checkbox" value="analyzer">
+                                        <span>分析仪</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="device-category">
+                                <h4><i class="fas fa-microchip"></i>控制系统</h4>
+                                <div class="device-items">
+                                    <label class="device-item">
+                                        <input type="checkbox" value="plc">
+                                        <span>PLC控制器</span>
+                                    </label>
+                                    <label class="device-item">
+                                        <input type="checkbox" value="hmi">
+                                        <span>人机界面</span>
+                                    </label>
+                                    <label class="device-item">
+                                        <input type="checkbox" value="scada">
+                                        <span>SCADA系统</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label">
+                            <i class="fas fa-file-contract"></i>
+                            协议附件
+                        </label>
+                        <div class="file-upload" id="fileUpload" onclick="document.getElementById('fileInput').click()">
+                            <div class="file-upload-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <div class="file-upload-text">点击上传或拖拽文件到此处</div>
+                            <div class="file-upload-hint">支持 PDF、DOC、DOCX 格式，最大 10MB</div>
+                        </div>
+                        <input type="file" id="fileInput" style="display: none;" accept=".pdf,.doc,.docx" multiple>
+                        <div class="file-list" id="fileList"></div>
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label">
+                            <i class="fas fa-tasks"></i>
+                            服务范围
+                        </label>
+                        <textarea class="form-textarea" id="serviceScope" placeholder="请描述企业的服务范围和专业领域"></textarea>
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label">
+                            <i class="fas fa-comment"></i>
+                            备注
+                        </label>
+                        <textarea class="form-textarea" id="remark" placeholder="其他备注信息"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal('addModal')">取消</button>
+                <button class="btn-save" onclick="saveCompany()">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 编辑企业弹窗 -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">编辑企业信息</h3>
+                <button class="modal-close" onclick="closeModal('editModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <input type="hidden" id="editIndex">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">企业名称 *</label>
+                            <input type="text" class="form-input" id="editCompanyName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">联系人 *</label>
+                            <input type="text" class="form-input" id="editContactPerson" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">联系电话 *</label>
+                            <input type="tel" class="form-input" id="editContactPhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">邮箱</label>
+                            <input type="email" class="form-input" id="editContactEmail">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">服务区域 *</label>
+                            <select class="form-select" id="editServiceRegion" required>
+                                <option value="">请选择区域</option>
+                                <option value="north">华北区</option>
+                                <option value="east">华东区</option>
+                                <option value="south">华南区</option>
+                                <option value="west">西部区</option>
+                                <option value="northeast">东北区</option>
+                                <option value="central">中部区</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">合作开始日期 *</label>
+                            <input type="date" class="form-input" id="editStartDate" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">服务范围</label>
+                        <textarea class="form-textarea" id="editServiceScope"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">备注</label>
+                        <textarea class="form-textarea" id="editRemark"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal('editModal')">取消</button>
+                <button class="btn-save" onclick="updateCompany()">更新</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 查看详情弹窗 -->
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">企业详情</h3>
+                <button class="modal-close" onclick="closeModal('detailModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="detailContent">
+                    <!-- 详情内容将通过JavaScript动态填充 -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal('detailModal')">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 模拟企业数据
+        let companies = [
+            {
+                id: 1,
+                name: '智联售后服务有限公司',
+                code: 'AS-2023001',
+                contact: '王经理',
+                phone: '138-1234-5678',
+                email: 'wang@zhilian.com',
+                region: 'east,south',
+                startDate: '2023-01-15',
+                endDate: '2025-01-15',
+                status: 'active',
+                scope: '设备维修、技术支持、培训服务',
+                remark: '长期合作伙伴',
+                devices: ['cnc_machine', 'robot_arm', 'vision_system']
+            },
+            {
+                id: 2,
+                name: '北方速达技术支持',
+                code: 'AP-2024005',
+                contact: '李主管',
+                phone: '159-8765-4321',
+                email: 'li@beifang.com',
+                region: 'north',
+                startDate: '2024-07-20',
+                endDate: '',
+                status: 'pending',
+                scope: '技术支持、现场服务',
+                remark: '新申请企业',
+                devices: ['plc', 'hmi']
+            },
+            {
+                id: 3,
+                name: '西部服务联盟',
+                code: 'AS-2022011',
+                contact: '赵工',
+                phone: '186-2233-4455',
+                email: 'zhao@xibu.com',
+                region: 'west',
+                startDate: '2022-01-01',
+                endDate: '2024-06-30',
+                status: 'expired',
+                scope: '设备维护、故障处理',
+                remark: '合同已到期',
+                devices: ['conveyor', 'sensor']
+            },
+            {
+                id: 4,
+                name: '华东智能设备服务',
+                code: 'AS-2023002',
+                contact: '陈工程师',
+                phone: '139-5555-6666',
+                email: 'chen@huadong.com',
+                region: 'east',
+                startDate: '2023-03-10',
+                endDate: '2025-03-10',
+                status: 'active',
+                scope: '智能设备维护、系统集成',
+                remark: '技术实力强',
+                devices: ['cnc_machine', 'plc', 'hmi', 'scada']
+            },
+            {
+                id: 5,
+                name: '华南技术服务中心',
+                code: 'AS-2023003',
+                contact: '林主任',
+                phone: '137-7777-8888',
+                email: 'lin@huanan.com',
+                region: 'south',
+                startDate: '2023-05-20',
+                endDate: '2025-05-20',
+                status: 'active',
+                scope: '技术咨询、培训服务',
+                remark: '服务态度好',
+                devices: ['robot_arm', 'vision_system', 'analyzer']
+            }
+        ];
+
+        // 分页相关变量
+        let currentPage = 1;
+        let itemsPerPage = 6;
+        let currentView = 'card';
+
+        // 模拟可搜索的企业数据库
+        const availableCompanies = [
+            '智联售后服务有限公司',
+            '北方速达技术支持',
+            '西部服务联盟',
+            '华东智能设备服务',
+            '华南技术服务中心',
+            '东北工业设备维护',
+            '中部自动化服务',
+            '西南设备维修联盟',
+            '华北技术支援中心',
+            '东南智能维护服务'
+        ];
+
+        // 设备映射
+        const deviceMap = {
+            'cnc_machine': '数控机床',
+            'robot_arm': '机械臂',
+            'conveyor': '输送线',
+            'press_machine': '冲压设备',
+            'vision_system': '视觉检测系统',
+            'sensor': '传感器',
+            'analyzer': '分析仪',
+            'plc': 'PLC控制器',
+            'hmi': '人机界面',
+            'scada': 'SCADA系统'
+        };
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            renderCompanies();
+            updateStats();
+            initCompanySearch();
+            updatePagination();
+            initFileUpload();
+            // 合作期限自定义逻辑
+            document.getElementById('cooperationPeriod').addEventListener('change', function() {
+                if(this.value === '自定义') {
+                    document.getElementById('customPeriod').style.display = '';
+                    document.getElementById('customPeriod').required = true;
+                } else {
+                    document.getElementById('customPeriod').style.display = 'none';
+                    document.getElementById('customPeriod').required = false;
+                }
+            });
+        });
+
+        // 视图切换功能
+        function switchView(view) {
+            currentView = view;
+            currentPage = 1; // 切换视图时重置到第一页
+            
+            // 更新按钮状态
+            document.getElementById('cardViewBtn').classList.toggle('active', view === 'card');
+            document.getElementById('tableViewBtn').classList.toggle('active', view === 'table');
+            
+            // 显示/隐藏对应容器
+            const cardGrid = document.getElementById('companyGrid');
+            const tableContainer = document.getElementById('tableContainer');
+            
+            if (view === 'card') {
+                cardGrid.style.display = 'grid';
+                tableContainer.style.display = 'none';
+            } else {
+                cardGrid.style.display = 'none';
+                tableContainer.style.display = 'block';
+            }
+            
+            renderCompanies();
+            updatePagination();
+        }
+
+        // 分页功能
+        function changePage(direction) {
+            const totalPages = Math.ceil(companies.length / itemsPerPage);
+            const newPage = currentPage + direction;
+            
+            if (newPage >= 1 && newPage <= totalPages) {
+                currentPage = newPage;
+                renderCompanies();
+                updatePagination();
+            }
+        }
+
+        // 更新分页信息
+        function updatePagination() {
+            const totalPages = Math.ceil(companies.length / itemsPerPage);
+            const startIndex = (currentPage - 1) * itemsPerPage + 1;
+            const endIndex = Math.min(currentPage * itemsPerPage, companies.length);
+            
+            document.getElementById('pageInfo').textContent = `第 ${currentPage} 页，共 ${totalPages} 页 (${startIndex}-${endIndex}/${companies.length})`;
+            
+            // 更新按钮状态
+            document.getElementById('prevBtn').disabled = currentPage === 1;
+            document.getElementById('nextBtn').disabled = currentPage === totalPages;
+        }
+
+        // 获取当前页的数据
+        function getCurrentPageData() {
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            return companies.slice(startIndex, endIndex);
+        }
+
+        // 初始化企业搜索功能
+        function initCompanySearch() {
+            const companyInput = document.getElementById('companyName');
+            const dropdown = document.getElementById('companyDropdown');
+
+            companyInput.addEventListener('input', function() {
+                const query = this.value.trim();
+                if (query.length > 0) {
+                    const filtered = availableCompanies.filter(company => 
+                        company.toLowerCase().includes(query.toLowerCase())
+                    );
+                    showDropdown(filtered);
+                } else {
+                    hideDropdown();
+                }
+            });
+
+            // 点击外部关闭下拉框
+            document.addEventListener('click', function(e) {
+                if (!companyInput.contains(e.target) && !dropdown.contains(e.target)) {
+                    hideDropdown();
+                }
+            });
+        }
+
+        // 显示下拉框
+        function showDropdown(items) {
+            const dropdown = document.getElementById('companyDropdown');
+            dropdown.innerHTML = '';
+
+            if (items.length > 0) {
+                items.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'dropdown-item';
+                    div.textContent = item;
+                    div.onclick = function() {
+                        document.getElementById('companyName').value = item;
+                        hideDropdown();
+                    };
+                    dropdown.appendChild(div);
+                });
+                dropdown.style.display = 'block';
+            } else {
+                hideDropdown();
+            }
+        }
+
+        // 隐藏下拉框
+        function hideDropdown() {
+            document.getElementById('companyDropdown').style.display = 'none';
+        }
+
+        // 更新统计信息
+        function updateStats() {
+            const total = companies.length;
+            const active = companies.filter(c => c.status === 'active').length;
+            const pending = companies.filter(c => c.status === 'pending').length;
+            const expiring = companies.filter(c => {
+                if (c.endDate && c.status === 'active') {
+                    const endDate = new Date(c.endDate);
+                    const now = new Date();
+                    const diffDays = Math.ceil((endDate - now) / (1000 * 60 * 60 * 24));
+                    return diffDays <= 30 && diffDays > 0;
+                }
+                return false;
+            }).length;
+
+            document.getElementById('totalCompanies').textContent = total;
+            document.getElementById('activeCompanies').textContent = active;
+            document.getElementById('pendingCompanies').textContent = pending;
+            document.getElementById('expiringCompanies').textContent = expiring;
+        }
+
+        // 渲染企业列表
+        function renderCompanies() {
+            const currentData = getCurrentPageData();
+            
+            if (currentView === 'card') {
+                renderCardView(currentData);
+            } else {
+                renderTableView(currentData);
+            }
+            
+            updateStats();
+        }
+
+        // 渲染卡片视图
+        function renderCardView(data) {
+            const grid = document.getElementById('companyGrid');
+            grid.innerHTML = '';
+
+            data.forEach((company, index) => {
+                const actualIndex = (currentPage - 1) * itemsPerPage + index;
+                const card = createCompanyCard(company, actualIndex);
+                grid.appendChild(card);
+            });
+        }
+
+        // 渲染表格视图
+        function renderTableView(data) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            data.forEach((company, index) => {
+                const actualIndex = (currentPage - 1) * itemsPerPage + index;
+                const row = createTableRow(company, actualIndex);
+                tbody.appendChild(row);
+            });
+        }
+
+        // 创建表格行
+        function createTableRow(company, index) {
+            const row = document.createElement('tr');
+            const statusText = getStatusText(company.status);
+            const statusClass = `status-${company.status}`;
+            const regionText = getRegionText(company.region);
+            const deviceText = company.devices ? company.devices.map(d => deviceMap[d]).join('、') : '未设置';
+            
+            row.innerHTML = `
+                <td><strong>${company.name}</strong></td>
+                <td>${company.code}</td>
+                <td>${company.contact}</td>
+                <td>${company.phone}</td>
+                <td>${regionText}</td>
+                <td>${deviceText}</td>
+                <td>${company.cooperationPeriod || '未设置'}</td>
+                <td>${company.startDate}</td>
+                <td>${company.endDate || '未设置'}</td>
+                <td class="table-actions">
+                    <button class="btn btn-outline" onclick="showEditModal(${index})" title="编辑">
+                        <i class="fas fa-pen"></i>
+                    </button>
+                    <button class="btn btn-info" onclick="previewAttachments(${index})" title="附件预览">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="btn btn-success" onclick="downloadAttachments(${index})" title="下载附件">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <button class="btn btn-danger-outline" onclick="deleteCompany(${index})" title="解约">
+                        <i class="fas fa-unlink"></i>
+                    </button>
+                </td>
+            `;
+            
+            return row;
+        }
+
+        // 创建企业卡片
+        function createCompanyCard(company, index) {
+            const card = document.createElement('div');
+            card.className = 'company-card';
+            
+            const statusText = getStatusText(company.status);
+            const statusClass = `status-${company.status}`;
+            const regionText = getRegionText(company.region);
+            const deviceText = company.devices ? company.devices.map(d => deviceMap[d]).join('、') : '未设置';
+            
+            card.innerHTML = `
+                <div class="card-header">
+                    <div class="company-info">
+                        <div class="company-logo">${company.name.charAt(0)}</div>
+                        <div class="company-details">
+                            <h3>${company.name}</h3>
+                            <p>${company.code}</p>
+                        </div>
+                    </div>
+                    <span class="status-badge ${statusClass}">${statusText}</span>
+                </div>
+                <div class="card-body">
+                    <div class="info-group">
+                        <div class="info-row"><i class="fas fa-user-tie"></i><span>${company.contact}</span></div>
+                        <div class="info-row"><i class="fas fa-phone"></i><span>${company.phone}</span></div>
+                        <div class="info-row"><i class="fas fa-map-marker-alt"></i><span>${regionText}</span></div>
+                    </div>
+                    <div class="info-group">
+                        <div class="info-row"><i class="fas fa-cogs"></i><span>${deviceText}</span></div>
+                        <div class="info-row"><i class="fas fa-hourglass-half"></i><span>${company.cooperationPeriod || '未设置'}</span></div>
+                    </div>
+                    <div class="info-group">
+                        <div class="info-row"><i class="fas fa-calendar-check"></i><span>${company.startDate}</span></div>
+                        <div class="info-row"><i class="fas fa-calendar-times"></i><span>${company.endDate || '未设置'}</span></div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-outline" onclick="showEditModal(${index})" title="编辑">
+                        <i class="fas fa-pen"></i>
+                    </button>
+                    <button class="btn btn-info" onclick="previewAttachments(${index})" title="附件预览">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="btn btn-success" onclick="downloadAttachments(${index})" title="下载附件">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <button class="btn btn-danger-outline" onclick="deleteCompany(${index})" title="解约">
+                        <i class="fas fa-unlink"></i>
+                    </button>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // 显示添加弹窗
+        function showAddModal() {
+            document.getElementById('addForm').reset();
+            // 清除所有设备选择
+            document.querySelectorAll('.device-item input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+            });
+            document.getElementById('addModal').style.display = 'flex';
+        }
+
+        // 显示编辑弹窗
+        function showEditModal(index) {
+            const company = companies[index];
+            document.getElementById('editIndex').value = index;
+        document.getElementById('editCompanyName').value = company.name;
+        document.getElementById('editContactPerson').value = company.contact;
+        document.getElementById('editContactPhone').value = company.phone;
+            document.getElementById('editContactEmail').value = company.email || '';
+        document.getElementById('editServiceRegion').value = company.region;
+        document.getElementById('editStartDate').value = company.startDate;
+            document.getElementById('editServiceScope').value = company.scope || '';
+            document.getElementById('editRemark').value = company.remark || '';
+            document.getElementById('editModal').style.display = 'flex';
+        }
+
+        // 显示详情弹窗
+        function showDetailModal(index) {
+            const company = companies[index];
+            const deviceText = company.devices ? company.devices.map(d => deviceMap[d]).join('、') : '未设置';
+        const content = `
+            <div class="detail-row">
+                <div class="detail-label">企业名称:</div>
+                <div class="detail-value">${company.name}</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">企业代码:</div>
+                <div class="detail-value">${company.code}</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">联系人:</div>
+                <div class="detail-value">${company.contact}</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">联系电话:</div>
+                <div class="detail-value">${company.phone}</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">邮箱:</div>
+                <div class="detail-value">${company.email || '未提供'}</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">服务区域:</div>
+                <div class="detail-value">${getRegionText(company.region)}</div>
+            </div>
+                <div class="detail-row">
+                    <div class="detail-label">合作设备:</div>
+                    <div class="detail-value">${deviceText}</div>
+                </div>
+            <div class="detail-row">
+                <div class="detail-label">合作开始:</div>
+                <div class="detail-value">${company.startDate}</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">合作结束:</div>
+                <div class="detail-value">${company.endDate || '未设置'}</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">合作状态:</div>
+                <div class="detail-value">
+                    <span class="status-badge status-${company.status}">${getStatusText(company.status)}</span>
+                </div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">服务范围:</div>
+                <div class="detail-value">${company.scope || '未设置'}</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">备注:</div>
+                <div class="detail-value">${company.remark || '无'}</div>
+            </div>
+        `;
+            document.getElementById('detailContent').innerHTML = content;
+            document.getElementById('detailModal').style.display = 'flex';
+        }
+
+        // 关闭弹窗
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // 保存企业
+        function saveCompany() {
+            const name = document.getElementById('companyName').value.trim();
+            const contact = document.getElementById('contactPerson').value.trim();
+            const phone = document.getElementById('contactPhone').value.trim();
+            const email = document.getElementById('contactEmail').value.trim();
+            const region = document.getElementById('serviceRegion').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            let cooperationPeriod = document.getElementById('cooperationPeriod').value;
+            if(cooperationPeriod === '自定义') {
+                cooperationPeriod = document.getElementById('customPeriod').value.trim();
+            }
+            const scope = document.getElementById('serviceScope').value.trim();
+            const remark = document.getElementById('remark').value.trim();
+            
+            // 获取选中的设备
+            const selectedDevices = [];
+            document.querySelectorAll('.device-item input[type="checkbox"]:checked').forEach(cb => {
+                selectedDevices.push(cb.value);
+            });
+            
+            // 获取上传的附件
+            const attachments = [];
+            document.querySelectorAll('.file-item').forEach(item => {
+                const fileName = item.querySelector('.file-name').textContent;
+                const fileSize = item.querySelector('.file-size').textContent;
+                attachments.push({
+                    name: fileName,
+                    size: fileSize,
+                    type: getFileType(fileName)
+                });
+            });
+            
+            if(!name || !contact || !phone || !region || !startDate || !endDate || !cooperationPeriod) {
+                alert('请填写必填字段');
+                return;
+            }
+            
+            if(selectedDevices.length === 0) {
+                alert('请至少选择一种合作设备');
+                return;
+            }
+            
+            const newCompany = {
+                id: Date.now(),
+                name,
+                code: 'AS-' + new Date().getFullYear() + String(companies.length + 1).padStart(3, '0'),
+                contact,
+                phone,
+                email,
+                region,
+                startDate,
+                endDate,
+                cooperationPeriod,
+                status: 'pending', // 新添加的企业默认为待审核状态
+                scope,
+                remark,
+                devices: selectedDevices,
+                attachments: attachments
+            };
+            
+            companies.push(newCompany);
+            renderCompanies();
+            closeModal('addModal');
+            alert('企业添加成功！已发送合作邀请，等待对方确认。');
+        }
+
+        // 获取文件类型
+        function getFileType(fileName) {
+            const ext = fileName.split('.').pop().toLowerCase();
+            switch(ext) {
+                case 'pdf': return 'PDF文档';
+                case 'doc': return 'Word文档';
+                case 'docx': return 'Word文档';
+                default: return '未知类型';
+            }
+        }
+
+        // 更新企业
+        function updateCompany() {
+            const index = document.getElementById('editIndex').value;
+            const name = document.getElementById('editCompanyName').value.trim();
+            const contact = document.getElementById('editContactPerson').value.trim();
+            const phone = document.getElementById('editContactPhone').value.trim();
+            const email = document.getElementById('editContactEmail').value.trim();
+            const region = document.getElementById('editServiceRegion').value;
+            const startDate = document.getElementById('editStartDate').value;
+            const scope = document.getElementById('editServiceScope').value.trim();
+            const remark = document.getElementById('editRemark').value.trim();
+            
+            if(!name || !contact || !phone || !region || !startDate) {
+                alert('请填写必填字段');
+                return;
+            }
+            
+            Object.assign(companies[index], {
+                name, contact, phone, email, region, startDate, scope, remark
+            });
+            
+            renderCompanies();
+            closeModal('editModal');
+            alert('企业信息更新成功！');
+        }
+        
+        // 删除企业
+        function deleteCompany(index) {
+            if(confirm('确定要删除这个企业吗？这将终止合作关系。')) {
+                companies.splice(index, 1);
+                renderCompanies();
+                alert('企业删除成功！合作关系已终止。');
+            }
+        }
+
+        // 获取状态文本
+        function getStatusText(status) {
+            const statusMap = {
+                'active': '合作中',
+                'pending': '待确认',
+                'expired': '已到期',
+                'terminated': '已终止',
+                'rejected': '已驳回'
+            };
+            return statusMap[status] || status;
+        }
+
+        // 获取区域文本
+        function getRegionText(region) {
+            const regionMap = {
+                'north': '华北区',
+                'east': '华东区',
+                'south': '华南区',
+                'west': '西部区',
+                'northeast': '东北区',
+                'central': '中部区'
+            };
+            return region.split(',').map(r => regionMap[r] || r).join('、');
+        }
+        
+        // 点击弹窗外部关闭弹窗
+        document.addEventListener('click', function(e) {
+            if(e.target.classList.contains('modal-overlay')) {
+                e.target.style.display = 'none';
+            }
+        });
+
+        // 初始化文件上传功能
+        function initFileUpload() {
+            const fileInput = document.getElementById('fileInput');
+            const fileUpload = document.getElementById('fileUpload');
+            const fileList = document.getElementById('fileList');
+
+            // 文件选择事件
+            fileInput.addEventListener('change', handleFileSelect);
+
+            // 拖拽上传
+            fileUpload.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                fileUpload.classList.add('dragover');
+            });
+
+            fileUpload.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                fileUpload.classList.remove('dragover');
+            });
+
+            fileUpload.addEventListener('drop', function(e) {
+                e.preventDefault();
+                fileUpload.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                handleFiles(files);
+            });
+        }
+
+        // 处理文件选择
+        function handleFileSelect(e) {
+            const files = e.target.files;
+            handleFiles(files);
+        }
+
+        // 处理文件
+        function handleFiles(files) {
+            const fileList = document.getElementById('fileList');
+            
+            Array.from(files).forEach(file => {
+                if (file.size > 10 * 1024 * 1024) {
+                    alert('文件大小不能超过10MB');
+                    return;
+                }
+                
+                const fileItem = createFileItem(file);
+                fileList.appendChild(fileItem);
+            });
+        }
+
+        // 创建文件项
+        function createFileItem(file) {
+            const fileItem = document.createElement('div');
+            fileItem.className = 'file-item';
+            
+            const fileSize = (file.size / 1024 / 1024).toFixed(2);
+            const fileIcon = getFileIcon(file.name);
+            
+            fileItem.innerHTML = `
+                <div class="file-info">
+                    <i class="file-icon ${fileIcon}"></i>
+                    <div>
+                        <div class="file-name">${file.name}</div>
+                        <div class="file-size">${fileSize} MB</div>
+                    </div>
+                </div>
+                <button class="file-remove" onclick="removeFile(this)">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            return fileItem;
+        }
+
+        // 获取文件图标
+        function getFileIcon(fileName) {
+            const ext = fileName.split('.').pop().toLowerCase();
+            switch(ext) {
+                case 'pdf': return 'fas fa-file-pdf';
+                case 'doc':
+                case 'docx': return 'fas fa-file-word';
+                default: return 'fas fa-file';
+            }
+        }
+
+        // 移除文件
+        function removeFile(button) {
+            button.parentElement.remove();
+        }
+
+        // 预览附件
+        function previewAttachments(index) {
+            const company = companies[index];
+            if (!company.attachments || company.attachments.length === 0) {
+                alert('该企业暂无附件');
+                return;
+            }
+            
+            // 这里可以实现附件预览功能
+            // 比如打开新窗口预览PDF，或者显示附件列表
+            const attachmentList = company.attachments.map(file => file.name).join('\n');
+            alert(`附件列表：\n${attachmentList}`);
+        }
+
+        // 下载附件
+        function downloadAttachments(index) {
+            const company = companies[index];
+            if (!company.attachments || company.attachments.length === 0) {
+                alert('该企业暂无附件');
+                return;
+            }
+            
+            // 这里可以实现附件下载功能
+            // 比如打包下载所有附件
+            alert(`正在下载 ${company.name} 的附件...`);
+        }
+    </script>
+</body>
+</html> 

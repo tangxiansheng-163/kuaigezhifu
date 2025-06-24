@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>知识库</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f7fa; margin: 0; }
+        .main-content { max-width: 1100px; margin: 40px auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); padding: 36px; }
+        h1 { color: #667eea; font-size: 1.7rem; margin-bottom: 18px; }
+        .filter-bar { display: flex; gap: 16px; margin-bottom: 18px; }
+        .filter-bar select, .filter-bar input { padding: 6px 12px; border-radius: 6px; border: 1px solid #e0e3ea; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 10px 8px; border-bottom: 1px solid #f0f0f0; text-align: left; }
+        th { color: #667eea; font-weight: 600; background: #f8f9fa; }
+        tr:hover { background: #f5f7fa; }
+        .btn-link { color: #667eea; background: none; border: none; cursor: pointer; text-decoration: underline; }
+        .doc-type { font-size: 0.95em; color: #888; margin-right: 8px; }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <h1>知识库</h1>
+        <div class="filter-bar">
+            <select>
+                <option>全部分类</option>
+                <option>设备维修</option>
+                <option>保养指南</option>
+                <option>巡检规范</option>
+                <option>常见故障</option>
+            </select>
+            <input type="text" placeholder="文档标题/关键词..." style="flex:1;">
+            <button style="padding:6px 18px; background:#667eea; color:#fff; border:none; border-radius:6px; cursor:pointer;">搜索</button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>文档标题</th>
+                    <th>分类</th>
+                    <th>类型</th>
+                    <th>上传时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>空压机常见故障及处理方法</td>
+                    <td>常见故障</td>
+                    <td><span class="doc-type">PDF</span></td>
+                    <td>2025-05-20</td>
+                    <td>
+                        <button class="btn-link">查看</button>
+                        <button class="btn-link">下载</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>年度保养操作规范</td>
+                    <td>保养指南</td>
+                    <td><span class="doc-type">DOCX</span></td>
+                    <td>2025-05-18</td>
+                    <td>
+                        <button class="btn-link">查看</button>
+                        <button class="btn-link">下载</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>巡检流程与注意事项</td>
+                    <td>巡检规范</td>
+                    <td><span class="doc-type">PDF</span></td>
+                    <td>2025-05-15</td>
+                    <td>
+                        <button class="btn-link">查看</button>
+                        <button class="btn-link">下载</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html> 

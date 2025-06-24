@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>维修认证</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f7fa; margin: 0; }
+        .main-content { max-width: 500px; margin: 40px auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); padding: 36px; }
+        h1 { color: #667eea; font-size: 1.5rem; margin-bottom: 18px; }
+        .form-group { margin-bottom: 18px; }
+        label { display: block; margin-bottom: 6px; color: #333; font-weight: 500; }
+        input[type="text"], input[type="file"] { width: 100%; padding: 8px 10px; border-radius: 6px; border: 1px solid #e0e3ea; }
+        .upload-tip { color: #888; font-size: 0.95em; margin-bottom: 8px; }
+        .status-info { background: #f8f9fa; color: #667eea; border-radius: 6px; padding: 10px 14px; margin-bottom: 18px; font-size: 0.98em; }
+        button { width: 100%; padding: 10px 0; background: #667eea; color: #fff; border: none; border-radius: 6px; font-size: 1.1em; cursor: pointer; }
+        button:disabled { background: #ccc; }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <h1>维修认证</h1>
+        <div class="status-info">请上传相关证书和工作经验证明，提交后平台将在1-2个工作日内完成审核。</div>
+        <form>
+            <div class="form-group">
+                <label>真实姓名</label>
+                <input type="text" placeholder="请输入姓名">
+            </div>
+            <div class="form-group">
+                <label>身份证号</label>
+                <input type="text" placeholder="请输入身份证号码">
+            </div>
+            <div class="form-group">
+                <label>学历证书</label>
+                <input type="file" accept="image/*,application/pdf">
+                <div class="upload-tip">支持图片/PDF，大小不超过10M</div>
+            </div>
+            <div class="form-group">
+                <label>技术资格证书</label>
+                <input type="file" accept="image/*,application/pdf">
+                <div class="upload-tip">支持图片/PDF，大小不超过10M</div>
+            </div>
+            <div class="form-group">
+                <label>工作经验证明</label>
+                <input type="file" accept="image/*,application/pdf">
+                <div class="upload-tip">支持图片/PDF，大小不超过10M</div>
+            </div>
+            <button type="submit">提交认证</button>
+        </form>
+    </div>
+</body>
+</html> 

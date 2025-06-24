@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统配置 - 快哥智服平台</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .layout {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* 头部样式 */
+        .header {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            color: white;
+            padding: 0 32px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .logo i {
+            color: #ffd700;
+        }
+
+        .space-switcher {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 40px;
+        }
+
+        .space-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            padding: 8px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .space-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .space-btn.active {
+            background: rgba(255,255,255,0.3);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .user-dropdown {
+            display: none;
+            position: absolute;
+            top: 45px;
+            right: 0;
+            min-width: 140px;
+            background: #fff;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+            border-radius: 8px;
+            z-index: 1001;
+            padding: 8px 0;
+            flex-direction: column;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            color: #495057;
+            text-decoration: none;
+            font-size: 0.98rem;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background: #f0f4ff;
+            color: #667eea;
+        }
+
+        .user-info:hover .user-dropdown {
+            display: flex;
+        }
+
+        .header-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .header-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .company-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 15px;
+        }
+
+        .company-selector span {
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .company-selector select {
+            padding: 6px 10px;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 4px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .company-selector select option {
+            background: #fff;
+            color: #333;
+        }
+
+        .company-selector select:focus {
+            outline: none;
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        /* 主体区域 */
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* 左侧菜单 */
+        .sidebar {
+            width: 250px;
+            background: white;
+            border-right: 1px solid #e9ecef;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+        }
+
+        .menu-section {
+            padding: 20px 0;
+        }
+
+        .menu-title {
+            padding: 0 20px 10px;
+            font-size: 0.8rem;
+            color: #6c757d;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: #495057;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .menu-item:hover {
+            background: #f8f9fa;
+            color: #764ba2;
+        }
+
+        .menu-item.active {
+            background: #764ba2;
+            color: white;
+        }
+
+        .menu-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* 主内容区域 */
+        .content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            background: #f5f7fa;
+            z-index: 1;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+
+        .header-content {
+            flex: 1;
+        }
+
+        .content-title {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .content-subtitle {
+            color: #6c757d;
+            font-size: 1rem;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .config-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .config-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .section-title i {
+            color: #764ba2;
+        }
+
+        .config-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .config-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .config-card:hover {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: white;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .card-icon.purple { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card-icon.orange { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .card-icon.blue { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .card-icon.green { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .config-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .config-item:last-child {
+            border-bottom: none;
+        }
+
+        .config-label {
+            font-weight: 500;
+            color: #495057;
+            flex-shrink: 0;
+        }
+
+        .config-value {
+            color: #333;
+            text-align: right;
+            flex: 1;
+            margin-left: 15px;
+        }
+
+        .status-enabled {
+            color: #28a745;
+            font-weight: 500;
+        }
+
+        .status-disabled {
+            color: #dc3545;
+            font-weight: 500;
+        }
+
+        .status-normal {
+            color: #17a2b8;
+            font-weight: 500;
+        }
+
+        .config-help {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-top: 30px;
+        }
+
+        .help-header {
+            margin-bottom: 25px;
+        }
+
+        .help-header h3 {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .help-header p {
+            color: #6c757d;
+            margin: 0;
+        }
+
+        .help-content {
+            color: #6c757d;
+            line-height: 1.6;
+        }
+
+        .help-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .help-item h4 {
+            color: #333;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1rem;
+        }
+
+        .help-item h4 i {
+            color: #764ba2;
+        }
+
+        .help-item p {
+            margin-bottom: 8px;
+        }
+
+        .help-item p:last-child {
+            margin-bottom: 0;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        
+        .btn-primary {
+            background: #764ba2;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #6a4190;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: #764ba2;
+            border: 1px solid #764ba2;
+        }
+        .btn-outline:hover { 
+            background-color: rgba(118, 75, 162, 0.05); 
+        }
+
+        .system-notice {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #1976d2;
+        }
+
+        .system-notice i {
+            font-size: 1.2rem;
+            color: #1976d2;
+        }
+
+        .system-notice .notice-text {
+            flex: 1;
+        }
+
+        .system-notice .notice-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .system-notice .notice-desc {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .space-switcher {
+                display: none;
+            }
+            
+            .sidebar {
+                position: fixed;
+                left: -250px;
+                top: 60px;
+                height: calc(100vh - 60px);
+                z-index: 999;
+                transition: left 0.3s;
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .content-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .header-actions {
+                justify-content: flex-start;
+                flex-wrap: wrap;
+            }
+
+            .config-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .help-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .config-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            .config-value {
+                text-align: left;
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <!-- 头部 -->
+        <header class="header">
+            <div class="header-left">
+                <div class="logo">
+                    <i class="fas fa-cogs"></i>
+                    <span>快哥智服</span>
+                </div>
+                <div class="space-switcher">
+                    <button class="space-btn" onclick="location.href='../personal/index.html'">
+                        <i class="fas fa-user"></i>
+                        个人空间
+                    </button>
+                    <button class="space-btn active" onclick="location.href='index.html'">
+                        <i class="fas fa-building"></i>
+                        企业空间
+                    </button>
+                    <button class="space-btn" onclick="location.href='../dashboard/index.html'">
+                        <i class="fas fa-tachometer-alt"></i>
+                        操作台
+                    </button>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="company-selector">
+                    <span>企业：</span>
+                    <select id="header-company-selector">
+                        <option value="company1">快哥智服科技有限公司</option>
+                        <option value="company2">智维技术服务有限公司</option>
+                        <option value="company3">快哥设备销售有限公司</option>
+                        <option value="company4">智服培训学院</option>
+                    </select>
+                </div>
+                <div class="user-info user-dropdown-trigger">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span>张三</span>
+                    <div class="user-dropdown">
+                        <a href="#" class="dropdown-item"><i class="fas fa-user-edit"></i> 个人资料</a>
+                        <a href="#" class="dropdown-item"><i class="fas fa-key"></i> 密码重置</a>
+                        <a href="#" class="dropdown-item"><i class="fas fa-shield-alt"></i> 安全设置</a>
+                    </div>
+                </div>
+                <button class="header-btn">
+                    <i class="fas fa-bell"></i>
+                    消息
+                </button>
+                <button class="header-btn">
+                    <i class="fas fa-cog"></i>
+                    设置
+                </button>
+                <button class="header-btn" onclick="location.href='../index.html'">
+                    <i class="fas fa-sign-out-alt"></i>
+                    退出
+                </button>
+            </div>
+        </header>
+
+        <!-- 主体区域 -->
+        <div class="main-container">
+            <!-- 左侧菜单 -->
+            <nav class="sidebar">
+                <div class="menu-section">
+                    <div class="menu-title">企业管理</div>
+                    <div class="menu-item" onclick="location.href='overview.html'">
+                        <i class="fas fa-home"></i>
+                        <span>企业概览</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='staff.html'">
+                        <i class="fas fa-users-cog"></i>
+                        <span>员工管理</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='staff-review.html'">
+                        <i class="fas fa-user-check"></i>
+                        <span>员工审核</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='org-structure.html'">
+                        <i class="fas fa-sitemap"></i>
+                        <span>组织结构</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='position.html'">
+                        <i class="fas fa-briefcase"></i>
+                        <span>岗位管理</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='company-info.html'">
+                        <i class="fas fa-building"></i>
+                        <span>企业资料</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">角色管理</div>
+                    <div class="menu-item" onclick="location.href='role-list.html'">
+                        <i class="fas fa-user-tag"></i>
+                        <span>角色列表</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='permission.html'">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>权限管理</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">合作企业</div>
+                    <div class="menu-item" onclick="location.href='after-sale.html'">
+                        <i class="fas fa-headset"></i>
+                        <span>售后企业</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='maintenance-company.html'">
+                        <i class="fas fa-tools"></i>
+                        <span>维保企业</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">资质认证</div>
+                    <div class="menu-item" onclick="location.href='user-company.html'">
+                        <i class="fas fa-industry"></i>
+                        <span>设备使用商</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='manufacturer-fixed.html'">
+                        <i class="fas fa-cogs"></i>
+                        <span>设备厂商</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='maintenance-provider.html'">
+                        <i class="fas fa-wrench"></i>
+                        <span>维保服务商</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='auth-shop.html'">
+                        <i class="fas fa-store-alt"></i>
+                        <span>商家认证</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">企业管理员</div>
+                    <div class="menu-item" onclick="location.href='admin.html'">
+                        <i class="fas fa-user-shield"></i>
+                        <span>管理员管理</span>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <div class="menu-title">系统设置</div>
+                    <div class="menu-item active" onclick="location.href='system-config.html'">
+                        <i class="fas fa-cogs"></i>
+                        <span>系统配置</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='system-log.html'">
+                        <i class="fas fa-file-alt"></i>
+                        <span>系统日志</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='system-cache.html'">
+                        <i class="fas fa-database"></i>
+                        <span>系统缓存</span>
+                    </div>
+                    <div class="menu-item" onclick="location.href='system-icon.html'">
+                        <i class="fas fa-images"></i>
+                        <span>系统图标</span>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- 主内容区域 -->
+            <main class="content">
+                <!-- 系统配置 -->
+                <div class="content-header">
+                    <div class="header-content">
+                        <h1 class="content-title">系统配置</h1>
+                        <p class="content-subtitle">管理平台的全局系统参数、安全设置、性能配置、通知设置等配置项，确保系统稳定运行和安全性</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-outline">
+                            <i class="fas fa-download"></i>
+                            导出配置
+                        </button>
+                        <button class="btn btn-outline">
+                            <i class="fas fa-upload"></i>
+                            导入配置
+                        </button>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-save"></i>
+                            保存配置
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 系统设置提示 -->
+                <div class="system-notice">
+                    <i class="fas fa-info-circle"></i>
+                    <div class="notice-text">
+                        <div class="notice-title">系统级配置</div>
+                        <div class="notice-desc">此页面为系统级配置，不受企业切换影响。所有配置项对所有企业生效。</div>
+                    </div>
+                </div>
+                
+                <!-- 配置项 -->
+                <div class="config-container">
+                    <!-- 第一行：基础配置 -->
+                    <div class="config-section">
+                        <h2 class="section-title"><i class="fas fa-cogs"></i> 基础配置</h2>
+                        <div class="config-grid">
+                            <!-- 基础参数 -->
+                            <div class="config-card">
+                                <div class="card-header">
+                                    <div class="card-title">基础参数</div>
+                                    <div class="card-icon purple">
+                                        <i class="fas fa-cogs"></i>
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <div class="config-item">
+                                        <span class="config-label">平台名称：</span>
+                                        <span class="config-value">快哥智服平台</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">版本号：</span>
+                                        <span class="config-value">v2.0.0</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">默认语言：</span>
+                                        <span class="config-value">简体中文</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">时区：</span>
+                                        <span class="config-value">Asia/Shanghai</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">系统时区：</span>
+                                        <span class="config-value">GMT+8</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">日期格式：</span>
+                                        <span class="config-value">YYYY-MM-DD</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">时间格式：</span>
+                                        <span class="config-value">HH:mm:ss</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">配置项总数：</span>
+                                        <span class="config-value" id="config-count">25</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">已启用配置：</span>
+                                        <span class="config-value" id="active-configs">23</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 安全设置 -->
+                            <div class="config-card">
+                                <div class="card-header">
+                                    <div class="card-title">安全设置</div>
+                                    <div class="card-icon orange">
+                                        <i class="fas fa-shield-alt"></i>
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <div class="config-item">
+                                        <span class="config-label">密码最小长度：</span>
+                                        <span class="config-value">8位</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">密码复杂度：</span>
+                                        <span class="config-value">必须包含大小写字母和数字</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">登录失败锁定：</span>
+                                        <span class="config-value">5次失败后锁定30分钟</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">会话超时：</span>
+                                        <span class="config-value">30分钟</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">强制HTTPS：</span>
+                                        <span class="config-value status-enabled">开启</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">双因素认证：</span>
+                                        <span class="config-value">可选</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">IP白名单：</span>
+                                        <span class="config-value status-disabled">未设置</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 通知设置 -->
+                            <div class="config-card">
+                                <div class="card-header">
+                                    <div class="card-title">通知设置</div>
+                                    <div class="card-icon blue">
+                                        <i class="fas fa-bell"></i>
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <div class="config-item">
+                                        <span class="config-label">系统消息推送：</span>
+                                        <span class="config-value status-enabled">开启</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">邮件通知：</span>
+                                        <span class="config-value status-enabled">开启</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">短信通知：</span>
+                                        <span class="config-value status-disabled">关闭</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">微信通知：</span>
+                                        <span class="config-value status-enabled">开启</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">紧急告警：</span>
+                                        <span class="config-value status-enabled">开启</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">维护通知：</span>
+                                        <span class="config-value status-enabled">开启</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">工单通知：</span>
+                                        <span class="config-value status-enabled">开启</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 第二行：性能与数据 -->
+                    <div class="config-section">
+                        <h2 class="section-title"><i class="fas fa-tachometer-alt"></i> 性能与数据</h2>
+                        <div class="config-grid">
+                            <!-- 性能配置 -->
+                            <div class="config-card">
+                                <div class="card-header">
+                                    <div class="card-title">性能配置</div>
+                                    <div class="card-icon green">
+                                        <i class="fas fa-tachometer-alt"></i>
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <div class="config-item">
+                                        <span class="config-label">缓存策略：</span>
+                                        <span class="config-value">Redis</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">缓存过期时间：</span>
+                                        <span class="config-value">3600秒</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">数据库连接池：</span>
+                                        <span class="config-value">50个连接</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">文件上传大小限制：</span>
+                                        <span class="config-value">50MB</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">API请求限制：</span>
+                                        <span class="config-value">1000次/分钟</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">页面加载优化：</span>
+                                        <span class="config-value status-enabled">开启</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">CDN加速：</span>
+                                        <span class="config-value status-enabled">开启</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 数据备份 -->
+                            <div class="config-card">
+                                <div class="card-header">
+                                    <div class="card-title">数据备份</div>
+                                    <div class="card-icon purple">
+                                        <i class="fas fa-database"></i>
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <div class="config-item">
+                                        <span class="config-label">自动备份：</span>
+                                        <span class="config-value">每日凌晨2点</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">备份保留天数：</span>
+                                        <span class="config-value">30天</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">备份存储位置：</span>
+                                        <span class="config-value">本地+云端</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">增量备份：</span>
+                                        <span class="config-value status-enabled">开启</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">备份压缩：</span>
+                                        <span class="config-value status-enabled">开启</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">备份验证：</span>
+                                        <span class="config-value status-enabled">开启</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">最后备份时间：</span>
+                                        <span class="config-value">2024-01-20 02:00:00</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 系统监控 -->
+                            <div class="config-card">
+                                <div class="card-header">
+                                    <div class="card-title">系统监控</div>
+                                    <div class="card-icon orange">
+                                        <i class="fas fa-chart-line"></i>
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <div class="config-item">
+                                        <span class="config-label">CPU使用率：</span>
+                                        <span class="config-value">45%</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">内存使用率：</span>
+                                        <span class="config-value">62%</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">磁盘使用率：</span>
+                                        <span class="config-value">78%</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">网络流量：</span>
+                                        <span class="config-value status-normal">正常</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">数据库连接：</span>
+                                        <span class="config-value status-normal">正常</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">缓存状态：</span>
+                                        <span class="config-value status-normal">正常</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">系统运行时间：</span>
+                                        <span class="config-value">15天</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 第三行：服务配置 -->
+                    <div class="config-section">
+                        <h2 class="section-title"><i class="fas fa-server"></i> 服务配置</h2>
+                        <div class="config-grid">
+                            <!-- API配置 -->
+                            <div class="config-card">
+                                <div class="card-header">
+                                    <div class="card-title">API配置</div>
+                                    <div class="card-icon blue">
+                                        <i class="fas fa-code"></i>
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <div class="config-item">
+                                        <span class="config-label">API版本：</span>
+                                        <span class="config-value">v2.0</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">API文档地址：</span>
+                                        <span class="config-value">https://api.kuaige.com/docs</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">API密钥有效期：</span>
+                                        <span class="config-value">365天</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">API限流：</span>
+                                        <span class="config-value">1000次/小时</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">Webhook支持：</span>
+                                        <span class="config-value status-enabled">开启</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">API监控：</span>
+                                        <span class="config-value status-enabled">开启</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">调试模式：</span>
+                                        <span class="config-value status-disabled">关闭</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 邮件配置 -->
+                            <div class="config-card">
+                                <div class="card-header">
+                                    <div class="card-title">邮件配置</div>
+                                    <div class="card-icon green">
+                                        <i class="fas fa-envelope"></i>
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <div class="config-item">
+                                        <span class="config-label">SMTP服务器：</span>
+                                        <span class="config-value">smtp.kuaige.com</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">SMTP端口：</span>
+                                        <span class="config-value">587</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">加密方式：</span>
+                                        <span class="config-value">TLS</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">发件人邮箱：</span>
+                                        <span class="config-value">noreply@kuaige.com</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">发件人名称：</span>
+                                        <span class="config-value">快哥智服平台</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">邮件模板：</span>
+                                        <span class="config-value status-enabled">已配置</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">发送频率限制：</span>
+                                        <span class="config-value">100封/分钟</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 短信配置 -->
+                            <div class="config-card">
+                                <div class="card-header">
+                                    <div class="card-title">短信配置</div>
+                                    <div class="card-icon orange">
+                                        <i class="fas fa-sms"></i>
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <div class="config-item">
+                                        <span class="config-label">短信服务商：</span>
+                                        <span class="config-value">阿里云短信</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">AccessKey：</span>
+                                        <span class="config-value status-enabled">已配置</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">短信签名：</span>
+                                        <span class="config-value">快哥智服</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">验证码模板：</span>
+                                        <span class="config-value status-enabled">已配置</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">通知模板：</span>
+                                        <span class="config-value status-enabled">已配置</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">发送频率限制：</span>
+                                        <span class="config-value">10条/分钟</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">状态：</span>
+                                        <span class="config-value status-disabled">未启用</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 第四行：文件与日志 -->
+                    <div class="config-section">
+                        <h2 class="section-title"><i class="fas fa-file-alt"></i> 文件与日志</h2>
+                        <div class="config-grid">
+                            <!-- 文件上传配置 -->
+                            <div class="config-card">
+                                <div class="card-header">
+                                    <div class="card-title">文件上传配置</div>
+                                    <div class="card-icon purple">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <div class="config-item">
+                                        <span class="config-label">存储方式：</span>
+                                        <span class="config-value">本地+云存储</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">最大文件大小：</span>
+                                        <span class="config-value">50MB</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">允许的文件类型：</span>
+                                        <span class="config-value">jpg,png,pdf,doc,xls</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">图片压缩：</span>
+                                        <span class="config-value status-enabled">开启</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">水印设置：</span>
+                                        <span class="config-value status-enabled">开启</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">文件命名规则：</span>
+                                        <span class="config-value">时间戳+随机数</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">存储路径：</span>
+                                        <span class="config-value">/uploads/</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 日志配置 -->
+                            <div class="config-card">
+                                <div class="card-header">
+                                    <div class="card-title">日志配置</div>
+                                    <div class="card-icon blue">
+                                        <i class="fas fa-file-alt"></i>
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <div class="config-item">
+                                        <span class="config-label">日志级别：</span>
+                                        <span class="config-value">INFO</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">日志保留天数：</span>
+                                        <span class="config-value">90天</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">日志存储位置：</span>
+                                        <span class="config-value">/var/log/kuaige/</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">操作日志：</span>
+                                        <span class="config-value status-enabled">开启</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">错误日志：</span>
+                                        <span class="config-value status-enabled">开启</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">访问日志：</span>
+                                        <span class="config-value status-enabled">开启</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">日志轮转：</span>
+                                        <span class="config-value">每日</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 第三方集成 -->
+                            <div class="config-card">
+                                <div class="card-header">
+                                    <div class="card-title">第三方集成</div>
+                                    <div class="card-icon green">
+                                        <i class="fas fa-plug"></i>
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <div class="config-item">
+                                        <span class="config-label">微信小程序：</span>
+                                        <span class="config-value status-enabled">已配置</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">企业微信：</span>
+                                        <span class="config-value status-enabled">已配置</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">钉钉：</span>
+                                        <span class="config-value status-disabled">未配置</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">支付宝：</span>
+                                        <span class="config-value status-disabled">未配置</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">腾讯云：</span>
+                                        <span class="config-value status-enabled">已配置</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">阿里云：</span>
+                                        <span class="config-value status-enabled">已配置</span>
+                                    </div>
+                                    <div class="config-item">
+                                        <span class="config-label">百度地图：</span>
+                                        <span class="config-value status-enabled">已配置</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 配置说明 -->
+                <div class="config-help">
+                    <div class="help-header">
+                        <h3><i class="fas fa-info-circle"></i> 配置说明</h3>
+                        <p>了解各配置项的作用和影响范围</p>
+                    </div>
+                    <div class="help-content">
+                        <div class="help-grid">
+                            <div class="help-item">
+                                <h4><i class="fas fa-cogs"></i> 基础配置</h4>
+                                <p><strong>基础参数：</strong>系统运行的基础配置，包括平台信息、语言、时区等设置。</p>
+                                <p><strong>安全设置：</strong>系统安全相关配置，包括密码策略、登录限制、会话管理等。</p>
+                                <p><strong>通知设置：</strong>各类消息通知的开关和配置，支持邮件、短信、微信等多种方式。</p>
+                            </div>
+                            <div class="help-item">
+                                <h4><i class="fas fa-tachometer-alt"></i> 性能与数据</h4>
+                                <p><strong>性能配置：</strong>系统性能优化相关配置，包括缓存、连接池、上传限制等。</p>
+                                <p><strong>数据备份：</strong>数据备份策略和配置，确保数据安全和可恢复性。</p>
+                                <p><strong>系统监控：</strong>系统运行状态的实时监控信息。</p>
+                            </div>
+                            <div class="help-item">
+                                <h4><i class="fas fa-server"></i> 服务配置</h4>
+                                <p><strong>API配置：</strong>对外API接口的配置，包括版本、限流、监控等。</p>
+                                <p><strong>邮件配置：</strong>邮件服务的SMTP配置，用于发送系统通知邮件。</p>
+                                <p><strong>短信配置：</strong>短信服务的配置，用于发送验证码和通知短信。</p>
+                            </div>
+                            <div class="help-item">
+                                <h4><i class="fas fa-file-alt"></i> 文件与日志</h4>
+                                <p><strong>文件上传配置：</strong>文件上传相关的配置，包括大小限制、类型限制等。</p>
+                                <p><strong>日志配置：</strong>系统日志的配置，包括级别、保留时间、存储位置等。</p>
+                                <p><strong>第三方集成：</strong>与第三方服务的集成配置，如微信、支付宝等。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="company-switcher.js"></script>
+</body>
+</html> 

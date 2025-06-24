@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>安全设置</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f7fa; margin: 0; }
+        .main-content { max-width: 600px; margin: 40px auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); padding: 36px; }
+        h1 { color: #667eea; font-size: 1.5rem; margin-bottom: 18px; }
+        .section { margin-bottom: 28px; }
+        .section-title { color: #333; font-weight: 600; margin-bottom: 10px; }
+        .desc { color: #888; font-size: 0.98em; margin-bottom: 8px; }
+        .device-list { background: #f8f9fa; border-radius: 8px; padding: 10px 16px; }
+        .device-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #eee; }
+        .device-item:last-child { border-bottom: none; }
+        .device-name { color: #333; }
+        .device-action { color: #667eea; cursor: pointer; font-size: 0.95em; }
+        .login-history { background: #f8f9fa; border-radius: 8px; padding: 10px 16px; }
+        .login-row { display: flex; justify-content: space-between; color: #555; font-size: 0.97em; padding: 6px 0; border-bottom: 1px solid #eee; }
+        .login-row:last-child { border-bottom: none; }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <h1>安全设置</h1>
+        <div class="section">
+            <div class="section-title">二次验证</div>
+            <div class="desc">为账号开启二次验证，提升安全性。</div>
+            <button style="padding:7px 18px; background:#667eea; color:#fff; border:none; border-radius:6px; cursor:pointer;">开启二次验证</button>
+        </div>
+        <div class="section">
+            <div class="section-title">登录历史</div>
+            <div class="login-history">
+                <div class="login-row"><span>2024-06-01 09:12</span><span>Windows · Chrome</span></div>
+                <div class="login-row"><span>2024-05-30 20:45</span><span>Android · 微信小程序</span></div>
+                <div class="login-row"><span>2024-05-28 14:22</span><span>iOS · Safari</span></div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="section-title">设备管理</div>
+            <div class="desc">管理已登录的设备，发现异常可一键下线。</div>
+            <div class="device-list">
+                <div class="device-item"><span class="device-name">Windows · Chrome</span><span class="device-action">下线</span></div>
+                <div class="device-item"><span class="device-name">Android · 微信小程序</span><span class="device-action">下线</span></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
