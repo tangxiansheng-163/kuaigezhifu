@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>申请加入企业 - 快哥智服</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .page-header {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .page-header h1 {
+            color: #333;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            display: flex; align-items: center;
+            gap: 12px;
+        }
+
+        .page-header h1 i {
+            color: #667eea;
+        }
+
+        .page-desc {
+            color: #6c757d;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        button:hover {
+            opacity: 0.8;
+            transform: translateY(-1px);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .company-card {
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            background: white;
+            transition: all 0.3s;
+        }
+
+        .company-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .company-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .company-details {
+            flex: 1;
+        }
+
+        .company-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .company-desc {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .company-stats {
+            display: flex;
+            gap: 20px;
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+
+        .company-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #6c757d;
+            border: 1px solid #e9ecef;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .search-section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #e0e3ea;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+
+        .search-btn {
+            padding: 12px 24px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .filter-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid #e0e3ea;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .results-section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c757d;
+        }
+
+        .no-results i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #e9ecef;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <h1><i class="fas fa-user-plus"></i> 申请加入企业</h1>
+        <p class="page-desc">搜索并申请加入已有企业，成为企业团队成员</p>
+    </div>
+
+    <!-- 搜索企业 -->
+    <div class="search-section">
+        <h3 style="color: #333; margin-bottom: 20px; font-size: 1.2rem;">搜索企业</h3>
+        <div class="search-form">
+            <input type="text" id="companySearchInput" class="search-input" placeholder="请输入企业名称或邀请码">
+            <button onclick="searchCompany()" class="search-btn">
+                <i class="fas fa-search"></i> 搜索
+            </button>
+        </div>
+        
+        <div class="filter-section">
+            <select class="filter-select" id="industryFilter">
+                <option value="">全部分类</option>
+                <option value="制造业">制造业</option>
+                <option value="建筑业">建筑业</option>
+                <option value="信息技术">信息技术</option>
+                <option value="贸易服务">贸易服务</option>
+                <option value="其他">其他</option>
+            </select>
+            <select class="filter-select" id="locationFilter">
+                <option value="">全部地区</option>
+                <option value="北京">北京</option>
+                <option value="上海">上海</option>
+                <option value="广州">广州</option>
+                <option value="深圳">深圳</option>
+                <option value="其他">其他</option>
+            </select>
+            <select class="filter-select" id="sizeFilter">
+                <option value="">全部规模</option>
+                <option value="小型">小型企业</option>
+                <option value="中型">中型企业</option>
+                <option value="大型">大型企业</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- 搜索结果 -->
+    <div class="results-section">
+        <h3 style="color: #333; margin-bottom: 20px; font-size: 1.2rem;">搜索结果</h3>
+        
+        <div id="searchResults">
+            <!-- 示例企业卡片 -->
+            <div class="company-card">
+                <div class="company-info">
+                    <div class="company-details">
+                        <div class="company-name">北京工业设备有限公司</div>
+                        <div class="company-desc">专注于工业设备维修、保养和技术服务，拥有专业的技术团队和丰富的行业经验。</div>
+                        <div class="company-stats">
+                            <span><i class="fas fa-users"></i> 员工：45人</span>
+                            <span><i class="fas fa-map-marker-alt"></i> 地区：北京</span>
+                            <span><i class="fas fa-industry"></i> 行业：制造业</span>
+                            <span><i class="fas fa-calendar-alt"></i> 成立：2018年</span>
+                        </div>
+                    </div>
+                    <div class="company-actions">
+                        <button class="btn-primary" onclick="applyToCompany('北京工业设备有限公司')">
+                            <i class="fas fa-paper-plane"></i> 申请加入
+                        </button>
+                        <button class="btn-secondary" onclick="viewCompanyDetail('北京工业设备有限公司')">
+                            <i class="fas fa-eye"></i> 查看详情
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="company-card">
+                <div class="company-info">
+                    <div class="company-details">
+                        <div class="company-name">上海智能科技有限公司</div>
+                        <div class="company-desc">专注于智能设备研发、系统集成和技术服务，致力于为客户提供智能化解决方案。</div>
+                        <div class="company-stats">
+                            <span><i class="fas fa-users"></i> 员工：128人</span>
+                            <span><i class="fas fa-map-marker-alt"></i> 地区：上海</span>
+                            <span><i class="fas fa-industry"></i> 行业：信息技术</span>
+                            <span><i class="fas fa-calendar-alt"></i> 成立：2020年</span>
+                        </div>
+                    </div>
+                    <div class="company-actions">
+                        <button class="btn-primary" onclick="applyToCompany('上海智能科技有限公司')">
+                            <i class="fas fa-paper-plane"></i> 申请加入
+                        </button>
+                        <button class="btn-secondary" onclick="viewCompanyDetail('上海智能科技有限公司')">
+                            <i class="fas fa-eye"></i> 查看详情
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="company-card">
+                <div class="company-info">
+                    <div class="company-details">
+                        <div class="company-name">广州设备维护服务有限公司</div>
+                        <div class="company-desc">专业从事各类工业设备的维护保养、故障维修和技术培训服务。</div>
+                        <div class="company-stats">
+                            <span><i class="fas fa-users"></i> 员工：32人</span>
+                            <span><i class="fas fa-map-marker-alt"></i> 地区：广州</span>
+                            <span><i class="fas fa-industry"></i> 行业：制造业</span>
+                            <span><i class="fas fa-calendar-alt"></i> 成立：2019年</span>
+                        </div>
+                    </div>
+                    <div class="company-actions">
+                        <button class="btn-primary" onclick="applyToCompany('广州设备维护服务有限公司')">
+                            <i class="fas fa-paper-plane"></i> 申请加入
+                        </button>
+                        <button class="btn-secondary" onclick="viewCompanyDetail('广州设备维护服务有限公司')">
+                            <i class="fas fa-eye"></i> 查看详情
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 分页 -->
+        <div style="display: flex; justify-content: center; margin-top: 30px;">
+            <div style="display: flex; gap: 5px;">
+                <button class="btn-secondary" style="padding: 8px 12px;">
+                    <i class="fas fa-chevron-left"></i> 上一页
+                </button>
+                <button class="btn-primary" style="padding: 8px 12px;">1</button>
+                <button class="btn-secondary" style="padding: 8px 12px;">2</button>
+                <button class="btn-secondary" style="padding: 8px 12px;">3</button>
+                <button class="btn-secondary" style="padding: 8px 12px;">
+                    下一页 <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function searchCompany() {
+            const searchInput = document.getElementById('companySearchInput').value;
+            const industryFilter = document.getElementById('industryFilter').value;
+            const locationFilter = document.getElementById('locationFilter').value;
+            const sizeFilter = document.getElementById('sizeFilter').value;
+            
+            // 模拟搜索功能
+            console.log('搜索条件:', {
+                keyword: searchInput,
+                industry: industryFilter,
+                location: locationFilter,
+                size: sizeFilter
+            });
+            
+            // 这里可以添加实际的搜索逻辑
+            alert('搜索功能：将根据输入条件搜索相关企业');
+        }
+
+        function applyToCompany(companyName) {
+            // 模拟申请加入功能
+            const confirmed = confirm(`确定要申请加入"${companyName}"吗？\n\n申请提交后，企业管理员将审核您的申请。`);
+            if (confirmed) {
+                alert(`申请已提交！\n\n企业：${companyName}\n状态：等待审核\n\n我们会在3-5个工作日内通知您审核结果。`);
+            }
+        }
+
+        function viewCompanyDetail(companyName) {
+            // 模拟查看企业详情功能
+            alert(`企业详情：${companyName}\n\n这里将显示企业的详细信息，包括：\n- 企业介绍\n- 业务范围\n- 团队规模\n- 联系方式\n- 招聘信息等`);
+        }
+
+        // 监听搜索输入框的回车事件
+        document.getElementById('companySearchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchCompany();
+            }
+        });
+
+        // 监听筛选条件变化
+        document.getElementById('industryFilter').addEventListener('change', function() {
+            // 可以在这里添加实时筛选逻辑
+            console.log('行业筛选:', this.value);
+        });
+
+        document.getElementById('locationFilter').addEventListener('change', function() {
+            console.log('地区筛选:', this.value);
+        });
+
+        document.getElementById('sizeFilter').addEventListener('change', function() {
+            console.log('规模筛选:', this.value);
+        });
+    </script>
+</body>
+</html> 

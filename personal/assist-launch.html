@@ -2,67 +2,632 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>发起协助</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发起远程协助 - 快哥智服</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f7fa; margin: 0; }
-        .main-content { max-width: 600px; margin: 40px auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); padding: 36px; }
-        h1 { color: #667eea; font-size: 1.5rem; margin-bottom: 18px; }
-        .form-group { margin-bottom: 18px; }
-        label { display: block; margin-bottom: 6px; color: #333; font-weight: 500; }
-        input[type="text"], textarea, select { width: 100%; padding: 8px 10px; border-radius: 6px; border: 1px solid #e0e3ea; }
-        textarea { min-height: 70px; }
-        .upload-tip { color: #888; font-size: 0.95em; margin-bottom: 8px; }
-        .expert-list { margin-bottom: 12px; }
-        .expert-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
-        .expert-radio { margin-right: 8px; }
-        .expert-info { flex: 1; }
-        .fee { color: #fd7e14; font-weight: bold; margin-left: 8px; }
-        button { width: 100%; padding: 10px 0; background: #667eea; color: #fff; border: none; border-radius: 6px; font-size: 1.1em; cursor: pointer; }
-        button:disabled { background: #ccc; }
+        * {
+            margin: 0; 
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .page-header {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .page-header h1 {
+            color: #333;
+            font-size: 1.8rem; 
+            margin-bottom: 8px; 
+            display: flex; align-items: center;
+            gap: 12px;
+        }
+
+        .page-header h1 i {
+            color: #667eea;
+        }
+
+        .page-desc { 
+            color: #6c757d; 
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .info-box {
+            padding: 15px 20px;
+            background: #d1ecf1;
+            color: #0c5460;
+            border-left: 4px solid #17a2b8;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .content-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: #667eea;
+        }
+
+        .assist-type-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .assist-type-card {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .assist-type-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+        }
+
+        .assist-type-card.selected {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .assist-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0 auto 15px;
+        }
+
+        .assist-icon.video {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .assist-icon.audio {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+
+        .assist-icon.text {
+            background: linear-gradient(135deg, #17a2b8, #6f42c1);
+        }
+
+        .assist-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .assist-desc {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .assist-price {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            color: #333;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e0e3ea;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #e0e3ea;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            min-height: 100px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        .upload-area {
+            border: 2px dashed #e0e3ea;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .upload-area:hover {
+            border-color: #667eea;
+        }
+
+        .urgency-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .urgency-option {
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .urgency-option:hover {
+            border-color: #667eea;
+        }
+
+        .urgency-option.selected {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .radio-circle {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e0e3ea;
+            border-radius: 50%;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .urgency-option.selected .radio-circle {
+            border-color: #667eea;
+        }
+
+        .urgency-option.selected .radio-circle::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            background: #667eea;
+            border-radius: 50%;
+        }
+
+        .expert-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .expert-card {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .expert-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+        }
+
+        .expert-card.selected {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .expert-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .expert-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .expert-info {
+            flex: 1;
+        }
+
+        .expert-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .expert-title {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .expert-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #ffc107;
+            font-size: 0.9rem;
+            margin-top: 2px;
+        }
+
+        .expert-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+
+        .expert-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+
+        .expert-tag {
+            padding: 3px 8px;
+            background: #e9ecef;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: #6c757d;
+        }
+
+        .expert-pricing {
+            text-align: center;
+            padding-top: 15px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .expert-price {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .expert-price-secondary {
+            color: #6c757d;
+            font-size: 0.85rem;
+        }
+
+        .submit-section {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .btn-submit {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 15px 40px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-submit:hover {
+            background: #218838;
+            transform: translateY(-1px);
+        }
+
+        .required {
+            color: #dc3545;
+        }
     </style>
 </head>
 <body>
-    <div class="main-content">
-        <h1>发起协助（专家求助）</h1>
-        <form>
-            <div class="form-group">
-                <label>问题描述</label>
-                <textarea placeholder="请详细描述遇到的问题"></textarea>
-            </div>
-            <div class="form-group">
-                <label>相关附件（可选）</label>
-                <input type="file" multiple>
-                <div class="upload-tip">支持图片、文档等，单文件不超过10M</div>
-            </div>
-            <div class="form-group">
-                <label>选择专家</label>
-                <div class="expert-list">
-                    <div class="expert-item">
-                        <input type="radio" name="expert" class="expert-radio">
-                        <div class="expert-info">
-                            <span>王专家</span> <span class="fee">￥100/次</span><br>
-                            <span style="color:#888;font-size:0.95em;">电气自动化 | 10年经验 | 评分4.9</span>
-                        </div>
-                    </div>
-                    <div class="expert-item">
-                        <input type="radio" name="expert" class="expert-radio">
-                        <div class="expert-info">
-                            <span>李专家</span> <span class="fee">￥80/次</span><br>
-                            <span style="color:#888;font-size:0.95em;">机械维修 | 8年经验 | 评分4.8</span>
-                        </div>
-                    </div>
+    <div class="page-header">
+        <div class="header-left">
+            <h1><i class="fas fa-handshake"></i> 发起协助</h1>
+            <p class="page-desc">向平台专家发起协助请求，获得专业技术支持</p>
+        </div>
+    </div>
+
+    <!-- 统计卡片 -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 25px;">
+        <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                <span style="color: #6c757d; font-size: 0.9rem; font-weight: 500;">本月协助</span>
+                <div style="width: 35px; height: 35px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1rem;">
+                    <i class="fas fa-handshake"></i>
                 </div>
             </div>
-            <div class="form-group">
-                <label>支付方式</label>
-                <select>
-                    <option>平台余额</option>
-                    <option>微信支付</option>
-                    <option>支付宝</option>
+            <div style="font-size: 1.8rem; font-weight: bold; color: #333;">23</div>
+            <div style="font-size: 0.8rem; color: #28a745; margin-top: 8px;">
+                <i class="fas fa-arrow-up"></i> +5 较上月
+            </div>
+        </div>
+        <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                <span style="color: #6c757d; font-size: 0.9rem; font-weight: 500;">平均评分</span>
+                <div style="width: 35px; height: 35px; background: linear-gradient(135deg, #ffc107, #fd7e14); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1rem;">
+                    <i class="fas fa-star"></i>
+                </div>
+            </div>
+            <div style="font-size: 1.8rem; font-weight: bold; color: #333;">4.9</div>
+            <div style="font-size: 0.8rem; color: #ffc107; margin-top: 8px;">
+                <i class="fas fa-star"></i> 优秀评价
+            </div>
+        </div>
+        <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                <span style="color: #6c757d; font-size: 0.9rem; font-weight: 500;">累计支出</span>
+                <div style="width: 35px; height: 35px; background: linear-gradient(135deg, #28a745, #20c997); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1rem;">
+                    <i class="fas fa-coins"></i>
+                </div>
+            </div>
+            <div style="font-size: 1.8rem; font-weight: bold; color: #333;">¥4,680</div>
+            <div style="font-size: 0.8rem; color: #28a745; margin-top: 8px;">
+                <i class="fas fa-arrow-up"></i> +12.5% 较上月
+            </div>
+        </div>
+        <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                <span style="color: #6c757d; font-size: 0.9rem; font-weight: 500;">响应时间</span>
+                <div style="width: 35px; height: 35px; background: linear-gradient(135deg, #17a2b8, #20c997); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1rem;">
+                    <i class="fas fa-clock"></i>
+                </div>
+            </div>
+            <div style="font-size: 1.8rem; font-weight: bold; color: #333;">5分钟</div>
+            <div style="font-size: 0.8rem; color: #17a2b8; margin-top: 8px;">
+                <i class="fas fa-bolt"></i> 快速响应
+            </div>
+        </div>
+    </div>
+
+    <!-- 发起协助表单 -->
+    <div style="background: white; border-radius: 10px; padding: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 25px;">
+        <h3 style="color: #333; margin-bottom: 20px; font-size: 1.2rem; display: flex; align-items: center; gap: 10px;">
+            <i class="fas fa-plus-circle" style="color: #667eea;"></i>
+            发起新的协助请求
+        </h3>
+        
+        <form style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+            <div>
+                <label style="display: block; color: #333; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem;">协助标题 <span style="color: #dc3545;">*</span></label>
+                <input type="text" placeholder="请简要描述需要协助的问题..." style="width: 100%; padding: 12px; border: 1px solid #e0e3ea; border-radius: 6px; font-size: 0.95rem;">
+            </div>
+            
+            <div>
+                <label style="display: block; color: #333; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem;">协助类型 <span style="color: #dc3545;">*</span></label>
+                <select style="width: 100%; padding: 12px; border: 1px solid #e0e3ea; border-radius: 6px; font-size: 0.95rem;">
+                    <option value="">请选择协助类型</option>
+                    <option value="video">视频协助</option>
+                    <option value="voice">语音协助</option>
+                    <option value="text">文字协助</option>
+                    <option value="remote">远程协助</option>
                 </select>
             </div>
-            <button type="submit">提交求助</button>
+            
+            <div>
+                <label style="display: block; color: #333; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem;">设备类型</label>
+                <select style="width: 100%; padding: 12px; border: 1px solid #e0e3ea; border-radius: 6px; font-size: 0.95rem;">
+                    <option value="">请选择设备类型</option>
+                    <option value="air_compressor">空压机</option>
+                    <option value="refrigeration">制冷设备</option>
+                    <option value="ventilation">通风设备</option>
+                    <option value="boiler">锅炉设备</option>
+                    <option value="plc">PLC控制系统</option>
+                    <option value="other">其他设备</option>
+                </select>
+            </div>
+            
+            <div>
+                <label style="display: block; color: #333; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem;">紧急程度 <span style="color: #dc3545;">*</span></label>
+                <select style="width: 100%; padding: 12px; border: 1px solid #e0e3ea; border-radius: 6px; font-size: 0.95rem;">
+                    <option value="">请选择紧急程度</option>
+                    <option value="urgent">紧急</option>
+                    <option value="high">高</option>
+                    <option value="medium">中</option>
+                    <option value="low">低</option>
+                </select>
+            </div>
+            
+            <div>
+                <label style="display: block; color: #333; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem;">协助价格 <span style="color: #dc3545;">*</span></label>
+                <input type="number" placeholder="请输入协助价格（元）" min="0" style="width: 100%; padding: 12px; border: 1px solid #e0e3ea; border-radius: 6px; font-size: 0.95rem;">
+            </div>
+            
+            <div>
+                <label style="display: block; color: #333; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem;">期望专家</label>
+                <select style="width: 100%; padding: 12px; border: 1px solid #e0e3ea; border-radius: 6px; font-size: 0.95rem;">
+                    <option value="">系统自动分配</option>
+                    <option value="expert1">张专家（空压机专家）</option>
+                    <option value="expert2">李专家（制冷设备专家）</option>
+                    <option value="expert3">王专家（PLC控制专家）</option>
+                </select>
+            </div>
         </form>
+        
+        <div style="margin-top: 20px;">
+            <label style="display: block; color: #333; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem;">问题描述 <span style="color: #dc3545;">*</span></label>
+            <textarea placeholder="请详细描述您遇到的问题、设备型号、故障现象等..." rows="6" style="width: 100%; padding: 12px; border: 1px solid #e0e3ea; border-radius: 6px; font-size: 0.95rem; resize: vertical;"></textarea>
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <label style="display: block; color: #333; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem;">附件上传</label>
+            <div style="border: 2px dashed #e0e3ea; border-radius: 6px; padding: 20px; text-align: center; background: #f8f9fa;">
+                <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: #6c757d; margin-bottom: 10px;"></i>
+                <div style="color: #6c757d; margin-bottom: 10px;">点击或拖拽文件到此处上传</div>
+                <div style="font-size: 0.8rem; color: #6c757d;">支持图片、视频、文档等格式，单个文件不超过10MB</div>
+                <input type="file" multiple style="display: none;" id="fileUpload">
+                <button type="button" onclick="document.getElementById('fileUpload').click()" style="margin-top: 10px; padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem;">
+                    选择文件
+                </button>
+            </div>
+        </div>
+        
+        <div style="margin-top: 25px; display: flex; gap: 15px; justify-content: center;">
+            <button type="button" style="padding: 12px 30px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 500;" onclick="submitAssistRequest()">
+                <i class="fas fa-paper-plane" style="margin-right: 8px;"></i>
+                发起协助
+            </button>
+            <button type="button" style="padding: 12px 30px; background: #f8f9fa; color: #6c757d; border: 1px solid #e9ecef; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 500;">
+                保存草稿
+            </button>
+        </div>
     </div>
+
+    <!-- 协助指南 -->
+    <div style="background: linear-gradient(135deg, #f8f9ff 0%, #e8f0ff 100%); border-radius: 10px; padding: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+        <h3 style="color: #333; margin-bottom: 20px; font-size: 1.2rem; display: flex; align-items: center; gap: 10px;">
+            <i class="fas fa-lightbulb" style="color: #ffc107;"></i>
+            协助指南
+        </h3>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+            <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #667eea;">
+                <h4 style="color: #333; margin-bottom: 10px; font-size: 1rem; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-info-circle" style="color: #667eea;"></i>
+                    如何获得更好的协助
+                </h4>
+                <ul style="color: #6c757d; font-size: 0.9rem; line-height: 1.6; margin: 0; padding-left: 20px;">
+                    <li>详细描述问题现象和背景</li>
+                    <li>提供设备型号和参数信息</li>
+                    <li>上传相关图片或视频资料</li>
+                    <li>说明已尝试的解决方案</li>
+                </ul>
+            </div>
+            
+            <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #28a745;">
+                <h4 style="color: #333; margin-bottom: 10px; font-size: 1rem; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-clock" style="color: #28a745;"></i>
+                    响应时间说明
+                </h4>
+                <ul style="color: #6c757d; font-size: 0.9rem; line-height: 1.6; margin: 0; padding-left: 20px;">
+                    <li>紧急问题：5-15分钟内响应</li>
+                    <li>高优先级：30分钟内响应</li>
+                    <li>普通问题：2小时内响应</li>
+                    <li>低优先级：24小时内响应</li>
+                </ul>
+            </div>
+            
+            <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #ffc107;">
+                <h4 style="color: #333; margin-bottom: 10px; font-size: 1rem; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-shield-alt" style="color: #ffc107;"></i>
+                    安全保障
+                </h4>
+                <ul style="color: #6c757d; font-size: 0.9rem; line-height: 1.6; margin: 0; padding-left: 20px;">
+                    <li>专家身份实名认证</li>
+                    <li>协助过程全程记录</li>
+                    <li>问题解决后付款</li>
+                    <li>不满意可申请退款</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function submitAssistRequest() {
+        // 验证必填字段
+        const requiredFields = document.querySelectorAll('input[required], select[required], textarea[required]');
+        let isValid = true;
+        
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                field.style.borderColor = '#dc3545';
+                isValid = false;
+            } else {
+                field.style.borderColor = '#e0e3ea';
+            }
+        });
+        
+        if (!isValid) {
+            alert('请填写所有必填字段');
+            return;
+        }
+        
+        // 模拟提交
+        alert('协助请求已提交，专家将尽快与您联系！');
+        // 这里可以添加实际的提交逻辑
+    }
+
+    // 文件上传处理
+    document.getElementById('fileUpload').addEventListener('change', function(e) {
+        const files = e.target.files;
+        if (files.length > 0) {
+            alert(`已选择 ${files.length} 个文件`);
+            // 这里可以添加文件上传逻辑
+        }
+    });
+    </script>
 </body>
 </html> 

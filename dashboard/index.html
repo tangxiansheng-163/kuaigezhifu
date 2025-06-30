@@ -30,7 +30,7 @@
         .header {
             background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
             color: white;
-            padding: 0 20px;
+            padding: 0 32px;
             height: 60px;
             display: flex;
             align-items: center;
@@ -42,7 +42,7 @@
         .header-left {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 40px;
         }
 
         .logo {
@@ -61,17 +61,17 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-left: 60px;
+            margin-left: 40px;
         }
 
         .space-btn {
             background: rgba(255,255,255,0.1);
             border: none;
             color: white;
-            padding: 8px 16px;
+            padding: 8px 18px;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             transition: all 0.3s;
             display: flex;
             align-items: center;
@@ -146,27 +146,10 @@
             color: #667eea;
         }
 
-        .admin-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .admin-avatar {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-        }
-
         .header-right {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 18px;
         }
 
         .user-info {
@@ -226,11 +209,14 @@
             background: rgba(255,255,255,0.1);
             border: none;
             color: white;
-            padding: 8px 12px;
+            padding: 8px 14px;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .header-btn:hover {
@@ -275,16 +261,19 @@
             text-decoration: none;
             transition: all 0.3s;
             cursor: pointer;
+            border-left: 3px solid transparent;
         }
 
         .menu-item:hover {
             background: #f8f9fa;
             color: #2c3e50;
+            border-left: 3px solid #2c3e50;
         }
 
         .menu-item.active {
             background: #2c3e50;
             color: white;
+            border-left: 3px solid #2c3e50;
         }
 
         .menu-item i {
@@ -298,105 +287,19 @@
             padding: 30px;
             overflow-y: auto;
             background: #f5f7fa;
+            transition: margin-left 0.3s cubic-bezier(.4,2,.6,1);
         }
 
-        .content-header {
-            margin-bottom: 30px;
-        }
-
-        .content-title {
-            font-size: 1.8rem;
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        .content-subtitle {
-            color: #6c757d;
-            font-size: 1rem;
-        }
-
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .dashboard-card {
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .dashboard-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .card-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .card-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            color: white;
-        }
-
-        .card-icon.dark { background: #2c3e50; }
-        .card-icon.blue { background: #3498db; }
-        .card-icon.green { background: #27ae60; }
-        .card-icon.orange { background: #e67e22; }
-
-        .card-content {
-            color: #6c757d;
-            line-height: 1.6;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-        }
-
-        .stat-item {
-            text-align: center;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-        }
-
-        .stat-number {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 5px;
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            color: #6c757d;
+        /* 页面内容宽度控制 */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
         }
 
         /* 响应式设计 */
         @media (max-width: 768px) {
-            .space-switcher, .system-switcher {
+            .space-switcher {
                 display: none;
             }
             
@@ -416,10 +319,6 @@
             .content {
                 padding: 20px;
             }
-
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
         }
     </style>
 </head>
@@ -432,7 +331,7 @@
                     <i class="fas fa-cogs"></i>
                     <span>快哥智服</span>
                 </div>
-                <div class="space-switcher" style="margin-left: 60px;">
+                <div class="space-switcher">
                     <button class="space-btn" onclick="location.href='../personal/index.html'">
                         <i class="fas fa-user"></i>
                         个人空间
@@ -441,12 +340,12 @@
                         <i class="fas fa-building"></i>
                         企业空间
                     </button>
-                    <button class="space-btn active" onclick="location.href='index.html'">
+                    <button class="space-btn active" onclick="location.href='debug-index.html'">
                         <i class="fas fa-tachometer-alt"></i>
                         操作台
                     </button>
                 </div>
-                <div class="system-switcher-dropdown" style="margin-left: 20px; position: relative;">
+                <div class="system-switcher-dropdown">
                     <button class="space-btn" id="systemSwitcherBtn">
                         <i class="fas fa-layer-group"></i>
                         <span id="currentSystem">产品设备远程监测</span>
@@ -459,7 +358,7 @@
                 </div>
             </div>
             <div class="header-right">
-                <div class="user-info user-dropdown-trigger">
+                <div class="user-info">
                     <div class="user-avatar">
                         <i class="fas fa-user"></i>
                     </div>
@@ -487,11 +386,11 @@
 
         <!-- 主体区域 -->
         <div class="main-container">
-            <!-- 左侧菜单 -->
+            <!-- 产品设备远程监测菜单 -->
             <nav class="sidebar" id="productMenu">
                 <div class="menu-section">
                     <div class="menu-title">产品概览</div>
-                    <div class="menu-item active">
+                    <div class="menu-item active" onclick="loadPageContent('product-overview')">
                         <i class="fas fa-home"></i>
                         <span>产品概览</span>
                     </div>
@@ -499,11 +398,11 @@
 
                 <div class="menu-section">
                     <div class="menu-title">驾驶舱</div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('comprehensive-dashboard')">
                         <i class="fas fa-tachometer-alt"></i>
                         <span>综合看板</span>
                     </div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('realtime-monitor-dashboard')">
                         <i class="fas fa-desktop"></i>
                         <span>产品设备实时监测看板</span>
                     </div>
@@ -511,15 +410,15 @@
 
                 <div class="menu-section">
                     <div class="menu-title">状态监测</div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('start-stop-record')">
                         <i class="fas fa-play-circle"></i>
                         <span>启停记录</span>
                     </div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('fault-analysis')">
                         <i class="fas fa-exclamation-triangle"></i>
                         <span>故障分析</span>
                     </div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('device-events')">
                         <i class="fas fa-history"></i>
                         <span>设备事记</span>
                     </div>
@@ -527,31 +426,31 @@
 
                 <div class="menu-section">
                     <div class="menu-title">数据报表</div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('device-monitoring')">
                         <i class="fas fa-chart-line"></i>
                         <span>设备监测</span>
                     </div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('historical-trend')">
                         <i class="fas fa-chart-area"></i>
                         <span>历史趋势</span>
                     </div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('downtime-analysis')">
                         <i class="fas fa-pause-circle"></i>
                         <span>停机分析</span>
                     </div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('alarm-analysis')">
                         <i class="fas fa-bell"></i>
                         <span>告警分析</span>
                     </div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('fault-analysis-report')">
                         <i class="fas fa-exclamation-triangle"></i>
                         <span>故障分析</span>
                     </div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('health-trend')">
                         <i class="fas fa-heartbeat"></i>
                         <span>健康趋势</span>
                     </div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('monitoring-template')">
                         <i class="fas fa-file-alt"></i>
                         <span>监测模板</span>
                     </div>
@@ -559,11 +458,11 @@
 
                 <div class="menu-section">
                     <div class="menu-title">预警管理</div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('warning-record')">
                         <i class="fas fa-bell"></i>
                         <span>预警记录</span>
                     </div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('warning-config')">
                         <i class="fas fa-cog"></i>
                         <span>预警配置</span>
                     </div>
@@ -571,11 +470,11 @@
 
                 <div class="menu-section">
                     <div class="menu-title">保养指南</div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('maintenance-guide-add')">
                         <i class="fas fa-plus"></i>
                         <span>添加指南</span>
                     </div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('maintenance-guide-list')">
                         <i class="fas fa-list"></i>
                         <span>保养指南列表</span>
                     </div>
@@ -583,11 +482,11 @@
 
                 <div class="menu-section">
                     <div class="menu-title">巡检指南</div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('inspection-guide-add')">
                         <i class="fas fa-plus"></i>
                         <span>添加指南</span>
                     </div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('inspection-guide-list')">
                         <i class="fas fa-list"></i>
                         <span>巡检指南列表</span>
                     </div>
@@ -595,23 +494,23 @@
 
                 <div class="menu-section">
                     <div class="menu-title">售后工单</div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('repair-order')">
                         <i class="fas fa-tools"></i>
                         <span>维修</span>
                     </div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('install-order')">
                         <i class="fas fa-cog"></i>
                         <span>安装</span>
                     </div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('debug-order')">
                         <i class="fas fa-sliders-h"></i>
                         <span>调试</span>
                     </div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('return-order')">
                         <i class="fas fa-undo"></i>
                         <span>退货</span>
                     </div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('exchange-order')">
                         <i class="fas fa-exchange-alt"></i>
                         <span>换货</span>
                     </div>
@@ -619,11 +518,11 @@
 
                 <div class="menu-section">
                     <div class="menu-title">工单流程</div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('workflow-create')">
                         <i class="fas fa-plus"></i>
                         <span>创建流程</span>
                     </div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('workflow-list')">
                         <i class="fas fa-list"></i>
                         <span>流程列表</span>
                     </div>
@@ -631,15 +530,15 @@
 
                 <div class="menu-section">
                     <div class="menu-title">产品系列</div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('product-category')">
                         <i class="fas fa-tags"></i>
                         <span>产品分类</span>
                     </div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('product-model')">
                         <i class="fas fa-cube"></i>
                         <span>产品型号</span>
                     </div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('model-template')">
                         <i class="fas fa-file-alt"></i>
                         <span>型号模板</span>
                     </div>
@@ -647,11 +546,11 @@
 
                 <div class="menu-section">
                     <div class="menu-title">产品设备</div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('product-device-add')">
                         <i class="fas fa-plus"></i>
                         <span>添加产品设备</span>
                     </div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('product-device-list')">
                         <i class="fas fa-list"></i>
                         <span>产品设备</span>
                     </div>
@@ -659,19 +558,19 @@
 
                 <div class="menu-section">
                     <div class="menu-title">终端设备</div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('terminal-category')">
                         <i class="fas fa-tags"></i>
                         <span>终端分类</span>
                     </div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('terminal-list')">
                         <i class="fas fa-list"></i>
                         <span>终端列表</span>
                     </div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('thing-model-config')">
                         <i class="fas fa-cog"></i>
                         <span>物模型配置</span>
                     </div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('communication-protocol')">
                         <i class="fas fa-network-wired"></i>
                         <span>通讯协议</span>
                     </div>
@@ -679,15 +578,15 @@
 
                 <div class="menu-section">
                     <div class="menu-title">知识库管理</div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('knowledge-category-manage')">
                         <i class="fas fa-tags"></i>
                         <span>分类管理</span>
                     </div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('knowledge-category-list')">
                         <i class="fas fa-list"></i>
                         <span>分类列表</span>
                     </div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('knowledge-document-list')">
                         <i class="fas fa-file-alt"></i>
                         <span>文档列表</span>
                     </div>
@@ -695,11 +594,11 @@
 
                 <div class="menu-section">
                     <div class="menu-title">客户管理</div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('customer-add')">
                         <i class="fas fa-plus"></i>
                         <span>新增客户</span>
                     </div>
-                    <div class="menu-item">
+                    <div class="menu-item" onclick="loadPageContent('customer-list')">
                         <i class="fas fa-list"></i>
                         <span>客户列表</span>
                     </div>
@@ -959,136 +858,156 @@
 
             <!-- 主内容区域 -->
             <main class="content" id="main-content">
-                <!-- 动态内容区域 -->
+                <div class="main-content" id="page-content">
+                    <!-- 内容将通过AJAX动态加载 -->
+                </div>
             </main>
         </div>
     </div>
+
     <script>
-    // 菜单项跳转映射
-    const menuMap = {
-        // 产品设备远程监测菜单
-        '产品概览': 'dashboard-content',
-        '综合看板': 'overview.html',
-        '产品设备实时监测看板': 'device-monitor.html',
-        '启停记录': 'start-stop.html',
-        '故障分析': 'fault-analysis.html',
-        '设备事记': 'device-events.html',
-        '设备监测': 'device-report.html',
-        '历史趋势': 'history-trend.html',
-        '停机分析': 'downtime-analysis.html',
-        '告警分析': 'alarm-analysis.html',
-        '健康趋势': 'health-trend.html',
-        '监测模板': 'monitor-template.html',
-        '预警记录': 'warning-record.html',
-        '预警配置': 'warning-config.html',
-        '添加指南': 'guide-add.html',
-        '保养指南列表': 'guide-list.html',
-        '巡检指南列表': 'inspection-guide-list.html',
-        '维修': 'repair.html',
-        '安装': 'install.html',
-        '调试': 'debug.html',
-        '退货': 'return.html',
-        '换货': 'exchange.html',
-        '创建流程': 'workflow-add.html',
-        '流程列表': 'workflow-list.html',
-        '产品分类': 'product-category.html',
-        '产品型号': 'product-model.html',
-        '型号模板': 'model-template.html',
-        '添加产品设备': 'device-add.html',
-        '产品设备': 'device-list.html',
-        '终端分类': 'terminal-category.html',
-        '终端列表': 'terminal-list.html',
-        '物模型配置': 'thing-model.html',
-        '通讯协议': 'protocol.html',
-        '分类管理': 'kb-category.html',
-        '分类列表': 'kb-category-list.html',
-        '文档列表': 'kb-doc-list.html',
-        '新增客户': 'customer-add.html',
-        '客户列表': 'customer-list.html',
-        // 设备远程监测运维菜单
-        '设备概览': 'dashboard-content',
-        '工厂设备综合监测': 'factory-monitor.html',
-        '设备实时运行监测': 'device-realtime.html',
-        '告警记录': 'alarm-record.html',
-        '告警配置': 'alarm-config.html',
-        '保养工单': 'maintenance-order.html',
-        '保养计划': 'maintenance-plan.html',
-        '保养配置': 'maintenance-config.html',
-        '巡检工单': 'inspection-order.html',
-        '巡检计划': 'inspection-plan.html',
-        '巡检路线': 'inspection-route.html',
-        '巡检配置': 'inspection-config.html',
-        '维修、调试、退货、换货': 'service-mix.html',
-        '申请列表': 'service-list.html',
-        '设备分类': 'device-category.html',
-        '设备台账': 'device-ledger.html',
-        '设备位置': 'device-location.html',
-        '出入库审核': 'stock-review.html',
-        '库存台账': 'stock-ledger.html',
-        '员工库存': 'staff-stock.html',
-        '员工领用总汇': 'staff-collect.html',
-        '备件型号': 'spare-model.html',
-        '备件分类': 'spare-category.html',
-        '终端列表': 'terminal-list.html',
-        '终端分类': 'terminal-category.html',
-        '通知模板': 'notice-template.html',
-        '通知配置': 'notice-config.html',
-        '货品类型': 'goods-type.html',
-        '仓库类型': 'warehouse-type.html',
-        '仓库设置': 'warehouse-config.html',
-        '网点类型': 'site-type.html',
-        '异常类型': 'exception-type.html',
-        '停机原因': 'downtime-reason.html',
-        '倒班管理': 'shift.html',
-        '值班查询': 'duty-query.html',
-        '班组管理': 'team.html'
-    };
-    // 动态加载内容
-    function loadContent(key) {
-        const main = document.getElementById('main-content');
-        if (key === 'dashboard-content') {
-            main.innerHTML = `...（原首页内容，略）...`;
-            return;
-        }
-        fetch(key)
-            .then(res => res.text())
-            .then(html => {
-                const temp = document.createElement('div');
-                temp.innerHTML = html;
-                const content = temp.querySelector('.main-content');
-                main.innerHTML = content ? content.outerHTML : '<div style=\'color:red\'>内容加载失败</div>';
-            })
-            .catch(() => {
-                main.innerHTML = '<div style=\'color:red\'>内容加载失败</div>';
-            });
-    }
-    window.addEventListener('DOMContentLoaded', function() {
-        loadContent('dashboard-content');
-        document.querySelectorAll('.menu-item').forEach(item => {
-            const text = item.innerText.trim();
-            if(menuMap[text]) {
-                item.style.cursor = 'pointer';
-                item.onclick = function() {
-                    document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
-                    item.classList.add('active');
-                    loadContent(menuMap[text]);
-                };
+        // 页面文件映射 - 产品设备远程监测系统
+        const pageFileMap = {
+            'product-overview': 'product-overview-content.html',
+            'comprehensive-dashboard': 'comprehensive-dashboard-content.html',
+            'realtime-monitor-dashboard': 'realtime-monitor-dashboard-content.html',
+            'start-stop-record': 'start-stop-record-content.html',
+            'fault-analysis': 'fault-analysis-content.html',
+            'device-events': 'device-events-content.html',
+            'device-monitoring': 'device-monitoring-content.html',
+            'historical-trend': 'historical-trend-content.html',
+            'downtime-analysis': 'downtime-analysis-content.html',
+            'alarm-analysis': 'alarm-analysis-content.html',
+            'fault-analysis-report': 'fault-analysis-report-content.html',
+            'health-trend': 'health-trend-content.html',
+            'monitoring-template': 'monitoring-template-content.html',
+            'warning-record': 'warning-record-content.html',
+            'warning-config': 'warning-config-content.html',
+            'maintenance-guide-add': 'maintenance-guide-add-content.html',
+            'maintenance-guide-list': 'maintenance-guide-list-content.html',
+            'inspection-guide-add': 'inspection-guide-add-content.html',
+            'inspection-guide-list': 'inspection-guide-list-content.html',
+            'repair-order': 'repair-order-content.html',
+            'install-order': 'install-order-content.html',
+            'debug-order': 'debug-order-content.html',
+            'return-order': 'return-order-content.html',
+            'exchange-order': 'exchange-order-content.html',
+            'workflow-create': 'workflow-create-content.html',
+            'workflow-list': 'workflow-list-content.html',
+            'product-category': 'product-category-content.html',
+            'product-model': 'product-model-content.html',
+            'model-template': 'model-template-content.html',
+            'product-device-add': 'product-device-add-content.html',
+            'product-device-list': 'product-device-list-content.html',
+            'terminal-category': 'terminal-category-content.html',
+            'terminal-list': 'terminal-list-content.html',
+            'thing-model-config': 'thing-model-config-content.html',
+            'communication-protocol': 'communication-protocol-content.html',
+            'knowledge-category-manage': 'knowledge-category-manage-content.html',
+            'knowledge-category-list': 'knowledge-category-list-content.html',
+            'knowledge-document-list': 'knowledge-document-list-content.html',
+            'customer-add': 'customer-add-content.html',
+            'customer-list': 'customer-list-content.html'
+        };
+
+        // 加载页面内容的函数
+        function loadPageContent(pageKey) {
+            const pageContent = document.getElementById('page-content');
+            const fileName = pageFileMap[pageKey];
+            
+            if (!fileName) {
+                console.error('未找到页面文件映射:', pageKey);
+                return;
             }
+
+            // 更新菜单激活状态
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // 找到对应的菜单项并激活
+            event.target.closest('.menu-item').classList.add('active');
+
+            // 显示加载状态
+            pageContent.innerHTML = `
+                <div style="display: flex; justify-content: center; align-items: center; height: 400px;">
+                    <div style="text-align: center;">
+                        <div style="width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #2c3e50; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px;"></div>
+                        <p style="color: #6c757d; font-size: 1rem;">正在加载页面内容...</p>
+                    </div>
+                </div>
+                <style>
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
+                </style>
+            `;
+
+            // 通过fetch加载HTML文件内容
+            fetch(fileName)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.text();
+                })
+                .then(html => {
+                    // 直接插入内容（因为文件只包含内容片段）
+                    pageContent.innerHTML = html;
+                })
+                .catch(error => {
+                    console.error('加载页面失败:', error);
+                    pageContent.innerHTML = `
+                        <div style="display: flex; justify-content: center; align-items: center; height: 400px;">
+                            <div style="text-align: center;">
+                                <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #dc3545; margin-bottom: 20px;"></i>
+                                <h3 style="color: #333; margin-bottom: 10px;">页面加载失败</h3>
+                                <p style="color: #6c757d; font-size: 1rem;">无法加载 ${fileName} 文件</p>
+                                <p style="color: #6c757d; font-size: 0.9rem; margin-top: 10px;">错误信息: ${error.message}</p>
+                                <button onclick="loadPageContent('${pageKey}')" style="margin-top: 20px; padding: 10px 20px; background: #2c3e50; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                                    <i class="fas fa-redo"></i> 重新加载
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+        }
+
+        // 系统切换函数
+        function switchSystem(type) {
+            var name = type === 'product' ? '产品设备远程监测' : '设备远程监测运维';
+            document.getElementById('currentSystem').textContent = name;
+            
+            // 切换菜单
+            document.getElementById('productMenu').style.display = type === 'product' ? '' : 'none';
+            document.getElementById('deviceMenu').style.display = type === 'device' ? '' : 'none';
+            
+            // 默认加载第一个页面
+            if (type === 'product') {
+                loadPageContent('product-overview');
+            } else {
+                // 设备远程监测运维系统暂时显示占位内容
+                document.getElementById('page-content').innerHTML = `
+                    <div style="text-align: center; padding: 100px 20px;">
+                        <i class="fas fa-server" style="font-size: 4rem; color: #6c757d; margin-bottom: 20px;"></i>
+                        <h2 style="color: #495057; margin-bottom: 15px;">设备远程监测运维系统</h2>
+                        <p style="color: #6c757d; font-size: 1.1rem;">此系统功能正在开发中，敬请期待...</p>
+                    </div>
+                `;
+            }
+            
+            // 激活第一个菜单项
+            var activeMenu = (type === 'product' ? document.querySelector('#productMenu .menu-item') : document.querySelector('#deviceMenu .menu-item'));
+            document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+            if(activeMenu) activeMenu.classList.add('active');
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 直接跳转到debug-index.html页面，显示完整的产品概览内容
+            window.location.href = 'debug-index.html';
         });
-    });
-    function switchSystem(type) {
-        var name = type === 'product' ? '产品设备远程监测' : '设备远程监测运维';
-        document.getElementById('currentSystem').textContent = name;
-        // 切换菜单
-        document.getElementById('productMenu').style.display = type === 'product' ? '' : 'none';
-        document.getElementById('deviceMenu').style.display = type === 'device' ? '' : 'none';
-        // 切换内容区为首页
-        loadContent('dashboard-content');
-        // 激活第一个菜单项
-        var activeMenu = (type === 'product' ? document.querySelector('#productMenu .menu-item') : document.querySelector('#deviceMenu .menu-item'));
-        document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
-        if(activeMenu) activeMenu.classList.add('active');
-    }
     </script>
 </body>
 </html> 

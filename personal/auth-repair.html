@@ -2,50 +2,389 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>维修认证</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f7fa; margin: 0; }
-        .main-content { max-width: 500px; margin: 40px auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); padding: 36px; }
-        h1 { color: #667eea; font-size: 1.5rem; margin-bottom: 18px; }
-        .form-group { margin-bottom: 18px; }
-        label { display: block; margin-bottom: 6px; color: #333; font-weight: 500; }
-        input[type="text"], input[type="file"] { width: 100%; padding: 8px 10px; border-radius: 6px; border: 1px solid #e0e3ea; }
-        .upload-tip { color: #888; font-size: 0.95em; margin-bottom: 8px; }
-        .status-info { background: #f8f9fa; color: #667eea; border-radius: 6px; padding: 10px 14px; margin-bottom: 18px; font-size: 0.98em; }
-        button { width: 100%; padding: 10px 0; background: #667eea; color: #fff; border: none; border-radius: 6px; font-size: 1.1em; cursor: pointer; }
-        button:disabled { background: #ccc; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>维修技师认证 - 快哥智服平台</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
     <div class="main-content">
-        <h1>维修认证</h1>
-        <div class="status-info">请上传相关证书和工作经验证明，提交后平台将在1-2个工作日内完成审核。</div>
-        <form>
-            <div class="form-group">
-                <label>真实姓名</label>
-                <input type="text" placeholder="请输入姓名">
+        <!-- 认证状态卡片 -->
+        <div style="margin-bottom: 30px;">
+            <div style="background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%); border-radius: 12px; padding: 25px; color: white; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 20px rgba(255, 193, 7, 0.3);">
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <div style="width: 60px; height: 60px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-tools" style="font-size: 1.8rem;"></i>
+                    </div>
+                    <div>
+                        <h2 style="font-size: 1.5rem; margin-bottom: 5px;">维修技师认证</h2>
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 1.1rem;">
+                            <i class="fas fa-check-circle"></i>
+                            <span>认证已通过</span>
+                        </div>
+                        <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 5px;">
+                            认证时间：2024-02-20 16:45:30 | 有效期至：2025-02-20
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 8px;">距离到期还有</div>
+                    <div style="font-size: 1.3rem; font-weight: bold;">365天</div>
+                    <button onclick="renewCertification()" style="background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; margin-top: 10px; font-size: 0.9rem; transition: all 0.3s;">
+                        提前续签
+                    </button>
+                </div>
             </div>
-            <div class="form-group">
-                <label>身份证号</label>
-                <input type="text" placeholder="请输入身份证号码">
+        </div>
+
+        <!-- 认证记录 -->
+        <div style="background: white; border-radius: 12px; padding: 25px; margin-bottom: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <h3 style="display: flex; align-items: center; gap: 10px; color: #333; margin-bottom: 20px; font-size: 1.3rem; padding-bottom: 15px; border-bottom: 2px solid #f0f0f0;">
+                <i class="fas fa-history" style="color: #ffc107;"></i>
+                认证记录
+            </h3>
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: #f8f9fa;">
+                            <th style="padding: 15px; text-align: left; color: #495057; font-weight: 600; border-bottom: 2px solid #dee2e6;">申请时间</th>
+                            <th style="padding: 15px; text-align: left; color: #495057; font-weight: 600; border-bottom: 2px solid #dee2e6;">认证状态</th>
+                            <th style="padding: 15px; text-align: left; color: #495057; font-weight: 600; border-bottom: 2px solid #dee2e6;">审核时间</th>
+                            <th style="padding: 15px; text-align: left; color: #495057; font-weight: 600; border-bottom: 2px solid #dee2e6;">有效期</th>
+                            <th style="padding: 15px; text-align: center; color: #495057; font-weight: 600; border-bottom: 2px solid #dee2e6;">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid #e9ecef;">
+                            <td style="padding: 15px; color: #495057;">2024-02-20 14:30:20</td>
+                            <td style="padding: 15px;">
+                                <span style="background: #d4edda; color: #155724; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 5px;">
+                                    <i class="fas fa-check-circle"></i>
+                                    已通过
+                                </span>
+                            </td>
+                            <td style="padding: 15px; color: #495057;">2024-02-20 16:45:30</td>
+                            <td style="padding: 15px; color: #495057;">2024-02-20 ~ 2025-02-20</td>
+                            <td style="padding: 15px; text-align: center;">
+                                <button onclick="viewCertificate('repair')" style="background: #ffc107; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; margin-right: 5px;">
+                                    查看证书
+                                </button>
+                                <button onclick="downloadCertificate('repair')" style="background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">
+                                    下载证书
+                                </button>
+                            </td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #e9ecef;">
+                            <td style="padding: 15px; color: #495057;">2024-01-10 11:20:15</td>
+                            <td style="padding: 15px;">
+                                <span style="background: #f8d7da; color: #721c24; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 5px;">
+                                    <i class="fas fa-times-circle"></i>
+                                    已拒绝
+                                </span>
+                            </td>
+                            <td style="padding: 15px; color: #495057;">2024-01-12 09:30:45</td>
+                            <td style="padding: 15px; color: #6c757d;">-</td>
+                            <td style="padding: 15px; text-align: center;">
+                                <button onclick="viewRejectReason('维修技师认证', '技能证书不够清晰，工作经验描述不够详细。请重新上传高清证书照片，并详细描述您的维修经验和专业技能。')" style="background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">
+                                    查看原因
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-            <div class="form-group">
-                <label>学历证书</label>
-                <input type="file" accept="image/*,application/pdf">
-                <div class="upload-tip">支持图片/PDF，大小不超过10M</div>
+        </div>
+
+        <div class="page-header">
+            <h1><i class="fas fa-tools"></i> 维修技师认证申请</h1>
+            <p class="page-desc">通过维修技师认证，成为平台认证维修专家，获得更多维修订单和收益机会</p>
+        </div>
+
+        <!-- 认证进度 -->
+        <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 40px; padding: 40px 20px; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+            <div style="display: flex; align-items: center; justify-content: center; width: 100%; max-width: 600px; position: relative;">
+                <!-- 步骤1 -->
+                <div style="display: flex; flex-direction: column; align-items: center; z-index: 2;">
+                    <div style="width: 60px; height: 60px; border-radius: 50%; background: #28a745; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.4rem; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);">1</div>
+                    <div style="font-weight: 600; color: #28a745; font-size: 0.95rem; text-align: center; line-height: 1.3;">填写资料</div>
+                </div>
+                
+                <!-- 连接线1 -->
+                <div style="flex: 1; height: 3px; background: linear-gradient(to right, #28a745, #ffc107); margin: 0 20px; border-radius: 2px; position: relative; top: -25px;"></div>
+                
+                <!-- 步骤2 -->
+                <div style="display: flex; flex-direction: column; align-items: center; z-index: 2;">
+                    <div style="width: 60px; height: 60px; border-radius: 50%; background: #ffc107; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.4rem; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);">2</div>
+                    <div style="font-weight: 600; color: #ffc107; font-size: 0.95rem; text-align: center; line-height: 1.3;">上传证明</div>
+                </div>
+                
+                <!-- 连接线2 -->
+                <div style="flex: 1; height: 3px; background: #e9ecef; margin: 0 20px; border-radius: 2px; position: relative; top: -25px;"></div>
+                
+                <!-- 步骤3 -->
+                <div style="display: flex; flex-direction: column; align-items: center; z-index: 2;">
+                    <div style="width: 60px; height: 60px; border-radius: 50%; background: #e9ecef; color: #6c757d; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.4rem; margin-bottom: 12px; border: 3px solid #dee2e6;">3</div>
+                    <div style="font-weight: 600; color: #6c757d; font-size: 0.95rem; text-align: center; line-height: 1.3;">平台审核</div>
+                </div>
+                
+                <!-- 连接线3 -->
+                <div style="flex: 1; height: 3px; background: #e9ecef; margin: 0 20px; border-radius: 2px; position: relative; top: -25px;"></div>
+                
+                <!-- 步骤4 -->
+                <div style="display: flex; flex-direction: column; align-items: center; z-index: 2;">
+                    <div style="width: 60px; height: 60px; border-radius: 50%; background: #e9ecef; color: #6c757d; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.4rem; margin-bottom: 12px; border: 3px solid #dee2e6;">4</div>
+                    <div style="font-weight: 600; color: #6c757d; font-size: 0.95rem; text-align: center; line-height: 1.3;">认证通过</div>
+                </div>
             </div>
-            <div class="form-group">
-                <label>技术资格证书</label>
-                <input type="file" accept="image/*,application/pdf">
-                <div class="upload-tip">支持图片/PDF，大小不超过10M</div>
+        </div>
+
+        <!-- 认证表单 -->
+        <form style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 25px;">
+            <!-- 基本信息 -->
+            <div style="margin-bottom: 30px;">
+                <h3 style="display: flex; align-items: center; gap: 10px; color: #333; margin-bottom: 20px; font-size: 1.2rem; padding-bottom: 10px; border-bottom: 2px solid #f0f0f0;">
+                    <i class="fas fa-user" style="color: #17a2b8;"></i>
+                    基本信息
+                </h3>
+                <!-- 实名认证信息提示 -->
+                <div style="background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%); padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #2196f3;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                        <i class="fas fa-info-circle" style="color: #2196f3; font-size: 1.1rem;"></i>
+                        <span style="color: #1976d2; font-weight: 500; font-size: 0.95rem;">实名认证信息</span>
+                    </div>
+                    <div style="color: #424242; font-size: 0.9rem; line-height: 1.4;">
+                        以下信息来自您的实名认证，如需修改请前往 <a href="#" onclick="showPage('auth-real')" style="color: #2196f3; text-decoration: none;">实名认证页面</a>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                    <div>
+                        <label style="display: block; color: #333; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem;">真实姓名</label>
+                        <div style="width: 100%; padding: 12px 15px; border: 1px solid #e0e3ea; border-radius: 8px; font-size: 0.95rem; background-color: #f8f9fa; color: #6c757d; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-user" style="color: #28a745;"></i>
+                            <span>张三</span>
+                            <span style="margin-left: auto; font-size: 0.8rem; color: #28a745;">已认证</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label style="display: block; color: #333; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem;">联系电话 <span style="color: #dc3545;">*</span></label>
+                        <input type="tel" placeholder="请输入联系电话" style="width: 100%; padding: 12px 15px; border: 1px solid #e0e3ea; border-radius: 8px; font-size: 0.95rem;">
+                    </div>
+                    <div>
+                        <label style="display: block; color: #333; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem;">工作单位</label>
+                        <input type="text" placeholder="请输入工作单位" style="width: 100%; padding: 12px 15px; border: 1px solid #e0e3ea; border-radius: 8px; font-size: 0.95rem;">
+                    </div>
+                    <div>
+                        <label style="display: block; color: #333; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem;">从业年限 <span style="color: #dc3545;">*</span></label>
+                        <select style="width: 100%; padding: 12px 15px; border: 1px solid #e0e3ea; border-radius: 8px; font-size: 0.95rem;">
+                            <option value="">请选择从业年限</option>
+                            <option value="1-3年">1-3年</option>
+                            <option value="3-5年">3-5年</option>
+                            <option value="5-10年">5-10年</option>
+                            <option value="10年以上">10年以上</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display: block; color: #333; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem;">技术等级</label>
+                        <select style="width: 100%; padding: 12px 15px; border: 1px solid #e0e3ea; border-radius: 8px; font-size: 0.95rem;">
+                            <option value="">请选择技术等级</option>
+                            <option value="初级技师">初级技师</option>
+                            <option value="中级技师">中级技师</option>
+                            <option value="高级技师">高级技师</option>
+                            <option value="特级技师">特级技师</option>
+                        </select>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label>工作经验证明</label>
-                <input type="file" accept="image/*,application/pdf">
-                <div class="upload-tip">支持图片/PDF，大小不超过10M</div>
+
+            <!-- 专业技能 -->
+            <div style="margin-bottom: 30px;">
+                <h3 style="display: flex; align-items: center; gap: 10px; color: #333; margin-bottom: 20px; font-size: 1.2rem; padding-bottom: 10px; border-bottom: 2px solid #f0f0f0;">
+                    <i class="fas fa-cogs" style="color: #17a2b8;"></i>
+                    专业技能 <span style="color: #dc3545; font-size: 0.8rem;">(可多选)</span>
+                </h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                    <div onclick="toggleRepairSkill(this)" style="display: flex; align-items: center; gap: 10px; padding: 12px 15px; background: white; border-radius: 8px; border: 1px solid #e0e3ea; cursor: pointer;">
+                        <div style="width: 18px; height: 18px; border: 2px solid #e0e3ea; border-radius: 4px;"></div>
+                        <span>机械维修</span>
+                    </div>
+                    <div onclick="toggleRepairSkill(this)" style="display: flex; align-items: center; gap: 10px; padding: 12px 15px; background: white; border-radius: 8px; border: 1px solid #e0e3ea; cursor: pointer;">
+                        <div style="width: 18px; height: 18px; border: 2px solid #e0e3ea; border-radius: 4px;"></div>
+                        <span>电气维修</span>
+                    </div>
+                    <div onclick="toggleRepairSkill(this)" style="display: flex; align-items: center; gap: 10px; padding: 12px 15px; background: white; border-radius: 8px; border: 1px solid #e0e3ea; cursor: pointer;">
+                        <div style="width: 18px; height: 18px; border: 2px solid #e0e3ea; border-radius: 4px;"></div>
+                        <span>液压系统</span>
+                    </div>
+                    <div onclick="toggleRepairSkill(this)" style="display: flex; align-items: center; gap: 10px; padding: 12px 15px; background: white; border-radius: 8px; border: 1px solid #e0e3ea; cursor: pointer;">
+                        <div style="width: 18px; height: 18px; border: 2px solid #e0e3ea; border-radius: 4px;"></div>
+                        <span>空压机系统</span>
+                    </div>
+                    <div onclick="toggleRepairSkill(this)" style="display: flex; align-items: center; gap: 10px; padding: 12px 15px; background: white; border-radius: 8px; border: 1px solid #e0e3ea; cursor: pointer;">
+                        <div style="width: 18px; height: 18px; border: 2px solid #e0e3ea; border-radius: 4px;"></div>
+                        <span>制冷设备</span>
+                    </div>
+                    <div onclick="toggleRepairSkill(this)" style="display: flex; align-items: center; gap: 10px; padding: 12px 15px; background: white; border-radius: 8px; border: 1px solid #e0e3ea; cursor: pointer;">
+                        <div style="width: 18px; height: 18px; border: 2px solid #e0e3ea; border-radius: 4px;"></div>
+                        <span>工业锅炉</span>
+                    </div>
+                    <div onclick="toggleRepairSkill(this)" style="display: flex; align-items: center; gap: 10px; padding: 12px 15px; background: white; border-radius: 8px; border: 1px solid #e0e3ea; cursor: pointer;">
+                        <div style="width: 18px; height: 18px; border: 2px solid #e0e3ea; border-radius: 4px;"></div>
+                        <span>环保设备</span>
+                    </div>
+                    <div onclick="toggleRepairSkill(this)" style="display: flex; align-items: center; gap: 10px; padding: 12px 15px; background: white; border-radius: 8px; border: 1px solid #e0e3ea; cursor: pointer;">
+                        <div style="width: 18px; height: 18px; border: 2px solid #e0e3ea; border-radius: 4px;"></div>
+                        <span>其他设备</span>
+                    </div>
+                </div>
             </div>
-            <button type="submit">提交认证</button>
+
+            <!-- 工作经验 -->
+            <div style="margin-bottom: 30px;">
+                <h3 style="display: flex; align-items: center; gap: 10px; color: #333; margin-bottom: 20px; font-size: 1.2rem; padding-bottom: 10px; border-bottom: 2px solid #f0f0f0;">
+                    <i class="fas fa-briefcase" style="color: #17a2b8;"></i>
+                    工作经验
+                </h3>
+                <textarea placeholder="请详细描述您的维修工作经验、擅长的设备类型、成功案例等" style="width: 100%; padding: 15px; border: 1px solid #e0e3ea; border-radius: 8px; font-size: 0.95rem; min-height: 120px; resize: vertical; line-height: 1.6;"></textarea>
+            </div>
+
+            <!-- 证书上传 -->
+            <div style="margin-bottom: 30px;">
+                <h3 style="display: flex; align-items: center; gap: 10px; color: #333; margin-bottom: 20px; font-size: 1.2rem; padding-bottom: 10px; border-bottom: 2px solid #f0f0f0;">
+                    <i class="fas fa-upload" style="color: #17a2b8;"></i>
+                    证书上传
+                </h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                    <div>
+                        <label style="display: block; color: #333; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem;">学历证书</label>
+                        <div style="border: 2px dashed #e0e3ea; border-radius: 8px; padding: 20px; text-align: center; cursor: pointer;">
+                            <i class="fas fa-cloud-upload-alt" style="font-size: 1.5rem; color: #6c757d; margin-bottom: 10px;"></i>
+                            <div style="color: #6c757d; margin-bottom: 5px;">点击上传或拖拽文件至此</div>
+                            <div style="font-size: 0.85rem; color: #999;">支持jpg/png/pdf，大小不超过10M</div>
+                        </div>
+                    </div>
+                    <div>
+                        <label style="display: block; color: #333; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem;">技能证书</label>
+                        <div style="border: 2px dashed #e0e3ea; border-radius: 8px; padding: 20px; text-align: center; cursor: pointer;">
+                            <i class="fas fa-award" style="font-size: 1.5rem; color: #6c757d; margin-bottom: 10px;"></i>
+                            <div style="color: #6c757d; margin-bottom: 5px;">点击上传技能证书</div>
+                            <div style="font-size: 0.85rem; color: #999;">如职业资格证、技能等级证等</div>
+                        </div>
+                    </div>
+                    <div>
+                        <label style="display: block; color: #333; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem;">工作证明</label>
+                        <div style="border: 2px dashed #e0e3ea; border-radius: 8px; padding: 20px; text-align: center; cursor: pointer;">
+                            <i class="fas fa-file-alt" style="font-size: 1.5rem; color: #6c757d; margin-bottom: 10px;"></i>
+                            <div style="color: #6c757d; margin-bottom: 5px;">点击上传工作证明</div>
+                            <div style="font-size: 0.85rem; color: #999;">如工作证明、推荐信等</div>
+                        </div>
+                    </div>
+                    <div>
+                        <label style="display: block; color: #333; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem;">服务案例</label>
+                        <div style="border: 2px dashed #e0e3ea; border-radius: 8px; padding: 20px; text-align: center; cursor: pointer;">
+                            <i class="fas fa-images" style="font-size: 1.5rem; color: #6c757d; margin-bottom: 10px;"></i>
+                            <div style="color: #6c757d; margin-bottom: 5px;">点击上传服务案例照片</div>
+                            <div style="font-size: 0.85rem; color: #999;">展示您的工作成果，支持jpg/png</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 提交按钮 -->
+            <div style="display: flex; gap: 15px; justify-content: center; margin-top: 30px;">
+                <button type="submit" style="display: flex; align-items: center; gap: 8px; padding: 12px 30px; background: #ffc107; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 500;">
+                    <i class="fas fa-paper-plane"></i>
+                    提交认证申请
+                </button>
+                <button type="button" style="display: flex; align-items: center; gap: 8px; padding: 12px 30px; background: #f8f9fa; color: #6c757d; border: 1px solid #e9ecef; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 500;">
+                    <i class="fas fa-save"></i>
+                    保存草稿
+                </button>
+            </div>
         </form>
+
+        <!-- 技师权益 -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+            <div style="background: white; border-radius: 10px; padding: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                    <div style="width: 50px; height: 50px; border-radius: 12px; background: #ffc107; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div style="font-size: 1.1rem; font-weight: 600; color: #333;">优先派单</div>
+                </div>
+                <div style="color: #6c757d; line-height: 1.6;">认证维修技师在订单分配中享有优先权，获得更多高质量维修订单和服务机会。</div>
+            </div>
+            <div style="background: white; border-radius: 10px; padding: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                    <div style="width: 50px; height: 50px; border-radius: 12px; background: #28a745; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div style="font-size: 1.1rem; font-weight: 600; color: #333;">信誉保障</div>
+                </div>
+                <div style="color: #6c757d; line-height: 1.6;">获得平台认证标识，提升个人品牌形象和客户信任度，增强竞争优势。</div>
+            </div>
+            <div style="background: white; border-radius: 10px; padding: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                    <div style="width: 50px; height: 50px; border-radius: 12px; background: #17a2b8; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <div style="font-size: 1.1rem; font-weight: 600; color: #333;">收益提升</div>
+                </div>
+                <div style="color: #6c757d; line-height: 1.6;">认证技师享受更高的服务费率和奖励机制，提升个人收益水平。</div>
+            </div>
+        </div>
     </div>
+
+    <script>
+        function renewCertification() {
+            alert('续签功能开发中...');
+        }
+
+        function viewCertificate(type) {
+            alert('查看证书功能开发中...');
+        }
+
+        function downloadCertificate(type) {
+            alert('下载证书功能开发中...');
+        }
+
+        function viewRejectReason(type, reason) {
+            alert('拒绝原因：' + reason);
+        }
+
+        function toggleRepairSkill(element) {
+            const checkbox = element.querySelector('div');
+            const checkmark = checkbox.querySelector('span');
+            
+            if (element.classList.contains('selected')) {
+                // 取消选择
+                element.classList.remove('selected');
+                element.style.background = 'white';
+                element.style.borderColor = '#e0e3ea';
+                checkbox.style.background = 'transparent';
+                checkbox.style.borderColor = '#e0e3ea';
+                if (checkmark) checkmark.remove();
+            } else {
+                // 选择
+                element.classList.add('selected');
+                element.style.background = '#fff8f0';
+                element.style.borderColor = '#ffc107';
+                checkbox.style.background = '#ffc107';
+                checkbox.style.borderColor = '#ffc107';
+                if (!checkmark) {
+                    const newCheckmark = document.createElement('span');
+                    newCheckmark.innerHTML = '✓';
+                    newCheckmark.style.position = 'absolute';
+                    newCheckmark.style.top = '50%';
+                    newCheckmark.style.left = '50%';
+                    newCheckmark.style.transform = 'translate(-50%, -50%)';
+                    newCheckmark.style.color = 'white';
+                    newCheckmark.style.fontSize = '0.8rem';
+                    newCheckmark.style.fontWeight = 'bold';
+                    checkbox.appendChild(newCheckmark);
+                }
+            }
+        }
+    </script>
 </body>
 </html> 

@@ -13,6 +13,29 @@ const strengthFill = document.querySelector('.strength-fill');
 const strengthText = document.querySelector('.strength-text');
 const verificationGroup = document.querySelector('.verification-group');
 
+// 初始化页面状态
+function initializePage() {
+    // 默认隐藏验证码区域
+    if (verificationGroup) {
+        verificationGroup.style.display = 'none';
+    }
+    
+    // 检查当前选中的用户类型
+    const activeTypeBtn = document.querySelector('.type-btn.active');
+    if (activeTypeBtn) {
+        const userType = activeTypeBtn.dataset.type;
+        console.log('当前用户类型:', userType);
+        
+        // 企业用户不需要验证码
+        if (userType === 'enterprise') {
+            verificationGroup.style.display = 'none';
+        }
+    }
+}
+
+// 页面加载完成后初始化
+document.addEventListener('DOMContentLoaded', initializePage);
+
 // 用户类型切换
 userTypeBtns.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -26,11 +49,11 @@ userTypeBtns.forEach(btn => {
         
         // 根据用户类型调整界面
         if (userType === 'enterprise') {
-            // 企业用户登录时显示验证码选项
-            verificationGroup.style.display = 'block';
-        } else {
-            // 个人用户隐藏验证码选项
+            // 企业用户登录时不需要验证码
             verificationGroup.style.display = 'none';
+        } else {
+            // 个人用户可能需要验证码（根据安全策略）
+            verificationGroup.style.display = 'none'; // 暂时都隐藏，可根据需要调整
         }
     });
 });
@@ -160,10 +183,11 @@ loginFormElement.addEventListener('submit', (e) => {
         return;
     }
     
-    if (isEnterprise && !code) {
-        showMessage('请输入验证码', 'error');
-        return;
-    }
+    // 个人用户需要验证码时的验证（当前暂时不需要）
+    // if (!isEnterprise && verificationGroup.style.display === 'block' && !code) {
+    //     showMessage('请输入验证码', 'error');
+    //     return;
+    // }
     
     // 模拟登录请求
     showLoading('登录中...');

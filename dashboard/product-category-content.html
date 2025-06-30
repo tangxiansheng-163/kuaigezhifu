@@ -1,0 +1,1068 @@
+<!-- 产品分类管理页面 -->
+<div class="page-header">
+    <div class="header-content">
+        <h1><i class="fas fa-tags"></i> 产品分类管理</h1>
+        <p>管理您的产品分类结构，支持多级分类和批量操作</p>
+    </div>
+    <div class="header-actions">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+            <i class="fas fa-plus"></i> 新增分类
+        </button>
+        <button type="button" class="btn btn-secondary" id="expandAllBtn">
+            <i class="fas fa-expand-alt"></i> 展开全部
+        </button>
+        <button type="button" class="btn btn-outline-secondary" id="collapseAllBtn">
+            <i class="fas fa-compress-alt"></i> 收起全部
+        </button>
+    </div>
+</div>
+
+<!-- 搜索和筛选 -->
+<div class="filter-section">
+    <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" class="form-control" id="searchInput" placeholder="搜索分类名称或编码...">
+    </div>
+    <div class="filter-controls">
+        <select class="form-select" id="statusFilter">
+            <option value="all">全部状态</option>
+            <option value="active">启用</option>
+            <option value="inactive">禁用</option>
+        </select>
+        <select class="form-select" id="sortBy">
+            <option value="name">按名称排序</option>
+            <option value="code">按编码排序</option>
+            <option value="createTime">按创建时间排序</option>
+        </select>
+        <button type="button" class="btn btn-outline-primary" id="refreshBtn">
+            <i class="fas fa-sync-alt"></i> 刷新
+        </button>
+    </div>
+</div>
+
+<!-- 分类树结构 -->
+<div class="category-tree-container">
+    <div class="tree-header">
+        <div class="tree-stats">
+            <span class="stat-item">总分类: <strong>24</strong></span>
+            <span class="stat-item">一级分类: <strong>6</strong></span>
+            <span class="stat-item">启用: <strong>22</strong></span>
+            <span class="stat-item">禁用: <strong>2</strong></span>
+        </div>
+        <div class="tree-actions">
+            <label class="checkbox-label">
+                <input type="checkbox" id="selectAllCheckbox">
+                <span class="checkmark"></span>
+                全选
+            </label>
+            <button type="button" class="btn btn-sm btn-outline-danger" id="batchDeleteBtn" disabled>
+                <i class="fas fa-trash"></i> 批量删除
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-warning" id="batchStatusBtn" disabled>
+                <i class="fas fa-toggle-on"></i> 批量状态
+            </button>
+        </div>
+    </div>
+    
+    <div class="category-tree" id="categoryTree">
+        <!-- 工业设备 -->
+        <div class="tree-node level-1" data-id="1">
+            <div class="node-content">
+                <div class="node-toggle">
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="node-checkbox">
+                    <input type="checkbox" id="cat_1">
+                    <label for="cat_1"></label>
+                </div>
+                <div class="node-icon">
+                    <i class="fas fa-industry"></i>
+                </div>
+                <div class="node-info">
+                    <div class="node-title">工业设备</div>
+                    <div class="node-meta">
+                        <span class="node-code">IND-001</span>
+                        <span class="node-count">12个子分类</span>
+                    </div>
+                </div>
+                <div class="node-status">
+                    <span class="status-badge active">启用</span>
+                </div>
+                <div class="node-actions">
+                    <button class="action-btn" onclick="editCategory(1)" title="编辑">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="action-btn" onclick="addSubCategory(1)" title="添加子分类">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="action-btn danger" onclick="deleteCategory(1)" title="删除">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 子分类 -->
+            <div class="tree-children">
+                <!-- 压缩设备 -->
+                <div class="tree-node level-2" data-id="11">
+                    <div class="node-content">
+                        <div class="node-toggle">
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="node-checkbox">
+                            <input type="checkbox" id="cat_11">
+                            <label for="cat_11"></label>
+                        </div>
+                        <div class="node-icon">
+                            <i class="fas fa-compress-arrows-alt"></i>
+                        </div>
+                        <div class="node-info">
+                            <div class="node-title">压缩设备</div>
+                            <div class="node-meta">
+                                <span class="node-code">IND-001-01</span>
+                                <span class="node-count">3个子分类</span>
+                            </div>
+                        </div>
+                        <div class="node-status">
+                            <span class="status-badge active">启用</span>
+                        </div>
+                        <div class="node-actions">
+                            <button class="action-btn" onclick="editCategory(11)">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn" onclick="addSubCategory(11)">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button class="action-btn danger" onclick="deleteCategory(11)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="tree-children">
+                        <div class="tree-node level-3" data-id="111">
+                            <div class="node-content">
+                                <div class="node-checkbox">
+                                    <input type="checkbox" id="cat_111">
+                                    <label for="cat_111"></label>
+                                </div>
+                                <div class="node-icon">
+                                    <i class="fas fa-cog"></i>
+                                </div>
+                                <div class="node-info">
+                                    <div class="node-title">螺杆压缩机</div>
+                                    <div class="node-meta">
+                                        <span class="node-code">IND-001-01-01</span>
+                                        <span class="node-desc">高效螺杆式压缩机设备</span>
+                                    </div>
+                                </div>
+                                <div class="node-status">
+                                    <span class="status-badge active">启用</span>
+                                </div>
+                                <div class="node-actions">
+                                    <button class="action-btn" onclick="editCategory(111)">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="action-btn danger" onclick="deleteCategory(111)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="tree-node level-3" data-id="112">
+                            <div class="node-content">
+                                <div class="node-checkbox">
+                                    <input type="checkbox" id="cat_112">
+                                    <label for="cat_112"></label>
+                                </div>
+                                <div class="node-icon">
+                                    <i class="fas fa-cog"></i>
+                                </div>
+                                <div class="node-info">
+                                    <div class="node-title">离心压缩机</div>
+                                    <div class="node-meta">
+                                        <span class="node-code">IND-001-01-02</span>
+                                        <span class="node-desc">大型离心式压缩机设备</span>
+                                    </div>
+                                </div>
+                                <div class="node-status">
+                                    <span class="status-badge active">启用</span>
+                                </div>
+                                <div class="node-actions">
+                                    <button class="action-btn" onclick="editCategory(112)">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="action-btn danger" onclick="deleteCategory(112)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 风机设备 -->
+                <div class="tree-node level-2" data-id="12">
+                    <div class="node-content">
+                        <div class="node-checkbox">
+                            <input type="checkbox" id="cat_12">
+                            <label for="cat_12"></label>
+                        </div>
+                        <div class="node-icon">
+                            <i class="fas fa-fan"></i>
+                        </div>
+                        <div class="node-info">
+                            <div class="node-title">风机设备</div>
+                            <div class="node-meta">
+                                <span class="node-code">IND-001-02</span>
+                                <span class="node-desc">各类工业风机设备</span>
+                            </div>
+                        </div>
+                        <div class="node-status">
+                            <span class="status-badge active">启用</span>
+                        </div>
+                        <div class="node-actions">
+                            <button class="action-btn" onclick="editCategory(12)">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn" onclick="addSubCategory(12)">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button class="action-btn danger" onclick="deleteCategory(12)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 控制系统 -->
+        <div class="tree-node level-1" data-id="2">
+            <div class="node-content">
+                <div class="node-toggle">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div class="node-checkbox">
+                    <input type="checkbox" id="cat_2">
+                    <label for="cat_2"></label>
+                </div>
+                <div class="node-icon">
+                    <i class="fas fa-microchip"></i>
+                </div>
+                <div class="node-info">
+                    <div class="node-title">控制系统</div>
+                    <div class="node-meta">
+                        <span class="node-code">CTL-001</span>
+                        <span class="node-count">5个子分类</span>
+                    </div>
+                </div>
+                <div class="node-status">
+                    <span class="status-badge active">启用</span>
+                </div>
+                <div class="node-actions">
+                    <button class="action-btn" onclick="editCategory(2)">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="action-btn" onclick="addSubCategory(2)">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="action-btn danger" onclick="deleteCategory(2)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="tree-children" style="display: none;">
+                <!-- 子分类会在点击展开时显示 -->
+            </div>
+        </div>
+        
+        <!-- 监测设备 -->
+        <div class="tree-node level-1" data-id="3">
+            <div class="node-content">
+                <div class="node-toggle">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div class="node-checkbox">
+                    <input type="checkbox" id="cat_3">
+                    <label for="cat_3"></label>
+                </div>
+                <div class="node-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="node-info">
+                    <div class="node-title">监测设备</div>
+                    <div class="node-meta">
+                        <span class="node-code">MON-001</span>
+                        <span class="node-count">8个子分类</span>
+                    </div>
+                </div>
+                <div class="node-status">
+                    <span class="status-badge inactive">禁用</span>
+                </div>
+                <div class="node-actions">
+                    <button class="action-btn" onclick="editCategory(3)">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="action-btn" onclick="addSubCategory(3)">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="action-btn danger" onclick="deleteCategory(3)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 新增/编辑分类模态框 -->
+<div class="modal fade" id="addCategoryModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">新增产品分类</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="categoryForm">
+                    <div class="form-group">
+                        <label>上级分类</label>
+                        <select class="form-select" id="parentCategory">
+                            <option value="">作为顶级分类</option>
+                            <option value="1">工业设备</option>
+                            <option value="2">控制系统</option>
+                            <option value="3">监测设备</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>分类名称 <span class="required">*</span></label>
+                        <input type="text" class="form-control" id="categoryName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>分类编码 <span class="required">*</span></label>
+                        <input type="text" class="form-control" id="categoryCode" required>
+                        <small class="form-text">编码用于系统内部识别，不可重复</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>排序权重</label>
+                        <input type="number" class="form-control" id="sortOrder" value="0">
+                        <small class="form-text">数值越大排序越靠前</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>分类图标</label>
+                        <div class="icon-selector">
+                            <div class="selected-icon" id="selectedIcon">
+                                <i class="fas fa-tag"></i>
+                            </div>
+                            <button type="button" class="btn btn-outline-secondary" id="selectIconBtn">选择图标</button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>描述说明</label>
+                        <textarea class="form-control" id="categoryDesc" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="categoryStatus" checked>
+                            <label class="form-check-label">启用此分类</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="saveCategoryBtn">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* 页面头部 */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.header-content h1 {
+    font-size: 1.75rem;
+    color: #2c3e50;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-content p {
+    color: #6c757d;
+    margin: 0;
+}
+
+.header-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* 搜索筛选区域 */
+.filter-section {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.search-box {
+    position: relative;
+    flex: 1;
+    max-width: 400px;
+}
+
+.search-box i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+}
+
+.search-box .form-control {
+    padding-left: 40px;
+}
+
+.filter-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+/* 分类树容器 */
+.category-tree-container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+.tree-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8f9fa;
+}
+
+.tree-stats {
+    display: flex;
+    gap: 24px;
+}
+
+.stat-item {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.stat-item strong {
+    color: #2c3e50;
+}
+
+.tree-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+/* 分类树结构 */
+.category-tree {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.tree-node {
+    border-bottom: 1px solid #f8f9fa;
+}
+
+.tree-node.level-1 {
+    background: #ffffff;
+}
+
+.tree-node.level-2 {
+    background: #fafbfc;
+}
+
+.tree-node.level-3 {
+    background: #f5f6f7;
+}
+
+.node-content {
+    display: flex;
+    align-items: center;
+    padding: 16px 24px;
+    gap: 12px;
+    transition: background-color 0.2s;
+}
+
+.node-content:hover {
+    background-color: rgba(52, 144, 220, 0.05);
+}
+
+.tree-node.level-2 .node-content {
+    padding-left: 48px;
+}
+
+.tree-node.level-3 .node-content {
+    padding-left: 72px;
+}
+
+.node-toggle {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.node-toggle:hover {
+    background: #e9ecef;
+}
+
+.node-toggle i {
+    font-size: 0.8rem;
+    color: #6c757d;
+    transition: transform 0.2s;
+}
+
+.node-checkbox {
+    display: flex;
+    align-items: center;
+}
+
+.node-checkbox input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+}
+
+.node-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: white;
+}
+
+.tree-node.level-1 .node-icon {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.tree-node.level-2 .node-icon {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.tree-node.level-3 .node-icon {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.node-info {
+    flex: 1;
+}
+
+.node-title {
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+}
+
+.node-meta {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.node-code {
+    font-family: monospace;
+    font-size: 0.8rem;
+    color: #6c757d;
+    background: #f8f9fa;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.node-count {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.node-desc {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.node-status {
+    margin-right: 12px;
+}
+
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.status-badge.active {
+    background: #d1edff;
+    color: #0066cc;
+}
+
+.status-badge.inactive {
+    background: #ffe6e6;
+    color: #cc0000;
+}
+
+.node-actions {
+    display: flex;
+    gap: 4px;
+}
+
+.action-btn {
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #6c757d;
+}
+
+.action-btn:hover {
+    background: #e9ecef;
+    color: #495057;
+}
+
+.action-btn.danger:hover {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.tree-children {
+    border-left: 2px solid #e9ecef;
+    margin-left: 36px;
+}
+
+/* 复选框样式 */
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #495057;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+}
+
+/* 模态框样式 */
+.modal-content {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+}
+
+.modal-header {
+    border-bottom: 1px solid #e9ecef;
+    padding: 20px 24px;
+}
+
+.modal-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.modal-body {
+    padding: 24px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 500;
+    color: #2c3e50;
+    margin-bottom: 6px;
+}
+
+.required {
+    color: #e74c3c;
+}
+
+.form-control,
+.form-select {
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 0.2rem rgba(52, 144, 220, 0.25);
+}
+
+.form-text {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-top: 4px;
+}
+
+.icon-selector {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.selected-icon {
+    width: 40px;
+    height: 40px;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+}
+
+.selected-icon i {
+    font-size: 1.2rem;
+    color: #6c757d;
+}
+
+/* 按钮样式 */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: #3498db;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #2980b9;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #545b62;
+}
+
+.btn-outline-secondary {
+    background: transparent;
+    color: #6c757d;
+    border: 1px solid #6c757d;
+}
+
+.btn-outline-secondary:hover {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-outline-primary {
+    background: transparent;
+    color: #3498db;
+    border: 1px solid #3498db;
+}
+
+.btn-outline-primary:hover {
+    background: #3498db;
+    color: white;
+}
+
+.btn-outline-danger {
+    background: transparent;
+    color: #e74c3c;
+    border: 1px solid #e74c3c;
+}
+
+.btn-outline-danger:hover {
+    background: #e74c3c;
+    color: white;
+}
+
+.btn-outline-warning {
+    background: transparent;
+    color: #f39c12;
+    border: 1px solid #f39c12;
+}
+
+.btn-outline-warning:hover {
+    background: #f39c12;
+    color: white;
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .page-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+    
+    .filter-section {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+    
+    .filter-controls {
+        flex-wrap: wrap;
+    }
+    
+    .tree-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+    
+    .tree-stats {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    
+    .node-content {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .tree-node.level-2 .node-content,
+    .tree-node.level-3 .node-content {
+        padding-left: 24px;
+    }
+}
+</style>
+
+<script>
+// 产品分类管理功能
+document.addEventListener('DOMContentLoaded', function() {
+    // 树节点展开/收起
+    document.querySelectorAll('.node-toggle').forEach(toggle => {
+        toggle.addEventListener('click', function() {
+            const node = this.closest('.tree-node');
+            const children = node.querySelector('.tree-children');
+            const icon = this.querySelector('i');
+            
+            if (children) {
+                if (children.style.display === 'none') {
+                    children.style.display = 'block';
+                    icon.className = 'fas fa-chevron-down';
+                } else {
+                    children.style.display = 'none';
+                    icon.className = 'fas fa-chevron-right';
+                }
+            }
+        });
+    });
+    
+    // 全选功能
+    const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+    const categoryCheckboxes = document.querySelectorAll('.node-checkbox input[type="checkbox"]');
+    
+    selectAllCheckbox.addEventListener('change', function() {
+        categoryCheckboxes.forEach(checkbox => {
+            checkbox.checked = this.checked;
+        });
+        updateBatchButtons();
+    });
+    
+    // 单个复选框变化
+    categoryCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const checkedCount = document.querySelectorAll('.node-checkbox input[type="checkbox"]:checked').length;
+            selectAllCheckbox.checked = checkedCount === categoryCheckboxes.length;
+            selectAllCheckbox.indeterminate = checkedCount > 0 && checkedCount < categoryCheckboxes.length;
+            updateBatchButtons();
+        });
+    });
+    
+    // 更新批量操作按钮状态
+    function updateBatchButtons() {
+        const checkedCount = document.querySelectorAll('.node-checkbox input[type="checkbox"]:checked').length;
+        document.getElementById('batchDeleteBtn').disabled = checkedCount === 0;
+        document.getElementById('batchStatusBtn').disabled = checkedCount === 0;
+    }
+    
+    // 展开全部
+    document.getElementById('expandAllBtn').addEventListener('click', function() {
+        document.querySelectorAll('.tree-children').forEach(children => {
+            children.style.display = 'block';
+        });
+        document.querySelectorAll('.node-toggle i').forEach(icon => {
+            icon.className = 'fas fa-chevron-down';
+        });
+    });
+    
+    // 收起全部
+    document.getElementById('collapseAllBtn').addEventListener('click', function() {
+        document.querySelectorAll('.tree-children').forEach(children => {
+            children.style.display = 'none';
+        });
+        document.querySelectorAll('.node-toggle i').forEach(icon => {
+            icon.className = 'fas fa-chevron-right';
+        });
+    });
+    
+    // 搜索功能
+    document.getElementById('searchInput').addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const nodes = document.querySelectorAll('.tree-node');
+        
+        nodes.forEach(node => {
+            const title = node.querySelector('.node-title').textContent.toLowerCase();
+            const code = node.querySelector('.node-code').textContent.toLowerCase();
+            
+            if (title.includes(searchTerm) || code.includes(searchTerm)) {
+                node.style.display = 'block';
+                // 展开父节点
+                let parent = node.closest('.tree-children');
+                while (parent) {
+                    parent.style.display = 'block';
+                    const parentToggle = parent.previousElementSibling?.querySelector('.node-toggle i');
+                    if (parentToggle) {
+                        parentToggle.className = 'fas fa-chevron-down';
+                    }
+                    parent = parent.parentElement.closest('.tree-children');
+                }
+            } else if (searchTerm) {
+                node.style.display = 'none';
+            } else {
+                node.style.display = 'block';
+            }
+        });
+    });
+    
+    // 保存分类
+    document.getElementById('saveCategoryBtn').addEventListener('click', function() {
+        const form = document.getElementById('categoryForm');
+        if (form.checkValidity()) {
+            const formData = {
+                parent: document.getElementById('parentCategory').value,
+                name: document.getElementById('categoryName').value,
+                code: document.getElementById('categoryCode').value,
+                sort: document.getElementById('sortOrder').value,
+                desc: document.getElementById('categoryDesc').value,
+                status: document.getElementById('categoryStatus').checked
+            };
+            
+            console.log('保存分类:', formData);
+            // 这里调用API保存数据
+            
+            // 关闭模态框
+            const modal = bootstrap.Modal.getInstance(document.getElementById('addCategoryModal'));
+            modal.hide();
+            
+            // 刷新列表
+            setTimeout(() => {
+                location.reload();
+            }, 500);
+        } else {
+            form.reportValidity();
+        }
+    });
+    
+    console.log('产品分类管理页面初始化完成');
+});
+
+// 编辑分类
+function editCategory(id) {
+    console.log('编辑分类:', id);
+    // 这里可以打开编辑模态框并填充数据
+    const modal = new bootstrap.Modal(document.getElementById('addCategoryModal'));
+    document.querySelector('.modal-title').textContent = '编辑产品分类';
+    
+    // 模拟填充数据
+    if (id === 1) {
+        document.getElementById('categoryName').value = '工业设备';
+        document.getElementById('categoryCode').value = 'IND-001';
+        document.getElementById('categoryDesc').value = '各类工业生产设备';
+    }
+    
+    modal.show();
+}
+
+// 添加子分类
+function addSubCategory(parentId) {
+    console.log('添加子分类到:', parentId);
+    const modal = new bootstrap.Modal(document.getElementById('addCategoryModal'));
+    document.querySelector('.modal-title').textContent = '新增子分类';
+    document.getElementById('parentCategory').value = parentId;
+    modal.show();
+}
+
+// 删除分类
+function deleteCategory(id) {
+    if (confirm('确定要删除这个分类吗？删除后不可恢复。')) {
+        console.log('删除分类:', id);
+        // 这里调用API删除数据
+    }
+}
+</script> 

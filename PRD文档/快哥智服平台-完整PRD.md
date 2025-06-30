@@ -206,7 +206,7 @@
   - **实名认证**：`/personal/auth-real.html`
   - **维修认证**：`/personal/auth-repair.html`
   - **专家认证**：`/personal/auth-expert.html`
-  - **商家认证**：`/personal/auth-shop.html`
+  - **商家认证**：`/personal/index.html#auth-shop` (嵌入在个人空间主页中)
 
 **实名认证页面说明：**
 - **页面整体说明**：实名认证申请和状态查看页面

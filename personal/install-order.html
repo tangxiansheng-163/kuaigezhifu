@@ -2,83 +2,1185 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>安装工单</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f7fa; margin: 0; }
-        .main-content { max-width: 1100px; margin: 40px auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); padding: 36px; }
-        h1 { color: #667eea; font-size: 1.7rem; margin-bottom: 18px; }
-        .filter-bar { display: flex; gap: 16px; margin-bottom: 18px; }
-        .filter-bar select, .filter-bar input { padding: 6px 12px; border-radius: 6px; border: 1px solid #e0e3ea; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 10px 8px; border-bottom: 1px solid #f0f0f0; text-align: left; }
-        th { color: #667eea; font-weight: 600; background: #f8f9fa; }
-        tr:hover { background: #f5f7fa; }
-        .status { padding: 2px 10px; border-radius: 12px; font-size: 0.95em; }
-        .status.todo { background: #ffe6e6; color: #e74c3c; }
-        .status.doing { background: #eaf7ff; color: #3498db; }
-        .status.done { background: #e6ffe6; color: #27ae60; }
-        .btn-detail { color: #667eea; background: none; border: none; cursor: pointer; text-decoration: underline; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>安装工单管理 - 快哥智服平台</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="main-content">
-        <h1>安装工单</h1>
-        <div class="filter-bar">
-            <select>
-                <option>全部状态</option>
-                <option>待处理</option>
-                <option>进行中</option>
-                <option>已完成</option>
-            </select>
-            <input type="text" placeholder="设备名称/工单编号/联系人..." style="flex:1;">
-            <button style="padding:6px 18px; background:#667eea; color:#fff; border:none; border-radius:6px; cursor:pointer;">查询</button>
-        </div>
-        <table>
-            <thead>
-                <tr>
-                    <th>工单编号</th>
-                    <th>设备名称</th>
-                    <th>安装内容</th>
-                    <th>联系人</th>
-                    <th>联系电话</th>
-                    <th>创建时间</th>
-                    <th>状态</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>AN202405041</td>
-                    <td>空压机A1</td>
-                    <td>整机安装</td>
-                    <td>李四</td>
-                    <td>138****8888</td>
-                    <td>2025-05-19 08:12</td>
-                    <td><span class="status todo">待处理</span></td>
-                    <td><button class="btn-detail">详情</button></td>
-                </tr>
-                <tr>
-                    <td>AN202405042</td>
-                    <td>空压机B2</td>
-                    <td>管道安装</td>
-                    <td>王五</td>
-                    <td>139****6666</td>
-                    <td>2025-05-17 13:30</td>
-                    <td><span class="status doing">进行中</span></td>
-                    <td><button class="btn-detail">详情</button></td>
-                </tr>
-                <tr>
-                    <td>AN202405043</td>
-                    <td>空压机C3</td>
-                    <td>电气接线</td>
-                    <td>赵六</td>
-                    <td>137****5555</td>
-                    <td>2025-05-15 10:05</td>
-                    <td><span class="status done">已完成</span></td>
-                    <td><button class="btn-detail">详情</button></td>
-                </tr>
-            </tbody>
-        </table>
+<div class="main-content">
+<!-- 以下内容为原样拆分自index.html的#page-install-order -->
+<div class="page-header">
+    <div class="header-left">
+        <h1><i class="fas fa-cog"></i> 安装工单管理</h1>
+        <p class="page-desc">管理设备安装工单，确保安装质量和进度</p>
     </div>
+</div>
+
+<!-- 统计卡片 -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 25px;">
+    <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+            <span style="color: #6c757d; font-size: 0.9rem; font-weight: 500;">总安装工单</span>
+            <div style="width: 35px; height: 35px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1rem;">
+                <i class="fas fa-cog"></i>
+            </div>
+        </div>
+        <div style="font-size: 1.8rem; font-weight: bold; color: #333;">89</div>
+    </div>
+    <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+            <span style="color: #6c757d; font-size: 0.9rem; font-weight: 500;">待安装</span>
+            <div style="width: 35px; height: 35px; background: linear-gradient(135deg, #ffc107, #fd7e14); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1rem;">
+                <i class="fas fa-clock"></i>
+            </div>
+        </div>
+        <div style="font-size: 1.8rem; font-weight: bold; color: #333;">6</div>
+    </div>
+    <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+            <span style="color: #6c757d; font-size: 0.9rem; font-weight: 500;">安装中</span>
+            <div style="width: 35px; height: 35px; background: linear-gradient(135deg, #17a2b8, #20c997); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1rem;">
+                <i class="fas fa-spinner"></i>
+            </div>
+        </div>
+        <div style="font-size: 1.8rem; font-weight: bold; color: #333;">4</div>
+    </div>
+    <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+            <span style="color: #6c757d; font-size: 0.9rem; font-weight: 500;">已完成</span>
+            <div style="width: 35px; height: 35px; background: linear-gradient(135deg, #28a745, #20c997); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1rem;">
+                <i class="fas fa-check-circle"></i>
+            </div>
+        </div>
+        <div style="font-size: 1.8rem; font-weight: bold; color: #333;">79</div>
+    </div>
+</div>
+
+<!-- 筛选区域 -->
+<div style="background: white; border-radius: 10px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 20px;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px;">
+        <div>
+            <label style="display: block; color: #6c757d; font-size: 0.85rem; margin-bottom: 5px; font-weight: 500;">工单状态</label>
+            <select style="width: 100%; padding: 8px 12px; border: 1px solid #e0e3ea; border-radius: 6px; font-size: 0.9rem;">
+                <option>全部状态</option>
+                <option>待安装</option>
+                <option>安装中</option>
+                <option>已完成</option>
+                <option>已取消</option>
+            </select>
+        </div>
+        <div>
+            <label style="display: block; color: #6c757d; font-size: 0.85rem; margin-bottom: 5px; font-weight: 500;">设备类型</label>
+            <select style="width: 100%; padding: 8px 12px; border: 1px solid #e0e3ea; border-radius: 6px; font-size: 0.9rem;">
+                <option>全部设备</option>
+                <option>空调系统</option>
+                <option>通风设备</option>
+                <option>制冷设备</option>
+                <option>其他</option>
+            </select>
+        </div>
+        <div>
+            <label style="display: block; color: #6c757d; font-size: 0.85rem; margin-bottom: 5px; font-weight: 500;">安装类型</label>
+            <select style="width: 100%; padding: 8px 12px; border: 1px solid #e0e3ea; border-radius: 6px; font-size: 0.9rem;">
+                <option>全部类型</option>
+                <option>新装</option>
+                <option>改装</option>
+                <option>扩容</option>
+                <option>迁移</option>
+            </select>
+        </div>
+    </div>
+    <div style="display: flex; gap: 10px; align-items: end;">
+        <div style="flex: 1;">
+            <label style="display: block; color: #6c757d; font-size: 0.85rem; margin-bottom: 5px; font-weight: 500;">工单编号</label>
+            <input type="text" placeholder="请输入工单编号..." style="width: 100%; padding: 8px 12px; border: 1px solid #e0e3ea; border-radius: 6px; font-size: 0.9rem;">
+        </div>
+        <button style="padding: 8px 20px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem;">
+            <i class="fas fa-search"></i> 搜索
+        </button>
+    </div>
+</div>
+
+<!-- 工单列表 -->
+<div style="background: white; border-radius: 10px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3 style="color: #333; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; margin: 0;">
+            <i class="fas fa-list" style="color: #667eea;"></i>
+            安装工单列表
+        </h3>
+        <button style="display: flex; align-items: center; gap: 6px; padding: 8px 12px; background: #f8f9fa; color: #6c757d; border: 1px solid #e9ecef; border-radius: 6px; cursor: pointer; font-size: 0.85rem;">
+            <i class="fas fa-download"></i>
+            导出数据
+        </button>
+    </div>
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="border-bottom: 2px solid #f0f0f0;">
+                <th style="padding: 12px 8px; text-align: left; color: #667eea; font-weight: 600; font-size: 0.9rem;">工单号</th>
+                <th style="padding: 12px 8px; text-align: left; color: #667eea; font-weight: 600; font-size: 0.9rem;">客户信息</th>
+                <th style="padding: 12px 8px; text-align: left; color: #667eea; font-weight: 600; font-size: 0.9rem;">设备信息</th>
+                <th style="padding: 12px 8px; text-align: left; color: #667eea; font-weight: 600; font-size: 0.9rem;">安装地址</th>
+                <th style="padding: 12px 8px; text-align: left; color: #667eea; font-weight: 600; font-size: 0.9rem;">状态</th>
+                <th style="padding: 12px 8px; text-align: left; color: #667eea; font-weight: 600; font-size: 0.9rem;">创建时间</th>
+                <th style="padding: 12px 8px; text-align: left; color: #667eea; font-weight: 600; font-size: 0.9rem;">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr style="border-bottom: 1px solid #f8f9fa;" onmouseover="this.style.background='#f5f7fa'" onmouseout="this.style.background='white'">
+                <td style="padding: 12px 8px;">
+                    <span style="color: #667eea; font-weight: 500;">#IO20240601001</span>
+                </td>
+                <td style="padding: 12px 8px;">
+                    <div>
+                        <div style="font-weight: 500; color: #333;">北京科技大厦</div>
+                        <div style="font-size: 0.8rem; color: #6c757d;">李经理 | 138-0001-0001</div>
+                    </div>
+                </td>
+                <td style="padding: 12px 8px;">
+                    <span style="font-size: 0.9rem; color: #333;">中央空调系统 | 型号：VRV-X</span>
+                </td>
+                <td style="padding: 12px 8px;">
+                    <span style="font-size: 0.9rem; color: #333;">北京市朝阳区CBD核心区</span>
+                </td>
+                <td style="padding: 12px 8px;">
+                    <span style="padding: 3px 8px; border-radius: 12px; font-size: 0.8rem; font-weight: 500; background: #fff3cd; color: #856404;">待安装</span>
+                </td>
+                <td style="padding: 12px 8px;">
+                    <span style="font-size: 0.85rem; color: #6c757d;">2024-06-01 10:00</span>
+                </td>
+                <td style="padding: 12px 8px;">
+                    <div style="display: flex; gap: 5px;">
+                        <button onclick="showInstallAction('accept', 'IO20240601001')" style="padding: 4px 8px; font-size: 0.8rem; border-radius: 4px; border: none; background: #667eea; color: white; cursor: pointer;">接单</button>
+                        <button onclick="showInstallDetail('IO20240601001')" style="padding: 4px 8px; font-size: 0.8rem; border-radius: 4px; border: 1px solid #e0e3ea; background: white; color: #6c757d; cursor: pointer;">详情</button>
+                    </div>
+                </td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f8f9fa;" onmouseover="this.style.background='#f5f7fa'" onmouseout="this.style.background='white'">
+                <td style="padding: 12px 8px;">
+                    <span style="color: #667eea; font-weight: 500;">#IO20240531005</span>
+                </td>
+                <td style="padding: 12px 8px;">
+                    <div>
+                        <div style="font-weight: 500; color: #333;">上海工业园区</div>
+                        <div style="font-size: 0.8rem; color: #6c757d;">王总 | 139-0002-0002</div>
+                    </div>
+                </td>
+                <td style="padding: 12px 8px;">
+                    <span style="font-size: 0.9rem; color: #333;">新风系统 | 型号：ERV-500</span>
+                </td>
+                <td style="padding: 12px 8px;">
+                    <span style="font-size: 0.9rem; color: #333;">上海市浦东新区张江园区</span>
+                </td>
+                <td style="padding: 12px 8px;">
+                    <span style="padding: 3px 8px; border-radius: 12px; font-size: 0.8rem; font-weight: 500; background: #d1ecf1; color: #0c5460;">安装中</span>
+                </td>
+                <td style="padding: 12px 8px;">
+                    <span style="font-size: 0.85rem; color: #6c757d;">2024-05-31 14:30</span>
+                </td>
+                <td style="padding: 12px 8px;">
+                    <div style="display: flex; gap: 5px;">
+                        <button onclick="showInstallAction('progress', 'IO20240531005')" style="padding: 4px 8px; font-size: 0.8rem; border-radius: 4px; border: none; background: #17a2b8; color: white; cursor: pointer;">进度</button>
+                        <button onclick="showInstallDetail('IO20240531005')" style="padding: 4px 8px; font-size: 0.8rem; border-radius: 4px; border: 1px solid #e0e3ea; background: white; color: #6c757d; cursor: pointer;">详情</button>
+                    </div>
+                </td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f8f9fa;" onmouseover="this.style.background='#f5f7fa'" onmouseout="this.style.background='white'">
+                <td style="padding: 12px 8px;">
+                    <span style="color: #667eea; font-weight: 500;">#IO20240530008</span>
+                </td>
+                <td style="padding: 12px 8px;">
+                    <div>
+                        <div style="font-weight: 500; color: #333;">广州制造基地</div>
+                        <div style="font-size: 0.8rem; color: #6c757d;">张工 | 136-0003-0003</div>
+                    </div>
+                </td>
+                <td style="padding: 12px 8px;">
+                    <span style="font-size: 0.9rem; color: #333;">冷库制冷设备 | 型号：CR-2000</span>
+                </td>
+                <td style="padding: 12px 8px;">
+                    <span style="font-size: 0.9rem; color: #333;">广州市天河区科技园</span>
+                </td>
+                <td style="padding: 12px 8px;">
+                    <span style="padding: 3px 8px; border-radius: 12px; font-size: 0.8rem; font-weight: 500; background: #d4edda; color: #155724;">已完成</span>
+                </td>
+                <td style="padding: 12px 8px;">
+                    <span style="font-size: 0.85rem; color: #6c757d;">2024-05-30 09:15</span>
+                </td>
+                <td style="padding: 12px 8px;">
+                    <div style="display: flex; gap: 5px;">
+                        <button onclick="showInstallAction('evaluate', 'IO20240530008')" style="padding: 4px 8px; font-size: 0.8rem; border-radius: 4px; border: none; background: #28a745; color: white; cursor: pointer;">评价</button>
+                        <button onclick="showInstallDetail('IO20240530008')" style="padding: 4px 8px; font-size: 0.8rem; border-radius: 4px; border: 1px solid #e0e3ea; background: white; color: #6c757d; cursor: pointer;">详情</button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <!-- 分页 -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid #f0f0f0;">
+        <div style="color: #6c757d; font-size: 0.9rem;">
+            共 <span style="color: #333; font-weight: 500;">89</span> 条记录，第 <span style="color: #333; font-weight: 500;">1</span> 页，共 <span style="color: #333; font-weight: 500;">9</span> 页
+        </div>
+        <div style="display: flex; gap: 5px;">
+            <button style="padding: 8px 12px; border: 1px solid #e0e3ea; background: #f8f9fa; color: #6c757d; border-radius: 6px; cursor: not-allowed;" disabled>
+                <i class="fas fa-angle-left"></i> 上一页
+            </button>
+            <button style="padding: 8px 12px; border: 1px solid #667eea; background: #667eea; color: white; border-radius: 6px; cursor: pointer;">1</button>
+            <button style="padding: 8px 12px; border: 1px solid #e0e3ea; background: white; color: #333; border-radius: 6px; cursor: pointer;">2</button>
+            <button style="padding: 8px 12px; border: 1px solid #e0e3ea; background: white; color: #333; border-radius: 6px; cursor: pointer;">3</button>
+            <span style="padding: 8px 12px; color: #6c757d;">...</span>
+            <button style="padding: 8px 12px; border: 1px solid #e0e3ea; background: white; color: #333; border-radius: 6px; cursor: pointer;">9</button>
+            <button style="padding: 8px 12px; border: 1px solid #e0e3ea; background: white; color: #333; border-radius: 6px; cursor: pointer;">
+                下一页 <i class="fas fa-angle-right"></i>
+            </button>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- 接单弹窗 -->
+<div id="installActionModal" class="modal">
+    <div class="modal-content" style="max-width: 600px;">
+        <div class="modal-header">
+            <h2 id="installActionTitle"></h2>
+            <span class="close" onclick="closeModal('installActionModal')">&times;</span>
+        </div>
+        <div class="modal-body" id="installActionBody">
+            <!-- 动态内容 -->
+        </div>
+    </div>
+</div>
+
+<!-- 工单详情弹窗 -->
+<div id="installDetailModal" class="modal">
+    <div class="modal-content" style="max-width: 800px;">
+        <div class="modal-header">
+            <h2>工单详情</h2>
+            <span class="close" onclick="closeModal('installDetailModal')">&times;</span>
+        </div>
+        <div class="modal-body" id="installDetailBody">
+            <!-- 动态内容 -->
+        </div>
+    </div>
+</div>
+
+<style>
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    animation: fadeIn 0.3s ease-out;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    border-radius: 12px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    animation: slideInFromTop 0.3s ease-out;
+}
+
+.modal-header {
+    padding: 20px 25px;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 12px 12px 0 0;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.modal-body {
+    padding: 25px;
+}
+
+.close {
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.close:hover {
+    background-color: rgba(255,255,255,0.2);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideInFromTop {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    flex: 1;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #e0e3ea;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-left: 10px;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.info-item {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+}
+
+.info-label {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.info-value {
+    font-size: 0.95rem;
+    color: #333;
+    font-weight: 600;
+}
+
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, #667eea, #764ba2);
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -22px;
+    top: 20px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #667eea;
+    border: 3px solid white;
+    box-shadow: 0 0 0 1px #667eea;
+}
+
+.timeline-time {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-bottom: 5px;
+}
+
+.timeline-content {
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.status-pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-progress {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.status-completed {
+    background: #d4edda;
+    color: #155724;
+}
+
+.rating-stars {
+    display: flex;
+    gap: 5px;
+    margin: 10px 0;
+}
+
+.star {
+    color: #ddd;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.star.active,
+.star:hover {
+    color: #ffc107;
+}
+
+.attachment-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.attachment-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    color: #495057;
+}
+
+.upload-area {
+    border: 2px dashed #e0e3ea;
+    border-radius: 8px;
+    padding: 30px;
+    text-align: center;
+    margin: 15px 0;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.upload-area:hover {
+    border-color: #667eea;
+    background: #f8f9ff;
+}
+
+.upload-area.dragover {
+    border-color: #667eea;
+    background: #f0f4ff;
+}
+</style>
+
+<script>
+// 显示安装工单操作弹窗
+function showInstallAction(action, orderId) {
+    const modal = document.getElementById('installActionModal');
+    const title = document.getElementById('installActionTitle');
+    const body = document.getElementById('installActionBody');
+    
+    switch(action) {
+        case 'accept':
+            title.textContent = '接单确认';
+            body.innerHTML = `
+                <div style="margin-bottom: 20px;">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">工单编号</div>
+                            <div class="info-value">${orderId}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">客户名称</div>
+                            <div class="info-value">北京科技大厦</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">设备类型</div>
+                            <div class="info-value">中央空调系统</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">安装地址</div>
+                            <div class="info-value">北京市朝阳区CBD核心区</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <form id="acceptOrderForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>预计开始时间</label>
+                            <input type="datetime-local" name="startTime" required>
+                        </div>
+                        <div class="form-group">
+                            <label>预计完成时间</label>
+                            <input type="datetime-local" name="endTime" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>安装人员</label>
+                            <select name="installer" required>
+                                <option value="">请选择安装人员</option>
+                                <option value="tech001">张师傅 (高级技师)</option>
+                                <option value="tech002">李师傅 (中级技师)</option>
+                                <option value="tech003">王师傅 (高级技师)</option>
+                                <option value="team001">专业安装团队A</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>联系电话</label>
+                            <input type="tel" name="contactPhone" placeholder="请输入联系电话" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>特殊要求说明</label>
+                        <textarea name="requirements" rows="3" placeholder="请填写安装过程中的特殊要求或注意事项..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>所需工具清单</label>
+                        <textarea name="tools" rows="2" placeholder="请列出安装所需的专用工具和设备..."></textarea>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: flex-end; margin-top: 25px;">
+                        <button type="button" class="btn-secondary" onclick="closeModal('installActionModal')">取消</button>
+                        <button type="submit" class="btn-primary">确认接单</button>
+                    </div>
+                </form>
+            `;
+            break;
+            
+        case 'progress':
+            title.textContent = '安装进度更新';
+            body.innerHTML = `
+                <div style="margin-bottom: 20px;">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">工单编号</div>
+                            <div class="info-value">${orderId}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">当前状态</div>
+                            <div class="info-value"><span class="status-badge status-progress">安装中</span></div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">完成进度</div>
+                            <div class="info-value">65%</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">安装人员</div>
+                            <div class="info-value">张师傅</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 25px;">
+                    <h4 style="color: #333; margin-bottom: 15px;">
+                        <i class="fas fa-tasks" style="color: #667eea; margin-right: 8px;"></i>
+                        安装进度时间线
+                    </h4>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-time">2024-06-01 08:30</div>
+                            <div class="timeline-content">
+                                <strong>接单确认</strong> - 安装人员已确认接单，准备前往现场
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-time">2024-06-01 09:15</div>
+                            <div class="timeline-content">
+                                <strong>到达现场</strong> - 已到达客户现场，开始现场勘查
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-time">2024-06-01 10:00</div>
+                            <div class="timeline-content">
+                                <strong>开始安装</strong> - 设备已就位，开始安装作业
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-time">2024-06-01 12:30</div>
+                            <div class="timeline-content">
+                                <strong>主体安装完成</strong> - 设备主体安装完成，正在进行管道连接
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <form id="progressUpdateForm">
+                    <div class="form-group">
+                        <label>进度更新</label>
+                        <select name="progressStatus" required>
+                            <option value="">请选择当前进度</option>
+                            <option value="material_check">材料检查</option>
+                            <option value="site_survey">现场勘查</option>
+                            <option value="equipment_install">设备安装</option>
+                            <option value="pipeline_connect">管道连接</option>
+                            <option value="system_debug">系统调试</option>
+                            <option value="final_test">最终测试</option>
+                            <option value="completed">安装完成</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>进度说明</label>
+                        <textarea name="progressNote" rows="3" placeholder="请详细描述当前安装进度和完成情况..." required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>现场照片上传</label>
+                        <div class="upload-area" onclick="document.getElementById('progressPhotos').click()">
+                            <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: #667eea; margin-bottom: 10px;"></i>
+                            <div>点击上传或拖拽文件到此处</div>
+                            <div style="font-size: 0.8rem; color: #6c757d; margin-top: 5px;">支持 JPG、PNG、PDF 格式，最大 10MB</div>
+                        </div>
+                        <input type="file" id="progressPhotos" name="photos" multiple accept="image/*,.pdf" style="display: none;">
+                    </div>
+                    
+                    <div style="display: flex; justify-content: flex-end; margin-top: 25px;">
+                        <button type="button" class="btn-secondary" onclick="closeModal('installActionModal')">取消</button>
+                        <button type="submit" class="btn-primary">更新进度</button>
+                    </div>
+                </form>
+            `;
+            break;
+            
+        case 'evaluate':
+            title.textContent = '安装服务评价';
+            body.innerHTML = `
+                <div style="margin-bottom: 20px;">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">工单编号</div>
+                            <div class="info-value">${orderId}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">完成时间</div>
+                            <div class="info-value">2024-05-30 16:30</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">安装人员</div>
+                            <div class="info-value">张工</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">服务状态</div>
+                            <div class="info-value"><span class="status-badge status-completed">已完成</span></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <form id="evaluationForm">
+                    <div class="form-group">
+                        <label>服务质量评分</label>
+                        <div class="rating-stars">
+                            <span class="star" onclick="setRating('service', 1)">★</span>
+                            <span class="star" onclick="setRating('service', 2)">★</span>
+                            <span class="star" onclick="setRating('service', 3)">★</span>
+                            <span class="star" onclick="setRating('service', 4)">★</span>
+                            <span class="star" onclick="setRating('service', 5)">★</span>
+                            <span style="margin-left: 10px; color: #6c757d; font-size: 0.9rem;">请点击星星评分</span>
+                        </div>
+                        <input type="hidden" name="serviceRating" id="serviceRating">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>专业技能评分</label>
+                        <div class="rating-stars">
+                            <span class="star" onclick="setRating('skill', 1)">★</span>
+                            <span class="star" onclick="setRating('skill', 2)">★</span>
+                            <span class="star" onclick="setRating('skill', 3)">★</span>
+                            <span class="star" onclick="setRating('skill', 4)">★</span>
+                            <span class="star" onclick="setRating('skill', 5)">★</span>
+                        </div>
+                        <input type="hidden" name="skillRating" id="skillRating">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>安装效果评价</label>
+                        <textarea name="effectEvaluation" rows="3" placeholder="请评价设备安装效果、运行状况等..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>服务建议</label>
+                        <textarea name="suggestions" rows="3" placeholder="请提出改进建议或其他意见..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 8px;">
+                            <input type="checkbox" name="recommend" value="1">
+                            推荐此安装服务商给其他客户
+                        </label>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: flex-end; margin-top: 25px;">
+                        <button type="button" class="btn-secondary" onclick="closeModal('installActionModal')">取消</button>
+                        <button type="submit" class="btn-primary">提交评价</button>
+                    </div>
+                </form>
+            `;
+            break;
+    }
+    
+    modal.style.display = 'block';
+    
+    // 绑定表单提交事件
+    const form = body.querySelector('form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            handleInstallActionSubmit(action, orderId, new FormData(form));
+        });
+    }
+}
+
+// 显示工单详情弹窗
+function showInstallDetail(orderId) {
+    const modal = document.getElementById('installDetailModal');
+    const body = document.getElementById('installDetailBody');
+    
+    // 模拟获取工单详情数据
+    const orderData = getInstallOrderDetail(orderId);
+    
+    body.innerHTML = `
+        <div style="margin-bottom: 25px;">
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">工单编号</div>
+                    <div class="info-value">${orderData.id}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">工单状态</div>
+                    <div class="info-value">
+                        <span class="status-badge ${orderData.statusClass}">${orderData.status}</span>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">创建时间</div>
+                    <div class="info-value">${orderData.createTime}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">预计完成</div>
+                    <div class="info-value">${orderData.expectedTime}</div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 25px;">
+            <div>
+                <h4 style="color: #333; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-user" style="color: #667eea;"></i>
+                    客户信息
+                </h4>
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                    <div style="margin-bottom: 10px;">
+                        <strong>客户名称：</strong>${orderData.customer.name}
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <strong>联系人：</strong>${orderData.customer.contact}
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <strong>联系电话：</strong>${orderData.customer.phone}
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <strong>安装地址：</strong>${orderData.customer.address}
+                    </div>
+                    <div>
+                        <strong>客户类型：</strong>${orderData.customer.type}
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <h4 style="color: #333; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-cog" style="color: #667eea;"></i>
+                    设备信息
+                </h4>
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                    <div style="margin-bottom: 10px;">
+                        <strong>设备类型：</strong>${orderData.equipment.type}
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <strong>设备型号：</strong>${orderData.equipment.model}
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <strong>设备品牌：</strong>${orderData.equipment.brand}
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <strong>安装类型：</strong>${orderData.equipment.installType}
+                    </div>
+                    <div>
+                        <strong>技术要求：</strong>${orderData.equipment.requirements}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-bottom: 25px;">
+            <h4 style="color: #333; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-file-alt" style="color: #667eea;"></i>
+                安装要求
+            </h4>
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                <p style="margin: 0; line-height: 1.6;">${orderData.installRequirements}</p>
+            </div>
+        </div>
+        
+        <div style="margin-bottom: 25px;">
+            <h4 style="color: #333; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-paperclip" style="color: #667eea;"></i>
+                相关附件
+            </h4>
+            <div class="attachment-list">
+                ${orderData.attachments.map(file => `
+                    <div class="attachment-item">
+                        <i class="fas fa-file-pdf" style="color: #dc3545;"></i>
+                        <span>${file.name}</span>
+                        <i class="fas fa-download" style="color: #667eea; cursor: pointer;" onclick="downloadFile('${file.url}')"></i>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+        
+        ${orderData.progress ? `
+        <div style="margin-bottom: 25px;">
+            <h4 style="color: #333; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-tasks" style="color: #667eea;"></i>
+                安装进度
+            </h4>
+            <div class="timeline">
+                ${orderData.progress.map(item => `
+                    <div class="timeline-item">
+                        <div class="timeline-time">${item.time}</div>
+                        <div class="timeline-content">
+                            <strong>${item.title}</strong> - ${item.description}
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+        ` : ''}
+        
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px;">
+            <button class="btn-secondary" onclick="closeModal('installDetailModal')">关闭</button>
+            <button class="btn-primary" onclick="exportOrderDetail('${orderId}')">
+                <i class="fas fa-download"></i> 导出详情
+            </button>
+        </div>
+    `;
+    
+    modal.style.display = 'block';
+}
+
+// 模拟获取工单详情数据
+function getInstallOrderDetail(orderId) {
+    const orderDataMap = {
+        'IO20240601001': {
+            id: 'IO20240601001',
+            status: '待安装',
+            statusClass: 'status-pending',
+            createTime: '2024-06-01 10:00',
+            expectedTime: '2024-06-03 18:00',
+            customer: {
+                name: '北京科技大厦',
+                contact: '李经理',
+                phone: '138-0001-0001',
+                address: '北京市朝阳区CBD核心区A座18层',
+                type: '企业客户'
+            },
+            equipment: {
+                type: '中央空调系统',
+                model: 'VRV-X',
+                brand: '大金',
+                installType: '新装',
+                requirements: '变频多联机系统，支持分区控制'
+            },
+            installRequirements: '需要在办公时间外进行安装，确保不影响正常办公。安装过程中需要注意保护现有装修，完成后需要进行系统调试和性能测试。',
+            attachments: [
+                { name: '设备安装图纸.pdf', url: '/files/install-drawings.pdf' },
+                { name: '现场勘查报告.pdf', url: '/files/survey-report.pdf' },
+                { name: '安装技术要求.docx', url: '/files/requirements.docx' }
+            ]
+        },
+        'IO20240531005': {
+            id: 'IO20240531005',
+            status: '安装中',
+            statusClass: 'status-progress',
+            createTime: '2024-05-31 14:30',
+            expectedTime: '2024-06-02 16:00',
+            customer: {
+                name: '上海工业园区',
+                contact: '王总',
+                phone: '139-0002-0002',
+                address: '上海市浦东新区张江园区B区',
+                type: '工业客户'
+            },
+            equipment: {
+                type: '新风系统',
+                model: 'ERV-500',
+                brand: '松下',
+                installType: '改装',
+                requirements: '全热交换新风系统，需要配置PM2.5过滤'
+            },
+            installRequirements: '需要在生产间隙进行安装，确保不影响生产线运行。安装时需要穿戴防护设备，遵守工厂安全规定。',
+            attachments: [
+                { name: '工厂平面图.pdf', url: '/files/factory-layout.pdf' },
+                { name: '安全作业要求.pdf', url: '/files/safety-requirements.pdf' }
+            ],
+            progress: [
+                { time: '2024-05-31 15:00', title: '接单确认', description: '安装人员已确认接单，准备材料和工具' },
+                { time: '2024-06-01 08:30', title: '到达现场', description: '已到达工厂，完成安全培训和现场勘查' },
+                { time: '2024-06-01 10:00', title: '开始安装', description: '设备已就位，开始新风管道安装' },
+                { time: '2024-06-01 15:30', title: '主体安装完成', description: '新风主机和管道安装完成，开始系统调试' }
+            ]
+        },
+        'IO20240530008': {
+            id: 'IO20240530008',
+            status: '已完成',
+            statusClass: 'status-completed',
+            createTime: '2024-05-30 09:15',
+            expectedTime: '2024-05-30 18:00',
+            customer: {
+                name: '广州制造基地',
+                contact: '张工',
+                phone: '136-0003-0003',
+                address: '广州市天河区科技园C栋',
+                type: '制造企业'
+            },
+            equipment: {
+                type: '冷库制冷设备',
+                model: 'CR-2000',
+                brand: '美的',
+                installType: '新装',
+                requirements: '低温冷库制冷系统，温度控制-18°C'
+            },
+            installRequirements: '需要在指定的冷库区域进行安装，确保制冷效果和温度稳定性。安装完成后需要进行48小时连续运行测试。',
+            attachments: [
+                { name: '冷库设计方案.pdf', url: '/files/coldstore-design.pdf' },
+                { name: '制冷系统图纸.pdf', url: '/files/cooling-system.pdf' },
+                { name: '验收报告.pdf', url: '/files/acceptance-report.pdf' }
+            ],
+            progress: [
+                { time: '2024-05-30 09:30', title: '接单确认', description: '安装团队已确认接单，准备专业制冷设备' },
+                { time: '2024-05-30 10:15', title: '到达现场', description: '已到达制造基地，开始现场准备工作' },
+                { time: '2024-05-30 11:00', title: '设备安装', description: '制冷主机安装完成，开始管路连接' },
+                { time: '2024-05-30 14:30', title: '系统调试', description: '制冷系统调试完成，开始温度测试' },
+                { time: '2024-05-30 16:30', title: '安装完成', description: '系统测试通过，安装工作全部完成' }
+            ]
+        }
+    };
+    
+    return orderDataMap[orderId] || orderDataMap['IO20240601001'];
+}
+
+// 处理安装工单操作表单提交
+function handleInstallActionSubmit(action, orderId, formData) {
+    // 显示加载状态
+    const submitButton = document.querySelector('#installActionModal .btn-primary');
+    const originalText = submitButton.textContent;
+    submitButton.textContent = '处理中...';
+    submitButton.disabled = true;
+    
+    // 模拟API调用
+    setTimeout(() => {
+        let message = '';
+        switch(action) {
+            case 'accept':
+                message = `工单 ${orderId} 接单成功！安装人员将按计划时间到达现场。`;
+                break;
+            case 'progress':
+                message = `工单 ${orderId} 进度更新成功！进度信息已同步给客户。`;
+                break;
+            case 'evaluate':
+                message = `工单 ${orderId} 评价提交成功！感谢您的反馈。`;
+                break;
+        }
+        
+        alert(message);
+        closeModal('installActionModal');
+        
+        // 刷新页面数据
+        location.reload();
+    }, 1500);
+}
+
+// 评分功能
+function setRating(type, rating) {
+    const container = event.target.parentElement;
+    const stars = container.querySelectorAll('.star');
+    const hiddenInput = document.getElementById(type + 'Rating');
+    
+    // 清除所有星星的激活状态
+    stars.forEach(star => star.classList.remove('active'));
+    
+    // 激活选中的星星及之前的星星
+    for (let i = 0; i < rating; i++) {
+        stars[i].classList.add('active');
+    }
+    
+    // 设置隐藏输入的值
+    hiddenInput.value = rating;
+}
+
+// 文件下载
+function downloadFile(url) {
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = '';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+// 导出工单详情
+function exportOrderDetail(orderId) {
+    alert(`正在导出工单 ${orderId} 的详细信息...`);
+}
+
+// 关闭弹窗
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    modal.style.display = 'none';
+}
+
+// 点击弹窗外部关闭
+window.onclick = function(event) {
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+}
+
+// 文件上传处理
+document.addEventListener('DOMContentLoaded', function() {
+    // 文件拖拽上传
+    const uploadAreas = document.querySelectorAll('.upload-area');
+    uploadAreas.forEach(area => {
+        area.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.classList.add('dragover');
+        });
+        
+        area.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.classList.remove('dragover');
+        });
+        
+        area.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('dragover');
+            // 处理文件上传
+            const files = e.dataTransfer.files;
+            handleFileUpload(files);
+        });
+    });
+});
+
+function handleFileUpload(files) {
+    // 处理文件上传逻辑
+    Array.from(files).forEach(file => {
+        console.log('上传文件:', file.name);
+    });
+}
+</script>
 </body>
 </html> 

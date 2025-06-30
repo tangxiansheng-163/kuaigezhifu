@@ -1,0 +1,737 @@
+<!-- 产品设备列表页面 -->
+<div class="page-header">
+    <div class="header-left">
+        <h1><i class="fas fa-list"></i> 产品设备</h1>
+        <p>管理您销售的所有产品设备信息</p>
+    </div>
+    <div class="header-actions">
+        <button class="btn btn-success" onclick="loadPageContent('product-device-add')">
+            <i class="fas fa-plus"></i> 新增设备
+        </button>
+        <button class="btn btn-secondary" id="exportDevices">
+            <i class="fas fa-download"></i> 导出列表
+        </button>
+    </div>
+</div>
+
+<!-- 筛选和搜索 -->
+<div class="filter-panel">
+    <div class="search-section">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" class="form-control" id="searchInput" placeholder="搜索设备编号、名称或客户...">
+        </div>
+    </div>
+    <div class="filter-section">
+        <select class="form-select" id="statusFilter">
+            <option value="">全部状态</option>
+            <option value="online">在线</option>
+            <option value="offline">离线</option>
+            <option value="warning">告警</option>
+            <option value="maintenance">维护中</option>
+        </select>
+        <select class="form-select" id="categoryFilter">
+            <option value="">全部分类</option>
+            <option value="compressor">压缩机</option>
+            <option value="fan">风机</option>
+            <option value="control">控制器</option>
+        </select>
+        <select class="form-select" id="locationFilter">
+            <option value="">全部地区</option>
+            <option value="shanghai">上海</option>
+            <option value="beijing">北京</option>
+            <option value="guangzhou">广州</option>
+            <option value="shenzhen">深圳</option>
+        </select>
+        <button class="btn btn-outline-secondary" id="resetFilters">
+            <i class="fas fa-undo"></i> 重置
+        </button>
+    </div>
+</div>
+
+<!-- 设备统计卡片 -->
+<div class="stats-cards">
+    <div class="stat-card">
+        <div class="stat-icon bg-primary">
+            <i class="fas fa-cubes"></i>
+        </div>
+        <div class="stat-content">
+            <h3>1,248</h3>
+            <p>设备总数</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon bg-success">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="stat-content">
+            <h3>1,186</h3>
+            <p>在线设备</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon bg-warning">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div class="stat-content">
+            <h3>45</h3>
+            <p>告警设备</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon bg-danger">
+            <i class="fas fa-times-circle"></i>
+        </div>
+        <div class="stat-content">
+            <h3>17</h3>
+            <p>离线设备</p>
+        </div>
+    </div>
+</div>
+
+<!-- 设备列表表格 -->
+<div class="device-table-container">
+    <div class="table-header">
+        <div class="table-title">
+            <h3><i class="fas fa-table"></i> 设备列表</h3>
+            <span class="record-count">共 <strong>1,248</strong> 条记录</span>
+        </div>
+        <div class="table-actions">
+            <label class="select-all">
+                <input type="checkbox" id="selectAll">
+                <span>全选</span>
+            </label>
+            <button class="btn btn-sm btn-outline-warning" id="batchStatusBtn" disabled>
+                <i class="fas fa-edit"></i> 批量状态
+            </button>
+            <button class="btn btn-sm btn-outline-danger" id="batchDeleteBtn" disabled>
+                <i class="fas fa-trash"></i> 批量删除
+            </button>
+        </div>
+    </div>
+    
+    <div class="table-wrapper">
+        <table class="device-table">
+            <thead>
+                <tr>
+                    <th width="50">
+                        <input type="checkbox" class="select-all-checkbox">
+                    </th>
+                    <th>设备编号</th>
+                    <th>设备名称</th>
+                    <th>设备分类</th>
+                    <th>客户信息</th>
+                    <th>安装位置</th>
+                    <th>运行状态</th>
+                    <th>最后在线</th>
+                    <th>安装日期</th>
+                    <th width="120">操作</th>
+                </tr>
+            </thead>
+            <tbody id="deviceTableBody">
+                <!-- 数据将通过JavaScript动态填充 -->
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- 分页 -->
+    <div class="pagination-wrapper">
+        <div class="pagination-info">
+            显示第 1-20 条，共 1,248 条记录
+        </div>
+        <div class="pagination">
+            <button class="page-btn" disabled>
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <span class="page-dots">...</span>
+            <button class="page-btn">63</button>
+            <button class="page-btn">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.header-left h1 {
+    font-size: 1.75rem;
+    color: #2c3e50;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-left p {
+    color: #6c757d;
+    margin: 0;
+}
+
+.header-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.filter-panel {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.search-section {
+    flex: 1;
+    max-width: 400px;
+}
+
+.search-box {
+    position: relative;
+}
+
+.search-box i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+}
+
+.search-box .form-control {
+    padding-left: 40px;
+}
+
+.filter-section {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.stats-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: white;
+}
+
+.stat-icon.bg-primary { background: #3498db; }
+.stat-icon.bg-success { background: #27ae60; }
+.stat-icon.bg-warning { background: #f39c12; }
+.stat-icon.bg-danger { background: #e74c3c; }
+
+.stat-content h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0 0 4px 0;
+}
+
+.stat-content p {
+    color: #6c757d;
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.device-table-container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+.table-header {
+    padding: 20px;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.table-title {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.table-title h3 {
+    font-size: 1.1rem;
+    color: #2c3e50;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.record-count {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.table-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.select-all {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    color: #495057;
+    cursor: pointer;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.device-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.device-table th,
+.device-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #f8f9fa;
+}
+
+.device-table th {
+    background: #f8f9fa;
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+.device-table tbody tr {
+    transition: background-color 0.2s;
+}
+
+.device-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.device-code {
+    font-family: monospace;
+    font-weight: 600;
+    color: #3498db;
+}
+
+.device-status {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-align: center;
+    min-width: 60px;
+}
+
+.status-online {
+    background: #d1edff;
+    color: #0066cc;
+}
+
+.status-offline {
+    background: #ffe6e6;
+    color: #cc0000;
+}
+
+.status-warning {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-maintenance {
+    background: #f0e6ff;
+    color: #6633cc;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 4px;
+}
+
+.action-btn {
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #6c757d;
+}
+
+.action-btn:hover {
+    background: #e9ecef;
+    color: #495057;
+}
+
+.action-btn.edit:hover {
+    background: #e7f3ff;
+    color: #0066cc;
+}
+
+.action-btn.view:hover {
+    background: #e8f5e8;
+    color: #28a745;
+}
+
+.action-btn.delete:hover {
+    background: #f8d7da;
+    color: #dc3545;
+}
+
+.pagination-wrapper {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #e9ecef;
+}
+
+.pagination-info {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.pagination {
+    display: flex;
+    gap: 4px;
+}
+
+.page-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #dee2e6;
+    background: white;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.page-btn:hover:not(:disabled) {
+    background: #e9ecef;
+}
+
+.page-btn.active {
+    background: #3498db;
+    color: white;
+    border-color: #3498db;
+}
+
+.page-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.page-dots {
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    color: #6c757d;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.btn-success {
+    background: #27ae60;
+    color: white;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-outline-secondary {
+    background: transparent;
+    color: #6c757d;
+    border: 1px solid #6c757d;
+}
+
+.btn-outline-warning {
+    background: transparent;
+    color: #f39c12;
+    border: 1px solid #f39c12;
+}
+
+.btn-outline-danger {
+    background: transparent;
+    color: #e74c3c;
+    border: 1px solid #e74c3c;
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.form-control,
+.form-select {
+    padding: 8px 12px;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    background: white;
+    font-size: 0.9rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(52, 144, 220, 0.25);
+}
+
+@media (max-width: 768px) {
+    .page-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+    
+    .filter-panel {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+    
+    .filter-section {
+        flex-wrap: wrap;
+    }
+    
+    .stats-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .table-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+    
+    .pagination-wrapper {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 模拟设备数据
+    const deviceData = [
+        { id: 'KG-2024-001', name: '压缩机A1型', category: '压缩机', customer: '上海工业有限公司', location: '上海市浦东新区', status: 'online', lastOnline: '2024-01-15 14:23', installDate: '2023-06-15' },
+        { id: 'KG-2024-002', name: '压缩机A2型', category: '压缩机', customer: '北京制造集团', location: '北京市朝阳区', status: 'warning', lastOnline: '2024-01-15 14:20', installDate: '2023-07-22' },
+        { id: 'KG-2024-003', name: '风机B1型', category: '风机', customer: '广州重工企业', location: '广州市天河区', status: 'online', lastOnline: '2024-01-15 14:22', installDate: '2023-08-10' },
+        { id: 'KG-2024-004', name: '控制器C1', category: '控制器', customer: '深圳科技公司', location: '深圳市南山区', status: 'offline', lastOnline: '2024-01-15 13:45', installDate: '2023-09-05' },
+        { id: 'KG-2024-005', name: '压缩机A3型', category: '压缩机', customer: '天津工程有限公司', location: '天津市滨海新区', status: 'maintenance', lastOnline: '2024-01-15 12:30', installDate: '2023-10-12' }
+    ];
+
+    // 填充设备表格
+    function populateDeviceTable(data = deviceData) {
+        const tbody = document.getElementById('deviceTableBody');
+        tbody.innerHTML = data.map(device => `
+            <tr>
+                <td>
+                    <input type="checkbox" class="device-checkbox" data-id="${device.id}">
+                </td>
+                <td>
+                    <span class="device-code">${device.id}</span>
+                </td>
+                <td>${device.name}</td>
+                <td>${device.category}</td>
+                <td>${device.customer}</td>
+                <td>${device.location}</td>
+                <td>
+                    <span class="device-status status-${device.status}">
+                        ${getStatusText(device.status)}
+                    </span>
+                </td>
+                <td>${device.lastOnline}</td>
+                <td>${device.installDate}</td>
+                <td>
+                    <div class="action-buttons">
+                        <button class="action-btn view" onclick="viewDevice('${device.id}')" title="查看详情">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="action-btn edit" onclick="editDevice('${device.id}')" title="编辑">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn delete" onclick="deleteDevice('${device.id}')" title="删除">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+        
+        // 更新复选框事件
+        updateCheckboxEvents();
+    }
+
+    // 获取状态文本
+    function getStatusText(status) {
+        const statusMap = {
+            'online': '在线',
+            'offline': '离线',
+            'warning': '告警',
+            'maintenance': '维护中'
+        };
+        return statusMap[status] || status;
+    }
+
+    // 更新复选框事件
+    function updateCheckboxEvents() {
+        const selectAllCheckbox = document.getElementById('selectAll');
+        const deviceCheckboxes = document.querySelectorAll('.device-checkbox');
+        
+        selectAllCheckbox.addEventListener('change', function() {
+            deviceCheckboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+            updateBatchButtons();
+        });
+        
+        deviceCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const checkedCount = document.querySelectorAll('.device-checkbox:checked').length;
+                selectAllCheckbox.checked = checkedCount === deviceCheckboxes.length;
+                selectAllCheckbox.indeterminate = checkedCount > 0 && checkedCount < deviceCheckboxes.length;
+                updateBatchButtons();
+            });
+        });
+    }
+
+    // 更新批量操作按钮状态
+    function updateBatchButtons() {
+        const checkedCount = document.querySelectorAll('.device-checkbox:checked').length;
+        document.getElementById('batchStatusBtn').disabled = checkedCount === 0;
+        document.getElementById('batchDeleteBtn').disabled = checkedCount === 0;
+    }
+
+    // 搜索功能
+    document.getElementById('searchInput').addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const filteredData = deviceData.filter(device => 
+            device.id.toLowerCase().includes(searchTerm) ||
+            device.name.toLowerCase().includes(searchTerm) ||
+            device.customer.toLowerCase().includes(searchTerm)
+        );
+        populateDeviceTable(filteredData);
+    });
+
+    // 状态筛选
+    document.getElementById('statusFilter').addEventListener('change', function() {
+        const status = this.value;
+        const filteredData = status ? deviceData.filter(device => device.status === status) : deviceData;
+        populateDeviceTable(filteredData);
+    });
+
+    // 重置筛选
+    document.getElementById('resetFilters').addEventListener('click', function() {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('statusFilter').value = '';
+        document.getElementById('categoryFilter').value = '';
+        document.getElementById('locationFilter').value = '';
+        populateDeviceTable(deviceData);
+    });
+
+    // 导出设备列表
+    document.getElementById('exportDevices').addEventListener('click', function() {
+        console.log('导出设备列表');
+        // 这里可以实现导出功能
+    });
+
+    // 初始化
+    populateDeviceTable();
+    
+    console.log('产品设备列表页面初始化完成');
+});
+
+// 查看设备详情
+function viewDevice(deviceId) {
+    console.log('查看设备详情:', deviceId);
+    // 这里可以跳转到设备详情页面
+}
+
+// 编辑设备
+function editDevice(deviceId) {
+    console.log('编辑设备:', deviceId);
+    // 这里可以跳转到设备编辑页面
+}
+
+// 删除设备
+function deleteDevice(deviceId) {
+    if (confirm('确定要删除这个设备吗？')) {
+        console.log('删除设备:', deviceId);
+        // 这里可以调用API删除设备
+    }
+}
+</script> 

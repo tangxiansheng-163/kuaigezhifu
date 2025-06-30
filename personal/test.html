@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试页面 - 快哥智服平台</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div style="display: flex; height: 100vh;">
+        <!-- 左侧菜单 -->
+        <nav style="width: 250px; background: white; border-right: 1px solid #e9ecef; padding: 20px;">
+            <h2 style="margin-bottom: 20px; color: #333;">测试菜单</h2>
+            
+            <div style="margin-bottom: 30px;">
+                <h3 style="font-size: 0.8rem; color: #6c757d; margin-bottom: 10px;">测试页面</h3>
+                <div onclick="loadPage('dashboard')" style="padding: 10px; cursor: pointer; border-radius: 6px; margin-bottom: 5px;" class="menu-item active">
+                    <i class="fas fa-home"></i> 工作台
+                </div>
+                <div onclick="loadPage('profile')" style="padding: 10px; cursor: pointer; border-radius: 6px; margin-bottom: 5px;" class="menu-item">
+                    <i class="fas fa-user"></i> 个人档案
+                </div>
+                <div onclick="loadPage('auth-real')" style="padding: 10px; cursor: pointer; border-radius: 6px; margin-bottom: 5px;" class="menu-item">
+                    <i class="fas fa-id-card"></i> 实名认证
+                </div>
+            </div>
+        </nav>
+
+        <!-- 主内容区域 -->
+        <main id="main-content" style="flex: 1; padding: 30px; background: #f5f7fa; overflow-y: auto;">
+            <!-- 默认内容 -->
+            <div class="main-content">
+                <h1>测试页面</h1>
+                <p>点击左侧菜单测试AJAX加载功能。</p>
+                <div style="background: white; padding: 20px; border-radius: 8px; margin-top: 20px;">
+                    <h3>测试说明：</h3>
+                    <ul>
+                        <li>点击"工作台"加载 dashboard.html</li>
+                        <li>点击"个人档案"加载 profile.html</li>
+                        <li>点击"实名认证"加载 auth-real.html</li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <style>
+        .menu-item {
+            transition: all 0.3s;
+        }
+        .menu-item:hover {
+            background: #f8f9fa;
+            color: #667eea;
+        }
+        .menu-item.active {
+            background: #667eea;
+            color: white;
+        }
+    </style>
+
+    <script>
+        // 页面文件映射
+        const pageFiles = {
+            'dashboard': 'dashboard.html',
+            'profile': 'profile.html',
+            'auth-real': 'auth-real.html'
+        };
+
+        // 加载页面函数
+        function loadPage(pageKey) {
+            const mainContent = document.getElementById('main-content');
+            const fileName = pageFiles[pageKey];
+            
+            if (!fileName) {
+                console.error('未找到页面文件:', pageKey);
+                return;
+            }
+
+            // 更新菜单激活状态
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.closest('.menu-item').classList.add('active');
+
+            // 显示加载状态
+            mainContent.innerHTML = `
+                <div style="display: flex; justify-content: center; align-items: center; height: 400px;">
+                    <div style="text-align: center;">
+                        <div style="width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #667eea; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px;"></div>
+                        <p style="color: #6c757d;">正在加载页面内容...</p>
+                    </div>
+                </div>
+                <style>
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
+                </style>
+            `;
+
+            // 加载HTML文件
+            fetch(fileName)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.text();
+                })
+                .then(html => {
+                    // 解析HTML文档
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    
+                    // 提取body内容
+                    const bodyContent = doc.body.innerHTML;
+                    
+                    // 处理样式引用 - 确保styles.css被正确加载
+                    const styleLinks = doc.querySelectorAll('link[rel="stylesheet"]');
+                    styleLinks.forEach(link => {
+                        if (link.href.includes('styles.css')) {
+                            // 如果styles.css还没有加载，则加载它
+                            if (!document.querySelector('link[href*="styles.css"]')) {
+                                const newLink = document.createElement('link');
+                                newLink.rel = 'stylesheet';
+                                newLink.href = link.href;
+                                document.head.appendChild(newLink);
+                            }
+                        }
+                    });
+                    
+                    // 插入内容
+                    mainContent.innerHTML = `<div class="main-content">${bodyContent}</div>`;
+                    
+                    // 重新执行页面中的脚本
+                    const scripts = doc.querySelectorAll('script');
+                    scripts.forEach(script => {
+                        if (script.src) {
+                            // 外部脚本
+                            const newScript = document.createElement('script');
+                            newScript.src = script.src;
+                            document.head.appendChild(newScript);
+                        } else {
+                            // 内联脚本
+                            try {
+                                eval(script.textContent);
+                            } catch (e) {
+                                console.warn('执行脚本时出错:', e);
+                            }
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error('加载页面失败:', error);
+                    mainContent.innerHTML = `
+                        <div style="display: flex; justify-content: center; align-items: center; height: 400px;">
+                            <div style="text-align: center;">
+                                <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #dc3545; margin-bottom: 20px;"></i>
+                                <h3 style="color: #333; margin-bottom: 10px;">页面加载失败</h3>
+                                <p style="color: #6c757d;">无法加载 ${fileName} 文件</p>
+                                <p style="color: #6c757d; font-size: 0.9rem; margin-top: 10px;">错误信息: ${error.message}</p>
+                                <button onclick="loadPage('${pageKey}')" style="margin-top: 20px; padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                                    <i class="fas fa-redo"></i> 重新加载
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+        }
+    </script>
+</body>
+</html> 

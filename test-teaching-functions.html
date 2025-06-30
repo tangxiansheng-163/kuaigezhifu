@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教学管理功能测试</title>
+</head>
+<body>
+    <h1>教学管理功能测试</h1>
+    
+    <button onclick="showTeachingReport()">教学报告</button>
+    <button onclick="createNewCourse()">创建课程</button>
+    
+    <script>
+    // 教学管理相关函数
+    function showTeachingReport() {
+        alert('正在生成教学报告...');
+        setTimeout(() => {
+            alert('教学报告已生成！\n\n总课程数：12\n活跃课程：8\n总学员数：186\n教学收入：¥15,680\n\n平均评分：4.8分\n完成率：78%');
+        }, 1000);
+    }
+
+    function createNewCourse() {
+        alert('正在打开课程创建页面...');
+        setTimeout(() => {
+            alert('课程创建功能开发中，敬请期待！');
+        }, 1000);
+    }
+    </script>
+</body>
+</html> 

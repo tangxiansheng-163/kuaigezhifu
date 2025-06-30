@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>创建企业 - 快哥智服</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .page-header {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .page-header h1 {
+            color: #333;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .page-header h1 i {
+            color: #667eea;
+        }
+
+        .page-desc {
+            color: #6c757d;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        button:hover {
+            opacity: 0.8;
+            transform: translateY(-1px);
+        }
+
+        .upload-area {
+            border: 2px dashed #e0e3ea;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-area:hover {
+            border-color: #667eea;
+            background: #f8f9fa;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <h1><i class="fas fa-building"></i> 创建企业</h1>
+        <p class="page-desc">创建您的企业账户，享受企业级服务和管理功能</p>
+    </div>
+
+    <!-- 创建步骤 -->
+    <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 40px; padding: 40px 20px; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+        <div style="display: flex; align-items: center; justify-content: center; width: 100%; max-width: 600px; position: relative;">
+            <!-- 步骤1 -->
+            <div style="display: flex; flex-direction: column; align-items: center; z-index: 2;">
+                <div style="width: 60px; height: 60px; border-radius: 50%; background: #28a745; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.4rem; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);">1</div>
+                <div style="font-weight: 600; color: #28a745; font-size: 0.95rem; text-align: center; line-height: 1.3;">基本信息</div>
+            </div>
+            
+            <!-- 连接线1 -->
+            <div style="flex: 1; height: 3px; background: #e9ecef; margin: 0 20px; border-radius: 2px; position: relative; top: -25px;"></div>
+            
+            <!-- 步骤2 -->
+            <div style="display: flex; flex-direction: column; align-items: center; z-index: 2;">
+                <div style="width: 60px; height: 60px; border-radius: 50%; background: #e9ecef; color: #6c757d; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.4rem; margin-bottom: 12px; border: 3px solid #dee2e6;">2</div>
+                <div style="font-weight: 600; color: #6c757d; font-size: 0.95rem; text-align: center; line-height: 1.3;">资质审核</div>
+            </div>
+            
+            <!-- 连接线2 -->
+            <div style="flex: 1; height: 3px; background: #e9ecef; margin: 0 20px; border-radius: 2px; position: relative; top: -25px;"></div>
+            
+            <!-- 步骤3 -->
+            <div style="display: flex; flex-direction: column; align-items: center; z-index: 2;">
+                <div style="width: 60px; height: 60px; border-radius: 50%; background: #e9ecef; color: #6c757d; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.4rem; margin-bottom: 12px; border: 3px solid #dee2e6;">3</div>
+                <div style="font-weight: 600; color: #6c757d; font-size: 0.95rem; text-align: center; line-height: 1.3;">创建成功</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 企业信息表单 -->
+    <form style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 25px;">
+        <!-- 基本信息 -->
+        <div style="margin-bottom: 30px;">
+            <h3 style="display: flex; align-items: center; gap: 10px; color: #333; margin-bottom: 20px; font-size: 1.2rem; padding-bottom: 10px; border-bottom: 2px solid #f0f0f0;">
+                <i class="fas fa-building" style="color: #28a745;"></i>
+                企业基本信息
+            </h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                <div>
+                    <label style="display: block; color: #333; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem;">企业名称 <span style="color: #dc3545;">*</span></label>
+                    <input type="text" placeholder="请输入企业全称" style="width: 100%; padding: 12px 15px; border: 1px solid #e0e3ea; border-radius: 8px; font-size: 0.95rem;">
+                </div>
+                <div>
+                    <label style="display: block; color: #333; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem;">统一社会信用代码 <span style="color: #dc3545;">*</span></label>
+                    <input type="text" placeholder="请输入18位统一社会信用代码" style="width: 100%; padding: 12px 15px; border: 1px solid #e0e3ea; border-radius: 8px; font-size: 0.95rem;">
+                </div>
+                <div>
+                    <label style="display: block; color: #333; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem;">企业类型 <span style="color: #dc3545;">*</span></label>
+                    <select style="width: 100%; padding: 12px 15px; border: 1px solid #e0e3ea; border-radius: 8px; font-size: 0.95rem;">
+                        <option value="">请选择企业类型</option>
+                        <option value="有限责任公司">有限责任公司</option>
+                        <option value="股份有限公司">股份有限公司</option>
+                        <option value="合伙企业">合伙企业</option>
+                        <option value="个人独资企业">个人独资企业</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display: block; color: #333; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem;">法定代表人 <span style="color: #dc3545;">*</span></label>
+                    <input type="text" placeholder="请输入法定代表人姓名" style="width: 100%; padding: 12px 15px; border: 1px solid #e0e3ea; border-radius: 8px; font-size: 0.95rem;">
+                </div>
+                <div>
+                    <label style="display: block; color: #333; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem;">注册资本 <span style="color: #dc3545;">*</span></label>
+                    <input type="text" placeholder="请输入注册资本（万元）" style="width: 100%; padding: 12px 15px; border: 1px solid #e0e3ea; border-radius: 8px; font-size: 0.95rem;">
+                </div>
+                <div>
+                    <label style="display: block; color: #333; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem;">成立日期 <span style="color: #dc3545;">*</span></label>
+                    <input type="date" style="width: 100%; padding: 12px 15px; border: 1px solid #e0e3ea; border-radius: 8px; font-size: 0.95rem;">
+                </div>
+            </div>
+        </div>
+
+        <!-- 联系信息 -->
+        <div style="margin-bottom: 30px;">
+            <h3 style="display: flex; align-items: center; gap: 10px; color: #333; margin-bottom: 20px; font-size: 1.2rem; padding-bottom: 10px; border-bottom: 2px solid #f0f0f0;">
+                <i class="fas fa-address-card" style="color: #17a2b8;"></i>
+                联系信息
+            </h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                <div style="grid-column: 1 / -1;">
+                    <label style="display: block; color: #333; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem;">企业地址 <span style="color: #dc3545;">*</span></label>
+                    <input type="text" placeholder="请输入企业详细地址" style="width: 100%; padding: 12px 15px; border: 1px solid #e0e3ea; border-radius: 8px; font-size: 0.95rem;">
+                </div>
+                <div>
+                    <label style="display: block; color: #333; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem;">联系电话 <span style="color: #dc3545;">*</span></label>
+                    <input type="tel" placeholder="请输入企业联系电话" style="width: 100%; padding: 12px 15px; border: 1px solid #e0e3ea; border-radius: 8px; font-size: 0.95rem;">
+                </div>
+                <div>
+                    <label style="display: block; color: #333; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem;">企业邮箱 <span style="color: #dc3545;">*</span></label>
+                    <input type="email" placeholder="请输入企业邮箱" style="width: 100%; padding: 12px 15px; border: 1px solid #e0e3ea; border-radius: 8px; font-size: 0.95rem;">
+                </div>
+            </div>
+        </div>
+
+        <!-- 业务信息 -->
+        <div style="margin-bottom: 30px;">
+            <h3 style="display: flex; align-items: center; gap: 10px; color: #333; margin-bottom: 20px; font-size: 1.2rem; padding-bottom: 10px; border-bottom: 2px solid #f0f0f0;">
+                <i class="fas fa-briefcase" style="color: #fd7e14;"></i>
+                业务信息
+            </h3>
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; color: #333; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem;">主营业务 <span style="color: #dc3545;">*</span></label>
+                <textarea placeholder="请详细描述企业的主营业务范围和服务内容" style="width: 100%; padding: 15px; border: 1px solid #e0e3ea; border-radius: 8px; font-size: 0.95rem; min-height: 100px; resize: vertical; line-height: 1.6;"></textarea>
+            </div>
+            <div>
+                <label style="display: block; color: #333; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem;">行业类别 <span style="color: #dc3545;">*</span></label>
+                <select style="width: 100%; padding: 12px 15px; border: 1px solid #e0e3ea; border-radius: 8px; font-size: 0.95rem;">
+                    <option value="">请选择行业类别</option>
+                    <option value="制造业">制造业</option>
+                    <option value="建筑业">建筑业</option>
+                    <option value="信息技术">信息技术</option>
+                    <option value="贸易服务">贸易服务</option>
+                    <option value="其他">其他</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- 资质上传 -->
+        <div style="margin-bottom: 30px;">
+            <h3 style="display: flex; align-items: center; gap: 10px; color: #333; margin-bottom: 20px; font-size: 1.2rem; padding-bottom: 10px; border-bottom: 2px solid #f0f0f0;">
+                <i class="fas fa-upload" style="color: #6f42c1;"></i>
+                资质上传
+            </h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                <div>
+                    <label style="display: block; color: #333; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem;">营业执照 <span style="color: #dc3545;">*</span></label>
+                    <div class="upload-area" onclick="uploadFile(this)">
+                        <i class="fas fa-cloud-upload-alt" style="font-size: 1.5rem; color: #6c757d; margin-bottom: 10px;"></i>
+                        <div style="color: #6c757d; margin-bottom: 5px;">点击上传或拖拽文件至此</div>
+                        <div style="font-size: 0.85rem; color: #999;">支持jpg/png/pdf，大小不超过10M</div>
+                    </div>
+                </div>
+                <div>
+                    <label style="display: block; color: #333; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem;">税务登记证</label>
+                    <div class="upload-area" onclick="uploadFile(this)">
+                        <i class="fas fa-cloud-upload-alt" style="font-size: 1.5rem; color: #6c757d; margin-bottom: 10px;"></i>
+                        <div style="color: #6c757d; margin-bottom: 5px;">点击上传或拖拽文件至此</div>
+                        <div style="font-size: 0.85rem; color: #999;">支持jpg/png/pdf，大小不超过10M</div>
+                    </div>
+                </div>
+                <div>
+                    <label style="display: block; color: #333; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem;">组织机构代码证</label>
+                    <div class="upload-area" onclick="uploadFile(this)">
+                        <i class="fas fa-cloud-upload-alt" style="font-size: 1.5rem; color: #6c757d; margin-bottom: 10px;"></i>
+                        <div style="color: #6c757d; margin-bottom: 5px;">点击上传或拖拽文件至此</div>
+                        <div style="font-size: 0.85rem; color: #999;">支持jpg/png/pdf，大小不超过10M</div>
+                    </div>
+                </div>
+                <div>
+                    <label style="display: block; color: #333; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem;">其他资质证明</label>
+                    <div class="upload-area" onclick="uploadFile(this)">
+                        <i class="fas fa-cloud-upload-alt" style="font-size: 1.5rem; color: #6c757d; margin-bottom: 10px;"></i>
+                        <div style="color: #6c757d; margin-bottom: 5px;">点击上传或拖拽文件至此</div>
+                        <div style="font-size: 0.85rem; color: #999;">支持jpg/png/pdf，大小不超过10M</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 提交按钮 -->
+        <div style="display: flex; gap: 15px; justify-content: center; margin-top: 30px;">
+            <button type="submit" style="display: flex; align-items: center; gap: 8px; padding: 12px 30px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 500;">
+                <i class="fas fa-paper-plane"></i>
+                提交创建申请
+            </button>
+            <button type="button" style="display: flex; align-items: center; gap: 8px; padding: 12px 30px; background: #f8f9fa; color: #6c757d; border: 1px solid #e9ecef; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 500;">
+                <i class="fas fa-save"></i>
+                保存草稿
+            </button>
+        </div>
+    </form>
+
+    <!-- 创建企业说明 -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+        <div style="background: white; border-radius: 10px; padding: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                <div style="width: 50px; height: 50px; border-radius: 12px; background: #28a745; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div style="font-size: 1.1rem; font-weight: 600; color: #333;">团队协作</div>
+            </div>
+            <div style="color: #6c757d; line-height: 1.6;">创建企业后可邀请员工加入，实现多人协作管理，统一调度资源和工单分配。</div>
+        </div>
+        <div style="background: white; border-radius: 10px; padding: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                <div style="width: 50px; height: 50px; border-radius: 12px; background: #17a2b8; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div style="font-size: 1.1rem; font-weight: 600; color: #333;">数据分析</div>
+            </div>
+            <div style="color: #6c757d; line-height: 1.6;">享受企业级数据分析服务，实时掌握业务状况，科学决策提升运营效率。</div>
+        </div>
+        <div style="background: white; border-radius: 10px; padding: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                <div style="width: 50px; height: 50px; border-radius: 12px; background: #fd7e14; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div style="font-size: 1.1rem; font-weight: 600; color: #333;">优先服务</div>
+            </div>
+            <div style="color: #6c757d; line-height: 1.6;">企业用户享受优先客服支持、专属客户经理，获得更优质的平台服务体验。</div>
+        </div>
+    </div>
+
+    <script>
+        // 应用状态管理
+        let applicationStatus = 'draft'; // draft: 草稿, pending: 待审核, approved: 已通过, rejected: 已拒绝
+
+        function uploadFile(element) {
+            // 如果是待审核状态，不允许上传
+            if (applicationStatus === 'pending') {
+                showToast('申请正在审核中，无法修改资料', '#ffc107');
+                return;
+            }
+            
+            // 创建文件输入元素
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.jpg,.jpeg,.png,.pdf';
+            input.style.display = 'none';
+            
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    // 检查文件大小（10MB）
+                    if (file.size > 10 * 1024 * 1024) {
+                        alert('文件大小不能超过10MB');
+                        return;
+                    }
+                    
+                    // 更新上传区域显示
+                    element.innerHTML = '<i class="fas fa-check-circle" style="font-size: 1.5rem; color: #28a745; margin-bottom: 10px;"></i>' +
+                        '<div style="color: #28a745; margin-bottom: 5px; font-weight: 500;">文件上传成功</div>' +
+                        '<div style="font-size: 0.85rem; color: #6c757d;">' + file.name + '</div>';
+                    element.style.borderColor = '#28a745';
+                    element.style.background = '#f8fff8';
+                }
+            };
+            
+            document.body.appendChild(input);
+            input.click();
+            document.body.removeChild(input);
+        }
+
+        // 表单提交处理
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (applicationStatus === 'pending') {
+                showToast('申请正在审核中，无法重复提交', '#ffc107');
+                return;
+            }
+            
+            // 模拟提交过程
+            showToast('正在提交申请...', '#667eea');
+            
+            setTimeout(() => {
+                applicationStatus = 'pending';
+                updateUIStatus();
+                showToast('企业创建申请已提交，我们将在3-5个工作日内完成审核，请保持联系方式畅通。', '#28a745');
+            }, 1500);
+        });
+
+        // 撤回申请
+        function withdrawApplication() {
+            if (confirm('确定要撤回申请吗？撤回后可以重新编辑和提交。')) {
+                showToast('正在撤回申请...', '#667eea');
+                
+                setTimeout(() => {
+                    applicationStatus = 'draft';
+                    updateUIStatus();
+                    showToast('申请已撤回，您可以重新编辑和提交', '#28a745');
+                }, 1000);
+            }
+        }
+
+        // 保存草稿
+        function saveDraft() {
+            if (applicationStatus === 'pending') {
+                showToast('申请正在审核中，无法修改', '#ffc107');
+                return;
+            }
+            
+            showToast('草稿已保存', '#28a745');
+        }
+
+        // 更新UI状态
+        function updateUIStatus() {
+            const form = document.querySelector('form');
+            const inputs = form.querySelectorAll('input, select, textarea');
+            const uploadAreas = form.querySelectorAll('.upload-area');
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const draftBtn = form.querySelector('button[type="button"]');
+            
+            // 更新步骤指示器
+            updateStepIndicator();
+            
+            if (applicationStatus === 'pending') {
+                // 待审核状态：禁用所有表单元素
+                inputs.forEach(input => {
+                    input.disabled = true;
+                    input.style.backgroundColor = '#f8f9fa';
+                    input.style.color = '#6c757d';
+                });
+                
+                uploadAreas.forEach(area => {
+                    area.style.pointerEvents = 'none';
+                    area.style.opacity = '0.6';
+                });
+                
+                // 更新按钮
+                submitBtn.style.display = 'none';
+                draftBtn.innerHTML = '<i class="fas fa-undo"></i> 撤回申请';
+                draftBtn.style.background = '#ffc107';
+                draftBtn.style.color = 'white';
+                draftBtn.style.border = 'none';
+                draftBtn.onclick = withdrawApplication;
+                
+                // 添加状态提示
+                addStatusNotice();
+                
+            } else {
+                // 草稿状态：启用所有表单元素
+                inputs.forEach(input => {
+                    input.disabled = false;
+                    input.style.backgroundColor = 'white';
+                    input.style.color = '#333';
+                });
+                
+                uploadAreas.forEach(area => {
+                    area.style.pointerEvents = 'auto';
+                    area.style.opacity = '1';
+                });
+                
+                // 恢复按钮
+                submitBtn.style.display = 'flex';
+                draftBtn.innerHTML = '<i class="fas fa-save"></i> 保存草稿';
+                draftBtn.style.background = '#f8f9fa';
+                draftBtn.style.color = '#6c757d';
+                draftBtn.style.border = '1px solid #e9ecef';
+                draftBtn.onclick = saveDraft;
+                
+                // 移除状态提示
+                removeStatusNotice();
+            }
+        }
+
+        // 更新步骤指示器
+        function updateStepIndicator() {
+            const step1 = document.querySelector('.step-1');
+            const step2 = document.querySelector('.step-2');
+            const line1 = document.querySelector('.line-1');
+            
+            if (applicationStatus === 'pending') {
+                // 步骤2激活
+                if (step2) {
+                    step2.querySelector('div').style.background = '#ffc107';
+                    step2.querySelector('div').style.color = 'white';
+                    step2.querySelector('div').style.border = 'none';
+                    step2.querySelector('div').style.boxShadow = '0 4px 12px rgba(255, 193, 7, 0.3)';
+                    step2.querySelector('div:last-child').style.color = '#ffc107';
+                    step2.querySelector('div:last-child').style.fontWeight = '600';
+                }
+                if (line1) {
+                    line1.style.background = '#ffc107';
+                }
+            } else {
+                // 步骤1激活
+                if (step2) {
+                    step2.querySelector('div').style.background = '#e9ecef';
+                    step2.querySelector('div').style.color = '#6c757d';
+                    step2.querySelector('div').style.border = '3px solid #dee2e6';
+                    step2.querySelector('div').style.boxShadow = 'none';
+                    step2.querySelector('div:last-child').style.color = '#6c757d';
+                    step2.querySelector('div:last-child').style.fontWeight = '600';
+                }
+                if (line1) {
+                    line1.style.background = '#e9ecef';
+                }
+            }
+        }
+
+        // 添加状态提示
+        function addStatusNotice() {
+            if (document.getElementById('statusNotice')) return;
+            
+            const notice = document.createElement('div');
+            notice.id = 'statusNotice';
+            notice.style.cssText = 'background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 15px; margin-bottom: 20px; color: #856404;';
+            notice.innerHTML = '<div style="display: flex; align-items: center; gap: 10px;">' +
+                '<i class="fas fa-clock" style="font-size: 1.2rem;"></i>' +
+                '<div>' +
+                    '<div style="font-weight: 600; margin-bottom: 5px;">申请审核中</div>' +
+                    '<div style="font-size: 0.9rem;">您的企业创建申请正在审核中，预计3-5个工作日完成。审核期间无法修改申请信息，如需修改请先撤回申请。</div>' +
+                '</div>' +
+            '</div>';
+            
+            const form = document.querySelector('form');
+            form.insertBefore(notice, form.firstChild);
+        }
+
+        // 移除状态提示
+        function removeStatusNotice() {
+            const notice = document.getElementById('statusNotice');
+            if (notice) {
+                notice.remove();
+            }
+        }
+
+        // Toast提示函数
+        function showToast(message, color) {
+            color = color || '#667eea';
+            const toast = document.createElement('div');
+            toast.style.cssText = 'position: fixed; top: 20px; right: 20px; background: ' + color + 
+                '; color: white; padding: 15px 20px; border-radius: 8px; z-index: 10000; box-shadow: 0 4px 12px rgba(0,0,0,0.2);';
+            toast.innerHTML = '<i class="fas fa-info-circle"></i> ' + message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 为步骤元素添加类名以便操作
+            const steps = document.querySelectorAll('[style*="display: flex; flex-direction: column; align-items: center"]');
+            if (steps[0]) steps[0].classList.add('step-1');
+            if (steps[1]) steps[1].classList.add('step-2');
+            
+            const lines = document.querySelectorAll('[style*="flex: 1; height: 3px"]');
+            if (lines[0]) lines[0].classList.add('line-1');
+            
+            // 初始化UI状态
+            updateUIStatus();
+        });
+    </script>
+</body>
+</html> 

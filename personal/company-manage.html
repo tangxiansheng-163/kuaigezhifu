@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的企业 - 快哥智服</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .page-header {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .page-header h1 {
+            color: #333;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            display: flex; align-items: center;
+            gap: 12px;
+        }
+
+        .page-header h1 i {
+            color: #667eea;
+        }
+
+        .page-desc {
+            color: #6c757d;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #333;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .stat-card.primary .stat-number {
+            color: #28a745;
+        }
+
+        .stat-card.secondary .stat-number {
+            color: #007bff;
+        }
+
+        .stat-card.warning .stat-number {
+            color: #fd7e14;
+        }
+
+        .company-section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+
+        .company-card {
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+
+        .company-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .company-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .company-info h4 {
+            color: #333;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .company-meta {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .company-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            background: #5a6fd8;
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #6c757d;
+            border: 1px solid #e9ecef;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+
+        .company-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .detail-item i {
+            color: #667eea;
+            width: 16px;
+        }
+
+        .section-title {
+            color: #333;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: #667eea;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c757d;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #e9ecef;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .empty-state p {
+            margin-bottom: 20px;
+        }
+
+        .invite-section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+
+        .invite-form {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .invite-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #e0e3ea;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+
+        .invite-btn {
+            padding: 12px 24px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .invite-btn:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <h1><i class="fas fa-cogs"></i> 我的企业</h1>
+        <p class="page-desc">管理您所属的企业信息和成员权限</p>
+    </div>
+
+    <!-- 企业状态概览 -->
+    <div class="stats-grid">
+        <div class="stat-card primary">
+            <div class="stat-number">1</div>
+            <div class="stat-label">我创建的企业</div>
+        </div>
+        <div class="stat-card secondary">
+            <div class="stat-number">2</div>
+            <div class="stat-label">我加入的企业</div>
+        </div>
+        <div class="stat-card warning">
+            <div class="stat-number">1</div>
+            <div class="stat-label">待审核申请</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" style="color: #17a2b8;">3</div>
+            <div class="stat-label">总企业数</div>
+        </div>
+    </div>
+
+    <!-- 我创建的企业 -->
+    <div class="company-section">
+        <h3 class="section-title">
+            <i class="fas fa-crown"></i>
+            我创建的企业
+        </h3>
+        
+        <div class="company-card">
+            <div class="company-header">
+                <div class="company-info">
+                    <h4>北京工业设备有限公司</h4>
+                    <div class="company-meta">创始人 • 2024-01-15创建</div>
+                </div>
+                <div class="company-actions">
+                    <button class="btn-primary" onclick="goToEnterprise('北京工业设备有限公司')">
+                        <i class="fas fa-cogs"></i> 管理企业
+                    </button>
+                    <button class="btn-secondary" onclick="viewCompanyDetail('北京工业设备有限公司')">
+                        <i class="fas fa-eye"></i> 查看详情
+                    </button>
+                </div>
+            </div>
+            <div class="company-details">
+                <div class="detail-item">
+                    <i class="fas fa-users"></i>
+                    <span>成员：12人</span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>地区：北京</span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-industry"></i>
+                    <span>行业：制造业</span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>成立：2018年</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 我加入的企业 -->
+    <div class="company-section">
+        <h3 class="section-title">
+            <i class="fas fa-users"></i>
+            我加入的企业
+        </h3>
+        
+        <div class="company-card">
+            <div class="company-header">
+                <div class="company-info">
+                    <h4>上海智能科技有限公司</h4>
+                    <div class="company-meta">技术专家 • 2024-02-20加入</div>
+                </div>
+                <div class="company-actions">
+                    <button class="btn-primary" onclick="goToEnterprise('上海智能科技有限公司')">
+                        <i class="fas fa-arrow-right"></i> 进入企业
+                    </button>
+                    <button class="btn-secondary" onclick="viewCompanyDetail('上海智能科技有限公司')">
+                        <i class="fas fa-eye"></i> 查看详情
+                    </button>
+                </div>
+            </div>
+            <div class="company-details">
+                <div class="detail-item">
+                    <i class="fas fa-users"></i>
+                    <span>成员：128人</span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>地区：上海</span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-industry"></i>
+                    <span>行业：信息技术</span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-user-tag"></i>
+                    <span>角色：技术专家</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="company-card">
+            <div class="company-header">
+                <div class="company-info">
+                    <h4>广州设备维护服务有限公司</h4>
+                    <div class="company-meta">维修技师 • 2024-03-10加入</div>
+                </div>
+                <div class="company-actions">
+                    <button class="btn-primary" onclick="goToEnterprise('广州设备维护服务有限公司')">
+                        <i class="fas fa-arrow-right"></i> 进入企业
+                    </button>
+                    <button class="btn-secondary" onclick="viewCompanyDetail('广州设备维护服务有限公司')">
+                        <i class="fas fa-eye"></i> 查看详情
+                    </button>
+                </div>
+            </div>
+            <div class="company-details">
+                <div class="detail-item">
+                    <i class="fas fa-users"></i>
+                    <span>成员：32人</span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>地区：广州</span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-industry"></i>
+                    <span>行业：制造业</span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-user-tag"></i>
+                    <span>角色：维修技师</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 邀请成员 -->
+    <div class="invite-section">
+        <h3 class="section-title">
+            <i class="fas fa-user-plus"></i>
+            邀请成员加入企业
+        </h3>
+        
+        <div class="invite-form">
+            <select class="invite-input" id="inviteCompany">
+                <option value="">选择企业</option>
+                <option value="北京工业设备有限公司">北京工业设备有限公司</option>
+                <option value="上海智能科技有限公司">上海智能科技有限公司</option>
+                <option value="广州设备维护服务有限公司">广州设备维护服务有限公司</option>
+            </select>
+            <input type="email" class="invite-input" id="inviteEmail" placeholder="输入邮箱地址">
+            <button class="invite-btn" onclick="inviteMember()">
+                <i class="fas fa-paper-plane"></i> 发送邀请
+            </button>
+        </div>
+        
+        <div style="color: #6c757d; font-size: 0.9rem;">
+            <i class="fas fa-info-circle"></i>
+            邀请链接将发送到指定邮箱，被邀请人可通过链接直接加入企业。
+        </div>
+    </div>
+
+    <!-- 待审核申请 -->
+    <div class="company-section">
+        <h3 class="section-title">
+            <i class="fas fa-clock"></i>
+            待审核申请
+        </h3>
+        
+        <div class="company-card">
+            <div class="company-header">
+                <div class="company-info">
+                    <h4>深圳科技服务有限公司</h4>
+                    <div class="company-meta">申请时间：2024-06-15 14:30</div>
+                </div>
+                <div class="company-actions">
+                    <button class="btn-primary" onclick="approveApplication('深圳科技服务有限公司')">
+                        <i class="fas fa-check"></i> 同意
+                    </button>
+                    <button class="btn-secondary" onclick="rejectApplication('深圳科技服务有限公司')">
+                        <i class="fas fa-times"></i> 拒绝
+                    </button>
+                </div>
+            </div>
+            <div class="company-details">
+                <div class="detail-item">
+                    <i class="fas fa-user"></i>
+                    <span>申请人：张工程师</span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-user-tag"></i>
+                    <span>申请角色：技术专家</span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-comment"></i>
+                    <span>申请理由：希望加入贵公司技术团队，共同发展</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function goToEnterprise(companyName) {
+            // 模拟进入企业功能
+            alert(`正在进入企业：${companyName}\n\n这里将跳转到企业管理系统，包括：\n- 成员管理\n- 项目管理\n- 财务管理\n- 数据统计等`);
+        }
+
+        function viewCompanyDetail(companyName) {
+            // 模拟查看企业详情功能
+            alert(`企业详情：${companyName}\n\n这里将显示企业的详细信息，包括：\n- 企业介绍\n- 成员列表\n- 项目统计\n- 财务概况等`);
+        }
+
+        function inviteMember() {
+            const company = document.getElementById('inviteCompany').value;
+            const email = document.getElementById('inviteEmail').value;
+            
+            if (!company) {
+                alert('请选择要邀请加入的企业');
+                return;
+            }
+            
+            if (!email) {
+                alert('请输入被邀请人的邮箱地址');
+                return;
+            }
+            
+            if (!isValidEmail(email)) {
+                alert('请输入有效的邮箱地址');
+                return;
+            }
+            
+            // 模拟发送邀请
+            const confirmed = confirm(`确定要向 ${email} 发送加入"${company}"的邀请吗？`);
+            if (confirmed) {
+                alert(`邀请已发送！\n\n企业：${company}\n邮箱：${email}\n\n被邀请人将收到一封包含邀请链接的邮件。`);
+                
+                // 清空表单
+                document.getElementById('inviteEmail').value = '';
+            }
+        }
+
+        function approveApplication(companyName) {
+            // 模拟同意申请
+            const confirmed = confirm(`确定同意加入"${companyName}"的申请吗？`);
+            if (confirmed) {
+                alert(`申请已同意！\n\n申请人将收到通知，并自动成为企业成员。`);
+                // 这里可以添加移除申请卡片的逻辑
+            }
+        }
+
+        function rejectApplication(companyName) {
+            // 模拟拒绝申请
+            const reason = prompt(`请输入拒绝"${companyName}"申请的理由：`);
+            if (reason !== null) {
+                alert(`申请已拒绝！\n\n拒绝理由：${reason}\n\n申请人将收到通知。`);
+                // 这里可以添加移除申请卡片的逻辑
+            }
+        }
+
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // 监听邀请表单的回车事件
+        document.getElementById('inviteEmail').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                inviteMember();
+            }
+        });
+    </script>
+</body>
+</html> 

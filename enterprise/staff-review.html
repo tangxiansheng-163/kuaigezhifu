@@ -727,6 +727,125 @@
             flex: 1;
             color: #333;
         }
+        
+        /* 角色多选框样式 */
+        .role-checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 5px;
+        }
+        
+        .role-checkbox-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            background: #f8f9fa;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .role-checkbox-item:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+        
+        .role-checkbox-item.checked {
+            border-color: #667eea;
+            background: #e8f0ff;
+        }
+        
+        .role-checkbox {
+            margin: 0;
+            cursor: pointer;
+        }
+        
+        .role-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .role-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 2px;
+        }
+        
+        .role-description {
+            font-size: 0.8rem;
+            color: #6c757d;
+            line-height: 1.3;
+        }
+        
+        .role-type {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+        
+        .role-type.system {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .role-type.custom {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+        
+        .form-hint {
+            color: #6c757d;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: block;
+        }
+        
+        /* 邀请理由样式 */
+        .reason-tags-group {
+            margin-bottom: 15px;
+        }
+        
+        .reason-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .reason-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            background: #f8f9fa;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+        
+        .reason-tag:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+            transform: translateY(-1px);
+        }
+        
+        .reason-tag:active {
+            transform: translateY(0);
+            background: #667eea;
+            color: white;
+        }
+        
+        .reason-tag .tag-icon {
+            font-size: 0.8rem;
+        }
     </style>
 </head>
 <body>
@@ -899,6 +1018,7 @@
                 <div class="content-header">
                     <h1 class="content-title">员工审核</h1>
                     <div class="action-buttons">
+                        <button class="btn btn-success" onclick="showInviteModal()"><i class="fas fa-user-plus"></i>邀请加入</button>
                         <button class="btn btn-secondary"><i class="fas fa-download"></i>导出审核记录</button>
                         <button class="btn btn-primary"><i class="fas fa-cog"></i>审核设置</button>
                     </div>
@@ -1197,6 +1317,134 @@
         </div>
     </div>
 
+    <!-- 邀请加入弹窗 -->
+    <div class="modal-overlay" id="inviteModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">邀请员工加入</h3>
+                <button class="modal-close" onclick="closeModal('inviteModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="inviteForm">
+                    <div class="form-group">
+                        <label class="form-label">邀请方式 *</label>
+                        <select class="form-select" id="inviteMethod" onchange="toggleInviteMethod()" required>
+                            <option value="">请选择邀请方式</option>
+                            <option value="email">邮箱邀请</option>
+                            <option value="phone">手机邀请</option>
+                            <option value="code">生成邀请码</option>
+                            <option value="link">生成邀请链接</option>
+                        </select>
+                    </div>
+                    
+                    <!-- 邮箱邀请 -->
+                    <div class="form-group" id="emailInviteGroup" style="display: none;">
+                        <label class="form-label">邮箱地址 *</label>
+                        <input type="email" class="form-input" id="inviteEmail" placeholder="请输入被邀请人邮箱地址">
+                        <div style="font-size: 0.85rem; color: #6c757d; margin-top: 5px;">系统将向该邮箱发送邀请邮件</div>
+                    </div>
+                    
+                    <!-- 手机邀请 -->
+                    <div class="form-group" id="phoneInviteGroup" style="display: none;">
+                        <label class="form-label">手机号码 *</label>
+                        <input type="tel" class="form-input" id="invitePhone" placeholder="请输入被邀请人手机号码">
+                        <div style="font-size: 0.85rem; color: #6c757d; margin-top: 5px;">系统将向该手机号发送邀请短信</div>
+                    </div>
+                    
+                    <!-- 邀请码 -->
+                    <div class="form-group" id="codeInviteGroup" style="display: none;">
+                        <label class="form-label">邀请码</label>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <input type="text" class="form-input" id="inviteCode" readonly value="">
+                            <button type="button" class="btn btn-secondary" onclick="copyInviteCode()">
+                                <i class="fas fa-copy"></i>复制
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="generateInviteCode()">
+                                <i class="fas fa-sync-alt"></i>重新生成
+                            </button>
+                        </div>
+                        <div style="font-size: 0.85rem; color: #6c757d; margin-top: 5px;">
+                            <i class="fas fa-key" style="margin-right: 5px;"></i>将邀请码发送给被邀请人，他们可以通过此邀请码申请加入企业
+                        </div>
+                    </div>
+                    
+                    <!-- 邀请链接 -->
+                    <div class="form-group" id="linkInviteGroup" style="display: none;">
+                        <label class="form-label">邀请链接</label>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <input type="text" class="form-input" id="inviteLink" readonly value="">
+                            <button type="button" class="btn btn-secondary" onclick="copyInviteLink()">
+                                <i class="fas fa-copy"></i>复制
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="generateInviteLink()">
+                                <i class="fas fa-sync-alt"></i>重新生成
+                            </button>
+                        </div>
+                        <div style="font-size: 0.85rem; color: #6c757d; margin-top: 5px;">
+                            <i class="fas fa-link" style="margin-right: 5px;"></i>将邀请链接发送给被邀请人，他们可以通过此链接直接加入企业
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">邀请部门 *</label>
+                        <select class="form-select" id="inviteDepartment" required onchange="onDepartmentChange()">
+                            <option value="">请选择部门</option>
+                            <!-- 部门选项将通过JavaScript动态加载 -->
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">邀请岗位 *</label>
+                        <select class="form-select" id="invitePosition" required>
+                            <option value="">请选择岗位</option>
+                            <!-- 岗位选项将通过JavaScript动态加载 -->
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">权限级别 *</label>
+                        <div class="role-checkbox-group" id="inviteRoleGroup">
+                            <!-- 角色选项将通过JavaScript动态加载 -->
+                        </div>
+                        <small class="form-hint">可选择多个角色，员工将拥有所选角色的所有权限</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">邀请理由</label>
+                        
+                        <!-- 常用标签 -->
+                        <div class="reason-tags-group">
+                            <div class="reason-tags">
+                                <!-- 标签将通过JavaScript动态加载 -->
+                            </div>
+                        </div>
+                        
+                        <!-- 输入框 -->
+                        <textarea class="form-textarea" id="inviteReason" placeholder="请输入邀请理由（可选），或点击上方标签快速填入" rows="3"></textarea>
+                        
+                        <small class="form-hint">点击标签可快速填入常用理由，也可以在输入框中自由编辑和添加更多信息</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">有效期限 *</label>
+                        <select class="form-select" id="inviteExpiry" required>
+                            <option value="">请选择有效期</option>
+                            <option value="1">1天</option>
+                            <option value="3">3天</option>
+                            <option value="7">7天</option>
+                            <option value="15">15天</option>
+                            <option value="30">30天</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal('inviteModal')">取消</button>
+                <button class="btn-save" onclick="sendInvite()">发送邀请</button>
+            </div>
+        </div>
+    </div>
+
     <script>
     // 模拟审核数据
     let reviewList = [
@@ -1276,6 +1524,416 @@
         closeModal('rejectModal');
         renderReviewTable();
         alert('审核拒绝成功！');
+    }
+    
+    // 岗位数据（从岗位管理页面获取）
+    const positionList = [
+        {name:'高级工程师',code:'SE001',department:'技术部',salaryLevel:'高级',size:20,hiring:3,status:'active'},
+        {name:'运营经理',code:'OM001',department:'运营部',salaryLevel:'高级',size:10,hiring:2,status:'active'},
+        {name:'销售专员',code:'SS001',department:'销售部',salaryLevel:'中级',size:30,hiring:5,status:'active'},
+        {name:'客服主管',code:'CS001',department:'客服部',salaryLevel:'中级',size:15,hiring:0,status:'inactive'},
+        {name:'技术总监',code:'TD001',department:'技术部',salaryLevel:'高级',size:1,hiring:0,status:'inactive'},
+        {name:'实习生',code:'INT001',department:'技术部',salaryLevel:'初级',size:20,hiring:10,status:'active'}
+    ];
+
+    // 角色数据（从角色列表页面获取）
+    const roleList = [
+        {name:'超级管理员',code:'SUPER_ADMIN',type:'system',description:'拥有系统所有权限的最高级别管理员',employees:1,permissions:['all'],order:1},
+        {name:'财务经理',code:'FINANCE_MANAGER',type:'custom',description:'负责处理企业财务报表和薪资发放',employees:2,permissions:['finance_view','finance_edit','report_view','salary_manage'],order:2},
+        {name:'人事主管',code:'HR_MANAGER',type:'custom',description:'负责员工招聘、入职、档案和审核',employees:3,permissions:['employee_view','employee_edit','employee_review','department_view'],order:3},
+        {name:'普通员工',code:'EMPLOYEE',type:'system',description:'企业的基础角色，拥有最基本的操作权限',employees:42,permissions:['profile_view','ticket_submit'],order:4}
+    ];
+
+    // 加载部门选项
+    function loadDepartmentOptions() {
+        const departmentSelect = document.getElementById('inviteDepartment');
+        departmentSelect.innerHTML = '<option value="">请选择部门</option>';
+        
+        // 从岗位数据中提取唯一的部门
+        const departments = [...new Set(positionList.map(p => p.department))];
+        
+        departments.forEach(department => {
+            const option = document.createElement('option');
+            option.value = department;
+            option.textContent = department;
+            departmentSelect.appendChild(option);
+        });
+    }
+
+    // 加载岗位选项
+    function loadPositionOptions(selectedDepartment = null) {
+        const positionSelect = document.getElementById('invitePosition');
+        positionSelect.innerHTML = '<option value="">请选择岗位</option>';
+        
+        // 根据选择的部门过滤岗位
+        let filteredPositions = positionList.filter(p => p.status === 'active');
+        if (selectedDepartment) {
+            filteredPositions = filteredPositions.filter(p => p.department === selectedDepartment);
+        }
+        
+        filteredPositions.forEach(position => {
+            const option = document.createElement('option');
+            option.value = position.code;
+            option.textContent = `${position.name}`;
+            option.setAttribute('data-department', position.department);
+            option.setAttribute('data-salary-level', position.salaryLevel);
+            positionSelect.appendChild(option);
+        });
+    }
+
+    // 部门选择变化时更新岗位选项
+    function onDepartmentChange() {
+        const selectedDepartment = document.getElementById('inviteDepartment').value;
+        loadPositionOptions(selectedDepartment);
+    }
+
+    // 加载角色选项
+    function loadRoleOptions() {
+        const roleGroup = document.getElementById('inviteRoleGroup');
+        roleGroup.innerHTML = '';
+        
+        // 按照order排序角色
+        const sortedRoles = [...roleList].sort((a, b) => a.order - b.order);
+        
+        sortedRoles.forEach(role => {
+            const roleItem = document.createElement('div');
+            roleItem.className = 'role-checkbox-item';
+            roleItem.onclick = () => toggleRoleSelection(role.code);
+            
+            roleItem.innerHTML = `
+                <input type="checkbox" class="role-checkbox" id="role_${role.code}" value="${role.code}" onchange="updateRoleItemStyle('${role.code}')">
+                <div class="role-info">
+                    <div class="role-name">${role.name}</div>
+                    <div class="role-description">${role.description}</div>
+                    <span class="role-type ${role.type}">${role.type === 'system' ? '系统角色' : '自定义角色'}</span>
+                </div>
+            `;
+            
+            roleGroup.appendChild(roleItem);
+        });
+    }
+    
+    // 切换角色选择状态
+    function toggleRoleSelection(roleCode) {
+        const checkbox = document.getElementById(`role_${roleCode}`);
+        checkbox.checked = !checkbox.checked;
+        updateRoleItemStyle(roleCode);
+    }
+    
+    // 更新角色项样式
+    function updateRoleItemStyle(roleCode) {
+        const checkbox = document.getElementById(`role_${roleCode}`);
+        const roleItem = checkbox.closest('.role-checkbox-item');
+        
+        if (checkbox.checked) {
+            roleItem.classList.add('checked');
+        } else {
+            roleItem.classList.remove('checked');
+        }
+    }
+
+    // 邀请理由标签数据
+    const reasonTags = [
+        { text: '团队扩充', icon: 'fas fa-users' },
+        { text: '项目需要', icon: 'fas fa-project-diagram' },
+        { text: '专业技能', icon: 'fas fa-cogs' },
+        { text: '业务发展', icon: 'fas fa-chart-line' },
+        { text: '人才储备', icon: 'fas fa-user-graduate' },
+        { text: '岗位替换', icon: 'fas fa-exchange-alt' },
+        { text: '部门调整', icon: 'fas fa-sitemap' },
+        { text: '紧急需求', icon: 'fas fa-exclamation-triangle' },
+        { text: '长期合作', icon: 'fas fa-handshake' },
+        { text: '实习培养', icon: 'fas fa-graduation-cap' }
+    ];
+
+    // 加载邀请理由标签
+    function loadReasonTags() {
+        const tagsContainer = document.querySelector('.reason-tags');
+        tagsContainer.innerHTML = '';
+        
+        reasonTags.forEach((tag, index) => {
+            const tagElement = document.createElement('div');
+            tagElement.className = 'reason-tag';
+            tagElement.onclick = () => addReasonTag(tag.text);
+            
+            tagElement.innerHTML = `
+                <i class="${tag.icon} tag-icon"></i>
+                <span>${tag.text}</span>
+            `;
+            
+            tagsContainer.appendChild(tagElement);
+        });
+    }
+
+    // 点击标签时将内容添加到输入框
+    function addReasonTag(tagText) {
+        const reasonTextarea = document.getElementById('inviteReason');
+        const currentValue = reasonTextarea.value.trim();
+        
+        // 检查是否已经包含该标签
+        if (currentValue.includes(tagText)) {
+            return; // 如果已存在，不重复添加
+        }
+        
+        // 添加标签到输入框
+        if (currentValue === '') {
+            reasonTextarea.value = tagText;
+        } else {
+            // 如果已有内容，用顿号分隔
+            reasonTextarea.value = currentValue + '、' + tagText;
+        }
+        
+        // 聚焦到输入框末尾，方便继续编辑
+        reasonTextarea.focus();
+        reasonTextarea.setSelectionRange(reasonTextarea.value.length, reasonTextarea.value.length);
+    }
+
+    // 邀请功能
+    function showInviteModal() {
+        document.getElementById('inviteModal').style.display = 'flex';
+        // 重置表单
+        document.getElementById('inviteForm').reset();
+        // 隐藏所有邀请方式组
+        document.getElementById('emailInviteGroup').style.display = 'none';
+        document.getElementById('phoneInviteGroup').style.display = 'none';
+        document.getElementById('codeInviteGroup').style.display = 'none';
+        document.getElementById('linkInviteGroup').style.display = 'none';
+        // 加载部门、岗位、角色选项和理由标签
+        loadDepartmentOptions();
+        loadPositionOptions();
+        loadRoleOptions();
+        loadReasonTags();
+        
+        // 重置所有角色选择
+        setTimeout(() => {
+            document.querySelectorAll('.role-checkbox').forEach(checkbox => {
+                checkbox.checked = false;
+                updateRoleItemStyle(checkbox.value);
+            });
+        }, 100);
+        
+        // 清空邀请理由输入框
+        document.getElementById('inviteReason').value = '';
+        // 生成新的邀请码和邀请链接
+        generateInviteCode();
+        generateInviteLink();
+    }
+
+    function toggleInviteMethod() {
+        const method = document.getElementById('inviteMethod').value;
+        const emailGroup = document.getElementById('emailInviteGroup');
+        const phoneGroup = document.getElementById('phoneInviteGroup');
+        const codeGroup = document.getElementById('codeInviteGroup');
+        const linkGroup = document.getElementById('linkInviteGroup');
+        
+        // 隐藏所有组
+        emailGroup.style.display = 'none';
+        phoneGroup.style.display = 'none';
+        codeGroup.style.display = 'none';
+        linkGroup.style.display = 'none';
+        
+        // 显示对应组
+        if (method === 'email') {
+            emailGroup.style.display = 'block';
+        } else if (method === 'phone') {
+            phoneGroup.style.display = 'block';
+        } else if (method === 'code') {
+            codeGroup.style.display = 'block';
+        } else if (method === 'link') {
+            linkGroup.style.display = 'block';
+        }
+    }
+
+    function generateInviteCode() {
+        // 生成6位随机邀请码
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let inviteCode = '';
+        for (let i = 0; i < 6; i++) {
+            inviteCode += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        document.getElementById('inviteCode').value = inviteCode;
+    }
+
+    function copyInviteCode() {
+        const codeInput = document.getElementById('inviteCode');
+        codeInput.select();
+        codeInput.setSelectionRange(0, 99999); // 移动端兼容
+        
+        try {
+            document.execCommand('copy');
+            // 临时改变按钮文本
+            const copyBtn = event.target.closest('button');
+            const originalText = copyBtn.innerHTML;
+            copyBtn.innerHTML = '<i class="fas fa-check"></i>已复制';
+            copyBtn.style.background = '#28a745';
+            
+            setTimeout(() => {
+                copyBtn.innerHTML = originalText;
+                copyBtn.style.background = '';
+            }, 2000);
+        } catch (err) {
+            alert('复制失败，请手动复制邀请码');
+        }
+    }
+
+    function generateInviteLink() {
+        // 生成随机邀请链接
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let inviteCode = '';
+        for (let i = 0; i < 12; i++) {
+            inviteCode += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        document.getElementById('inviteLink').value = `https://kuaige.com/invite/${inviteCode}`;
+    }
+
+    function copyInviteLink() {
+        const linkInput = document.getElementById('inviteLink');
+        linkInput.select();
+        linkInput.setSelectionRange(0, 99999); // 移动端兼容
+        
+        try {
+            document.execCommand('copy');
+            // 临时改变按钮文本
+            const copyBtn = event.target.closest('button');
+            const originalText = copyBtn.innerHTML;
+            copyBtn.innerHTML = '<i class="fas fa-check"></i>已复制';
+            copyBtn.style.background = '#28a745';
+            
+            setTimeout(() => {
+                copyBtn.innerHTML = originalText;
+                copyBtn.style.background = '';
+            }, 2000);
+        } catch (err) {
+            alert('复制失败，请手动复制邀请链接');
+        }
+    }
+
+    function sendInvite() {
+        const form = document.getElementById('inviteForm');
+        const method = document.getElementById('inviteMethod').value;
+        const department = document.getElementById('inviteDepartment').value;
+        const position = document.getElementById('invitePosition').value;
+        const expiry = document.getElementById('inviteExpiry').value;
+        
+        // 收集选中的角色
+        const selectedRoles = [];
+        document.querySelectorAll('.role-checkbox:checked').forEach(checkbox => {
+            selectedRoles.push(checkbox.value);
+        });
+        
+        // 基本验证
+        if (!method) {
+            alert('请选择邀请方式');
+            return;
+        }
+        if (!department) {
+            alert('请选择邀请部门');
+            return;
+        }
+        if (!position) {
+            alert('请选择邀请岗位');
+            return;
+        }
+        if (selectedRoles.length === 0) {
+            alert('请至少选择一个权限级别');
+            return;
+        }
+        if (!expiry) {
+            alert('请选择有效期限');
+            return;
+        }
+        
+        // 根据邀请方式验证
+        let contact = '';
+        if (method === 'email') {
+            const email = document.getElementById('inviteEmail').value;
+            if (!email) {
+                alert('请输入邮箱地址');
+                return;
+            }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                alert('请输入有效的邮箱地址');
+                return;
+            }
+            contact = email;
+        } else if (method === 'phone') {
+            const phone = document.getElementById('invitePhone').value;
+            if (!phone) {
+                alert('请输入手机号码');
+                return;
+            }
+            if (!/^1[3-9]\d{9}$/.test(phone)) {
+                alert('请输入有效的手机号码');
+                return;
+            }
+            contact = phone;
+        } else if (method === 'code') {
+            contact = document.getElementById('inviteCode').value;
+        } else if (method === 'link') {
+            contact = document.getElementById('inviteLink').value;
+        }
+        
+        // 获取岗位名称和角色名称
+        const selectedPosition = positionList.find(p => p.code === position);
+        const positionName = selectedPosition ? selectedPosition.name : position;
+        
+        // 获取所有选中角色的名称
+        const roleNames = selectedRoles.map(roleCode => {
+            const role = roleList.find(r => r.code === roleCode);
+            return role ? role.name : roleCode;
+        });
+        
+        // 获取邀请理由
+        const inviteReason = document.getElementById('inviteReason').value.trim();
+        
+        // 模拟发送邀请
+        const inviteData = {
+            method: method,
+            contact: contact,
+            department: department,
+            position: position,
+            positionName: positionName,
+            roles: selectedRoles,
+            roleNames: roleNames,
+            reason: inviteReason,
+            expiry: expiry,
+            createTime: new Date().toLocaleString(),
+            status: 'pending'
+        };
+        
+        // 这里可以添加到邀请记录列表
+        console.log('发送邀请:', inviteData);
+        
+        // 显示成功消息
+        let successMsg = '';
+        if (method === 'email') {
+            successMsg = `邀请邮件已发送至 ${contact}`;
+        } else if (method === 'phone') {
+            successMsg = `邀请短信已发送至 ${contact}`;
+        } else if (method === 'code') {
+            successMsg = `邀请码已生成：${contact}，请将邀请码发送给被邀请人`;
+        } else if (method === 'link') {
+            successMsg = `邀请链接已生成，请将链接发送给被邀请人`;
+        }
+        
+        let detailMsg = `\n邀请部门：${department}\n邀请岗位：${positionName}\n权限级别：${roleNames.join('、')}\n有效期：${expiry}天`;
+        if (inviteReason) {
+            detailMsg += `\n邀请理由：${inviteReason}`;
+        }
+        
+        alert(successMsg + detailMsg);
+        
+        // 关闭弹窗
+        closeModal('inviteModal');
+        
+        // 可以在这里更新邀请统计数据
+        updateInviteStats();
+    }
+
+    function updateInviteStats() {
+        // 这里可以更新页面上的邀请统计数据
+        // 例如：待处理邀请数量等
+        console.log('更新邀请统计数据');
     }
     
     // 初始化渲染
